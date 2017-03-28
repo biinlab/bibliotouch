@@ -9,9 +9,6 @@ variables:
   MYSQL_USER: bibliotouch
   MYSQL_PASSWORD: bibliotouch
 
-script:
-  - export NODE_ENV=ci
-
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
 cache:
@@ -23,6 +20,7 @@ run_server:
   services:
     - mysql:5.5.54
   script:
+   - export NODE_ENV=ci
    - npm --prefix ./bibliotouch-server/ install
    - npm --prefix ./bibliotouch-server/ start
    
