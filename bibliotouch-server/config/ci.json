@@ -1,0 +1,11 @@
+{
+    "Bibliotouch" : {
+        "dbconfig" : {
+            "host" : "mysql",
+            "port" : "3306",
+            "dbname" : "bibliotouch",
+            "user" : "bibliotouch",
+            "pwd" : "bibliotouch"
+        }
+    }
+}

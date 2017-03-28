@@ -9,6 +9,8 @@ variables:
   MYSQL_USER: bibliotouch
   MYSQL_PASSWORD: bibliotouch
 
+script:
+  - export NODE_ENV=ci
 
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
