@@ -16,13 +16,13 @@ cache:
   - bibliotouch-server/node_modules/
   - mapgrid-js/node_modules/
 
-run_server:
+test_basic_server_running:
   services:
     - mysql:5.5.54
   script:
    - export NODE_ENV=ci
    - npm --prefix ./bibliotouch-server/ install
-   - npm --prefix ./bibliotouch-server/ start
+   - npm --prefix ./bibliotouch-server/ test
    
 build_mapgrid:
   script:

@@ -9,3 +9,5 @@ app.use(controllers);
 app.listen(serverPort, function () {
     console.log(`Server running on port ${serverPort}`)    
 })
+
+module.exports = app;
