@@ -16,7 +16,7 @@ cache:
   - mapgrid-js/node_modules/
 
 before_script:
-  - sudo apt-get install -y mysql-client libmysqlclient-dev
+  - apt-get install -y mysql-client libmysqlclient-dev
 
 test_basic_server_running:
   services:
