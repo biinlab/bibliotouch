@@ -25,7 +25,6 @@ test_basic_server_running:
   script:
    - export NODE_ENV=ci
    - mysql < ./bibliotouch-server/test/biblioitems-100.sql -u root -proot --host=mysql
-   - echo "GRANT ALL PRIVILEGES ON test.* TO 'bibliotouch'@'mysql';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql
    - npm --prefix ./bibliotouch-server/ install
    - npm --prefix ./bibliotouch-server/ run flush
    - npm --prefix ./bibliotouch-server/ test
