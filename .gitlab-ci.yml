@@ -4,7 +4,7 @@ image: node:7.9.0
   
 variables:
   MYSQL_ROOT_PASSWORD: root
-  MYSQL_DATABASE: bibliotouch
+  MYSQL_DATABASE: test
   MYSQL_USER: bibliotouch
   MYSQL_PASSWORD: bibliotouch
 
