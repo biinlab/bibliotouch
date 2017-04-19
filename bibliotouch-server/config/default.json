@@ -6,6 +6,57 @@
             "dbname" : "bibliotouch",
             "user" : "bibliotouch",
             "pwd" : "bibliotouch"
+        },
+        "koha":{
+            "kohadbconfig" : {
+                "host" : "localhost",
+                "port" : "3306",
+                "dbname" : "koha",
+                "user" : "bibliotouch",
+                "pwd" : "bibliotouch"
+            },
+            "kohaTags" :{
+                "title" : {
+                    "tag" : ["200"],
+                    "code": ["a"]
+                },
+                "isbn" : {
+                    "tag" : ["010"],
+                    "code": ["a"]
+                },
+                "issn" : {
+                    "tag" : ["011"],
+                    "code": ["a"]
+                },
+                "authors" : {
+                    "tag" : ["700","701","702"],
+                    "code": ["a","b"]
+                },
+                "nbPages" : {
+                    "tag" : ["215"],
+                    "code": ["a"]
+                },
+                "description" : {
+                    "tag" : ["330"],
+                    "code": ["a"]
+                },
+                "editor" : {
+                    "tag" : ["210"],
+                    "code": ["c"]
+                },
+                "datePub" : {
+                    "tag" : ["210"],
+                    "code": ["d"]
+                },
+                "authority" : {
+                    "tag" : ["600","601","602","603","604","605","606","607","608","616","617"],
+                    "code": ["a","j","x","y"]
+                }
+            }
+        }
+        ,
+        "sync":{
+            "updateHour" : "16"
         }
     }
 }

@@ -20,13 +20,6 @@ var Record = db.define('record', {
 });
 
 
-Record.sync({force: true}).then(function () {
-  // Table created
-  return Record.create({
-    title: 'The Hobbit',
-    datePublished: new Date(),
-    isbn: 'pouette01'
-  });
-});
+Record.sync();
 
 module.exports = Record;

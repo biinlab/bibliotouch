@@ -1,11 +1,13 @@
 {
     "Bibliotouch" : {
         "dbconfig" : {
-            "host" : "mysql",
-            "port" : "3306",
-            "dbname" : "bibliotouch",
-            "user" : "bibliotouch",
-            "pwd" : "bibliotouch"
+            "host" : "mysql"
+        },
+        "koha":{
+            "kohadbconfig" : {
+                "host" : "mysql",
+                "dbname" : "test"
+            }
         }
     }
 }

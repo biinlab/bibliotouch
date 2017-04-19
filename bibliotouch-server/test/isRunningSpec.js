@@ -17,9 +17,9 @@ describe('Basic server running', function(){
             });
         });
         
-        it('returns The Hobbit', function(done){
+        it('returns "Yo!"', function(done){
             chai.request(app).get('/').then(function(res){
-                expect(res.text).to.equal('The Hobbit');
+                expect(res.text).to.contain('Yo!');
                 done();
             }).catch(function(err){
                 done(err);
@@ -28,3 +28,16 @@ describe('Basic server running', function(){
         
     });
 });
+
+describe('Simple query doc 33392', function(){
+    describe('GET /search/33392', function () {
+        it('returns document with ISSN : 2266-7989', function (done) {
+            chai.request(app).get('/search/33392').then(function(res){
+                expect(res.text).to.contain('2266-7989');
+                done();
+            }).catch(function(err){
+                done(err);
+            });
+        })
+    })
+})

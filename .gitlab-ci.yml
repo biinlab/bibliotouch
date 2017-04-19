@@ -1,7 +1,6 @@
-# This file is a template, and might need editing before it works on your project.
 # Official framework image. Look for the different tagged releases at:
 # https://hub.docker.com/r/library/node/tags/
-image: node:7.7.4
+image: node:7.9.0
   
 variables:
   MYSQL_ROOT_PASSWORD: root
@@ -18,10 +17,13 @@ cache:
 
 test_basic_server_running:
   services:
-    - mysql:5.5.54
+    - mysql:5.7
   script:
    - export NODE_ENV=ci
+   - mysql < ./bibliotouch-server/test/biblioitems-100.sql -u root -proot
+   - echo "GRANT ALL PRIVILEGES ON test.* TO 'bibliotouch'@'mysql';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql
    - npm --prefix ./bibliotouch-server/ install
+   - npm --prefix ./bibliotouch-server/ run flush
    - npm --prefix ./bibliotouch-server/ test
    
 build_mapgrid:
