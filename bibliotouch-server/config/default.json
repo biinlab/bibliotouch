@@ -55,8 +55,8 @@
             }
         }
         ,
-        "sync":{
-            "updateHour" : "16"
+        "updateTime":{
+            "cron" : "0 4 * * *"
         }
     }
 }

@@ -3,6 +3,8 @@ var controllers = require('./controllers');
 var KohaImporter = require('./importers/kohaImporter/kohaImporter');
 var indexer = require('./helpers/searchIndex');
 var parseArgs = require('minimist');
+var schedule = require('node-schedule');
+var config = require('config');
 
 
 var argv = parseArgs(process.argv.slice(2));
@@ -38,7 +40,14 @@ if(argv.flush){
         return importer.update();
     })
 } else {
-    importer.update();
+    //Start update and then schedule updates
+    importer.update().then(function () {
+        let cron = config.get('Bibliotouch.updateTime.cron');
+        schedule.scheduleJob(cron, function(){
+            importer.update();
+        })
+    })
+    //Start server app
     app.listen(serverPort, function () {
         console.log(`Server running on port ${serverPort}`);
     });

@@ -61,7 +61,7 @@ KohaImporter.prototype.import = function(){
                             }
                         })
                     });
-                    record = await self.parseRecordObject(jsonRecord);
+                    record = await self.parseRecordObject(jsonRecord.record);
                     recordStream.push(record);
                 } catch(e){
                     console.log(e);
@@ -95,12 +95,15 @@ KohaImporter.prototype.update = function(){
         let importDate = require('../../'+lastUpdateFilename);
         let lastUpdate = new Date(importDate.lastUpdate);
         let today = new Date();
-        let lastUpdateString = `${lastUpdate.getUTCFullYear()}-${lastUpdate.getUTCMonth() < 10 ? '0'+lastUpdate.getUTCMonth() : lastUpdate.getUTCMonth()}-${lastUpdate.getUTCDate() < 10 ? '0'+lastUpdate.getUTCDate() : lastUpdate.getUTCDate()}`;
-        let todayString = `${today.getUTCFullYear()}-${today.getUTCMonth() < 10 ? '0'+today.getUTCMonth() : today.getUTCMonth()}-${today.getUTCDate() < 10 ? '0'+today.getUTCDate() : today.getUTCDate()}`
+        let lastUpdateString = `${lastUpdate.getUTCFullYear()}-${(lastUpdate.getUTCMonth()+1) < 10 ? '0'+(lastUpdate.getUTCMonth()+1) : (lastUpdate.getUTCMonth()+1)}-${lastUpdate.getUTCDate() < 10 ? '0'+lastUpdate.getUTCDate() : lastUpdate.getUTCDate()}`;
+        let todayString = `${today.getUTCFullYear()}-${(today.getUTCMonth()+1) < 10 ? '0'+(today.getUTCMonth()+1) : (today.getUTCMonth()+1)}-${today.getUTCDate() < 10 ? '0'+today.getUTCDate() : today.getUTCDate()}`
         let index = 0;
         let newRecords = 0;
-
         let nbProcessed = maxOAIPMHExports;
+
+        let info = 'Update started';
+        Logger.log('info', info);
+        console.log(info);
 
         while (nbProcessed == maxOAIPMHExports) {
             let updateUrl = oaipmhEndpoint+`/request?verb=ListRecords&resumptionToken=marcxml/${index}/${lastUpdateString}/${todayString}/`;
@@ -277,7 +280,7 @@ KohaImporter.prototype.parseRecordObject = function(record){
             let authorities = [];   //600-608,616,617ajxy   -- several
 
 
-            record.record.datafield.forEach(function(datafield){
+            record.datafield.forEach(function(datafield){
                 let tmp_title = getTitle(datafield);
                 if(tmp_title!=null){
                     title = tmp_title;
@@ -396,7 +399,7 @@ KohaImporter.prototype.parseRecordObject = function(record){
             })
 
             
-            record.record.controlfield.forEach(function(controlfield){
+            record.controlfield.forEach(function(controlfield){
                 if(controlfield.$.tag == '001'){
                     id = controlfield._;
                 }

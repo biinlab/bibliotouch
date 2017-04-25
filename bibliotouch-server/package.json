@@ -17,6 +17,7 @@
     "express": "^4.15.2",
     "minimist": "^1.2.0",
     "mysql": "^2.13.0",
+    "node-schedule": "^1.2.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.3",
     "search-index": "^0.9.16",
