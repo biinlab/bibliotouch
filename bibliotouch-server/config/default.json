@@ -16,10 +16,6 @@
                 "pwd" : "bibliotouch"
             },
             "kohaTags" :{
-                "title" : {
-                    "tag" : ["200"],
-                    "code": ["a"]
-                },
                 "isbn" : {
                     "tag" : ["010"],
                     "code": ["a"]
@@ -28,16 +24,16 @@
                     "tag" : ["011"],
                     "code": ["a"]
                 },
-                "authors" : {
-                    "tag" : ["700","701","702"],
-                    "code": ["a","b"]
-                },
-                "nbPages" : {
-                    "tag" : ["215"],
+                "ismn" : {
+                    "tag" : ["013"],
                     "code": ["a"]
                 },
-                "description" : {
-                    "tag" : ["330"],
+                "ean" : {
+                    "tag" : ["073"],
+                    "code": ["a"]
+                },
+                "title" : {
+                    "tag" : ["200"],
                     "code": ["a"]
                 },
                 "editor" : {
@@ -48,9 +44,73 @@
                     "tag" : ["210"],
                     "code": ["d"]
                 },
-                "authority" : {
-                    "tag" : ["600","601","602","603","604","605","606","607","608","616","617"],
+                "nbPages" : {
+                    "tag" : ["215"],
+                    "code": ["a"]
+                },
+                "note" : {
+                    "tag" : ["300"],
+                    "code": ["a"]
+                },
+                "noteBioIndex" : {
+                    "tag" : ["320"],
+                    "code": ["a"]
+                },
+                "thesisInfo" : {
+                    "tag" : ["328"],
+                    "code": ["a","b","c","d","e"]
+                },
+                "thesisUrl" : {
+                    "tag" : ["328"],
+                    "code": ["u"]
+                },
+                "description" : {
+                    "tag" : ["330"],
+                    "code": ["a"]
+                },
+                "table" : {
+                    "tag" : ["359"],
+                    "code": ["b"]
+                },
+                "collection" : {
+                    "tag" : ["410"],
+                    "code": ["t"]
+                },
+                "uniformTitle" : {
+                    "tag" : ["500"],
+                    "code": ["a"]
+                },
+                "formTitle" : {
+                    "tag" : ["503"],
+                    "code": ["a"]
+                },
+                "authorities" : {
+                    "tag" : ["600","601","602","603","604","605","606","607","616"],
                     "code": ["a","j","x","y"]
+                },
+                "freeIndex" : {
+                    "tag" : ["610"],
+                    "code": ["a"]
+                },
+                "cdu" : {
+                    "tag" : ["675"],
+                    "code": ["a"]
+                },
+                "dewey" : {
+                    "tag" : ["676"],
+                    "code": ["a"]
+                },
+                "lcc" : {
+                    "tag" : ["680"],
+                    "code": ["a","b"]
+                },
+                "otherClass" : {
+                    "tag" : ["686"],
+                    "code": ["a","2"]
+                },
+                "authors" : {
+                    "tag" : ["700","701","702"],
+                    "code": ["a","b"]
                 }
             }
         }

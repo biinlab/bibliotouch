@@ -166,14 +166,15 @@ KohaImporter.prototype.update = function(){
 KohaImporter.prototype.parseRecordObject = function(record){
 
     //Helper functions
-    var retrieveTextFromMultipleSubfields = function(datafield, codes) {
+    var retrieveTextFromMultipleSubfields = function(datafield, codes, separator) {
         var returnValue=null;
+        separator = (typeof separator === 'undefined') ? ' ' : separator;
         datafield.subfield.forEach(function(subfield){
             if(codes.indexOf(subfield.$.code) != -1){
                 if(returnValue===null){
                     returnValue = '';
                 } else {
-                    returnValue += ' ';
+                    returnValue += separator;
                 }
                 returnValue += subfield._;
             }
@@ -264,59 +265,125 @@ KohaImporter.prototype.parseRecordObject = function(record){
         }
     }
 
+    var getTextFromSubfields = function (datafield, tag, separator) {
+        if(tag.tag.indexOf(datafield.$.tag) === -1){
+            return null;
+        }else {
+            return retrieveTextFromMultipleSubfields(datafield, tag.code, separator);
+        }
+    }
+
+    var getMultipleTextsFromSubfields = function (datafield, tag) {
+        if(tag.tag.indexOf(datafield.$.tag) === -1){
+            return null;
+        }else {
+            return retrieveMultipleTextsFromMultipleSubfields(datafield, tag.code);
+        }
+    }
+
     //Core method
     return new Promise(function(resolve, reject){
         if(record != null){
             //console.log(result);
             let id = null;
-            let title = null;       //200a
             let isbn = null;        //010a
             let issn = null;        //011a
-            let authors = [];       //700a+b,701a+b,702a+b  -- can be of multiple occurence
-            let nbPages = null;     //215a                  -- rarely clean
-            let description = null; //330a
+            let ismn = null;        //013a N
+            let ean = null;         //073a N
+            let title = null;       //200a
             let editor = null;      //210c
             let datePub = null;     //210d                  -- rarely clean
-            let authorities = [];   //600-608,616,617ajxy   -- several
+            let nbPages = null;     //215a                  -- rarely clean
+            let note = null;        //300a N
+            let noteBioIndex = null;//320a N
+            let thesisInfo = null;  //328abcde N
+            let thesisUrl = null;   //328u N
+            let description = null; //330a
+            let table = [];         //359b N
+            let collection = null;  //410t N
+            let uniformTitle = null;//500a N
+            let formTitle = null;   //503a N
+            let authorities = [];   //600-607,616ajxy   -- several
+            let freeIndex = [];     //610[a] N          -- several
+            let cdu = [];           //675[a] N          -- several
+            let dewey = null;       //676a N
+            let lcc = null;         //680a+b N
+            let otherClass = null;  //686a+2 N
+            let authors = [];       //700a+b,701a+b,702a+b,710a+b,711a+b,712a+b  -- can be of multiple occurence
 
 
             record.datafield.forEach(function(datafield){
-                let tmp_title = getTitle(datafield);
-                if(tmp_title!=null){
-                    title = tmp_title;
-                }
-                let tmp_isbn = getIsbn(datafield);
-                if(tmp_isbn!=null){
-                    isbn = tmp_isbn;
-                }
-                let tmp_issn = getIssn(datafield);
-                if(tmp_issn!=null){
-                    issn = tmp_issn;
-                }
-                let tmp_author = getAuthor(datafield);
-                if(tmp_author!=null){
-                    authors.push(tmp_author);
-                }
-                let tmp_nbPages = getNbPages(datafield);
-                if(tmp_nbPages!=null){
-                    nbPages = tmp_nbPages;
-                }
-                let tmp_description = getDescription(datafield);
-                if(tmp_description!=null){
-                    description = tmp_description;
-                }
-                let tmp_editor = getEditor(datafield);
-                if(tmp_editor!=null){
-                    editor = tmp_editor;
-                }
-                let tmp_datePub = getDatePub(datafield);
-                if(tmp_datePub!=null){
-                    datePub = tmp_datePub;
-                }
-                let tmp_authorities = getAuthorities(datafield);
-                if(tmp_authorities!=null){
-                    Array.prototype.push.apply(authorities,tmp_authorities);
-                }
+                let tmp_isbn = getTextFromSubfields(datafield, kohaTags.isbn);
+                isbn = tmp_isbn ? tmp_isbn : isbn;
+
+                let tmp_issn = getTextFromSubfields(datafield, kohaTags.issn);
+                issn = tmp_issn ? tmp_issn : issn;
+
+                let tmp_ismn = getTextFromSubfields(datafield, kohaTags.ismn);
+                ismn = tmp_ismn ? tmp_ismn : ismn;
+
+                let tmp_ean = getTextFromSubfields(datafield, kohaTags.ean);
+                ean = tmp_ean ? tmp_ean : ean;
+
+                let tmp_title = getTextFromSubfields(datafield, kohaTags.title);
+                title = tmp_title ? tmp_title : title;
+
+                let tmp_editor = getTextFromSubfields(datafield, kohaTags.editor);
+                editor = tmp_editor ? tmp_editor : editor;
+
+                let tmp_datePub = getTextFromSubfields(datafield, kohaTags.datePub);
+                datePub = tmp_datePub ? tmp_datePub : datePub;
+
+                let tmp_nbPages = getTextFromSubfields(datafield, kohaTags.nbPages);
+                nbPages = tmp_nbPages ? tmp_nbPages : nbPages;
+
+                let tmp_note = getTextFromSubfields(datafield, kohaTags.note);
+                note = tmp_note ? tmp_note : note;
+
+                let tmp_noteBioIndex = getTextFromSubfields(datafield, kohaTags.noteBioIndex);
+                noteBioIndex = tmp_noteBioIndex ? tmp_noteBioIndex : noteBioIndex;
+
+                let tmp_thesisInfo = getTextFromSubfields(datafield, kohaTags.thesisInfo);
+                thesisInfo = tmp_thesisInfo ? tmp_thesisInfo : thesisInfo;
+
+                let tmp_thesisUrl = getTextFromSubfields(datafield, kohaTags.thesisUrl);
+                thesisUrl = tmp_thesisUrl ? tmp_thesisUrl : thesisUrl;
+
+                let tmp_description = getTextFromSubfields(datafield, kohaTags.description);
+                description = tmp_description ? tmp_description : description;
+
+                let tmp_table = getMultipleTextsFromSubfields(datafield, kohaTags.table);
+                Array.prototype.push.apply(table, tmp_table);
+
+                let tmp_collection = getTextFromSubfields(datafield, kohaTags.collection);
+                collection = tmp_collection ? tmp_collection : collection;
+
+                let tmp_uniformTitle = getTextFromSubfields(datafield, kohaTags.uniformTitle);
+                uniformTitle = tmp_uniformTitle ? tmp_uniformTitle : uniformTitle;
+
+                let tmp_formTitle = getTextFromSubfields(datafield, kohaTags.formTitle);
+                formTitle = tmp_formTitle ? tmp_formTitle : formTitle;
+
+                let tmp_authorities = getMultipleTextsFromSubfields(datafield, kohaTags.authorities);
+                Array.prototype.push.apply(authorities,tmp_authorities);
+
+                let tmp_freeIndex = getMultipleTextsFromSubfields(datafield, kohaTags.freeIndex);
+                Array.prototype.push.apply(freeIndex, tmp_freeIndex);
+
+                let tmp_cdu = getTextFromSubfields(datafield, kohaTags.cdu);
+                tmp_cdu ? cdu.push(tmp_cdu) : null;
+                
+                let tmp_dewey = getTextFromSubfields(datafield, kohaTags.dewey);
+                dewey = tmp_dewey ? tmp_dewey : dewey;
+
+                let tmp_lcc = getTextFromSubfields(datafield, kohaTags.lcc);
+                lcc = tmp_lcc ? tmp_lcc : lcc;
+
+                let tmp_otherClass = getTextFromSubfields(datafield, kohaTags.otherClass);
+                otherClass = tmp_otherClass ? tmp_otherClass : otherClass;
+
+                let tmp_author = getTextFromSubfields(datafield, kohaTags.authors);
+                tmp_author ? authors.push(tmp_author) : null;
 
                 /*
                 switch (datafield.$.tag) {
@@ -412,15 +479,30 @@ KohaImporter.prototype.parseRecordObject = function(record){
 
             var bibliodocument = {
                 id : id,
-                title : title,
                 isbn : isbn,
                 issn : issn,
-                authors : authors,
-                nbPages : nbPages,
-                description : description,
+                ismn : ismn,
+                ean : ean,
+                title : title,
                 editor : editor,
                 datePub : datePub,
-                authorities : authorities_uniq
+                nbPages : nbPages,
+                note : note,
+                noteBioIndex : noteBioIndex,
+                thesisInfo : thesisInfo,
+                thesisUrl : thesisUrl,
+                description : description,
+                table : table,
+                collection : collection,
+                uniformTitle : uniformTitle,
+                formTitle : formTitle,
+                authorities : authorities_uniq,
+                freeIndex : freeIndex,
+                cdu : cdu,
+                dewey : dewey,
+                lcc : lcc,
+                otherClass : otherClass,
+                authors : authors
             }
             resolve(bibliodocument);
         } else {
