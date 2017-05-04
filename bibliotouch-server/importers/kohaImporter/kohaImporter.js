@@ -6,6 +6,7 @@ var path = require('path');
 var Logger = require('../../helpers/logger');
 var config = require('config');
 var BiblioItems = require('./biblioitems');
+var coverDownloader = require('../../helpers/coverDownloader');
 
 var Readable = require('stream').Readable
 
@@ -385,79 +386,6 @@ KohaImporter.prototype.parseRecordObject = function(record){
                 let tmp_author = getTextFromSubfields(datafield, kohaTags.authors);
                 tmp_author ? authors.push(tmp_author) : null;
 
-                /*
-                switch (datafield.$.tag) {
-                    case '200':
-                        title = retrieveTextFromSubfield(datafield,'a');
-                        break;
-                    case '010':
-                        isbn = retrieveTextFromSubfield(datafield,'a');
-                        break;
-                    case '011' :
-                        issn = retrieveTextFromSubfield(datafield,'a');
-                        break;
-                    case '700' :
-                        authors.push(retrieveTextFromSubfield(datafield,'a')
-                            + ' '
-                            + retrieveTextFromSubfield(datafield,'b'));
-                        break;
-                    case '701' :
-                        authors.push(retrieveTextFromSubfield(datafield,'a')
-                            + ' '
-                            + retrieveTextFromSubfield(datafield,'b'));
-                        break;
-                    case '702' :
-                        authors.push(retrieveTextFromSubfield(datafield,'a')
-                            + ' '
-                            + retrieveTextFromSubfield(datafield,'b'));
-                        break;
-                    case '215' :
-                        nbPages = retrieveTextFromSubfield(datafield,'a');
-                        break;
-                    case '330' :
-                        description = retrieveTextFromSubfield(datafield,'a');
-                        break;
-                    case '210' :
-                        editor = retrieveTextFromSubfield(datafield,'c');
-                        datePub = retrieveTextFromSubfield(datafield,'d');
-                        break;
-                    case '600' :
-                        Array.prototype.push.apply(authorities,retrieveMultipleTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '601' :
-                        Array.prototype.push.apply(authorities,retrieveMultipleTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '602' :
-                        Array.prototype.push.apply(authorities,retrieveMultipleTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '603' :
-                        Array.prototype.push.apply(authorities,retrieveMultipleTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '604' :
-                        Array.prototype.push.apply(authorities,retrieveMultipleTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '605' :
-                        Array.prototype.push.apply(authorities,retrieveMultipleTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '606' :
-                        Array.prototype.push.apply(authorities,retrieveMultipleTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '607' :
-                        Array.prototype.push.apply(authorities,retrieveMultipleTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '608' :
-                        Array.prototype.push.apply(authorities,retrieveMultipleTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '616' :
-                        Array.prototype.push.apply(authorities,retrieveMultipleTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '617' :
-                        Array.prototype.push.apply(authorities,retrieveMultipleTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    default:
-                        break;
-                }
-                */
             });
 
             //Remove duplicates from authorities
@@ -476,6 +404,11 @@ KohaImporter.prototype.parseRecordObject = function(record){
                 reject('No ID found.');
                 return;
             }
+
+            coverDownloader.dlCover({
+                isbn : isbn,
+                issn : issn
+            })
 
             var bibliodocument = {
                 id : id,
@@ -512,159 +445,5 @@ KohaImporter.prototype.parseRecordObject = function(record){
         }
     });
 }
-
-KohaImporter.prototype.parseXmlToJson = function() {
-
-    //Helper functions
-    var retrieveTextFromSubfield = function(datafield, code) {
-        var returnValue=null;
-        datafield.subfield.forEach(function(subfield){
-            if(subfield.$.code == code){
-                returnValue = subfield.$text;
-            }
-        });
-        return returnValue;
-    }
-
-    var retrieveTextsFromMultipleSubfields = function(datafield, codes) {
-        var returnValue=[];
-        datafield.subfield.forEach(function(subfield){
-            if(codes.indexOf(subfield.$.code) > -1){
-                returnValue.push(subfield.$text);
-            }
-        });
-        return returnValue;
-    }
-
-    return new Promise(function(resolve, reject){
-
-        var readStream = fs.createReadStream(path.join(__dirname, '../oai9.xml'));
-        var writeStream = fs.createWriteStream(path.join(__dirname, '../index_caca.str'));
-        var xml = new XmlStream(readStream);
-        let nbDocumentsImported = 0;
-
-        xml.collect('datafield');   //We collect all datafield of record
-        xml.collect('subfield');    //We collect all subfield of datafield
-
-        xml.on('endElement: record', function (record) {
-
-            if(record.datafield === undefined){
-                return;
-            }
-
-            let title = null;       //200a
-            let isbn = null;        //010a
-            let issn = null;        //011a
-            let authors = [];       //700a+b,701a+b,702a+b  -- can be of multiple occurence
-            let nbPages = null;     //215a                  -- rarely clean
-            let description = null; //330a
-            let editor = null;      //210c
-            let datePub = null;     //210d                  -- rarely clean
-            let authorities = [];   //600-608,616,617ajxy   -- several
-
-            record.datafield.forEach(function(datafield){
-                switch (datafield.$.tag) {
-                    case '200':
-                        title = retrieveTextFromSubfield(datafield,'a');
-                        break;
-                    case '010':
-                        isbn = retrieveTextFromSubfield(datafield,'a');
-                        break;
-                    case '011' :
-                        issn = retrieveTextFromSubfield(datafield,'a');
-                        break;
-                    case '700' :
-                        authors.push(retrieveTextFromSubfield(datafield,'a')
-                            + ' '
-                            + retrieveTextFromSubfield(datafield,'b'));
-                        break;
-                    case '701' :
-                        authors.push(retrieveTextFromSubfield(datafield,'a')
-                            + ' '
-                            + retrieveTextFromSubfield(datafield,'b'));
-                        break;
-                    case '702' :
-                        authors.push(retrieveTextFromSubfield(datafield,'a')
-                            + ' '
-                            + retrieveTextFromSubfield(datafield,'b'));
-                        break;
-                    case '215' :
-                        nbPages = retrieveTextFromSubfield(datafield,'a');
-                        break;
-                    case '330' :
-                        description = retrieveTextFromSubfield(datafield,'a');
-                        break;
-                    case '210' :
-                        editor = retrieveTextFromSubfield(datafield,'c');
-                        datePub = retrieveTextFromSubfield(datafield,'d');
-                        break;
-                    case '600' :
-                        Array.prototype.push.apply(authorities,retrieveTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '601' :
-                        Array.prototype.push.apply(authorities,retrieveTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '602' :
-                        Array.prototype.push.apply(authorities,retrieveTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '603' :
-                        Array.prototype.push.apply(authorities,retrieveTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '604' :
-                        Array.prototype.push.apply(authorities,retrieveTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '605' :
-                        Array.prototype.push.apply(authorities,retrieveTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '606' :
-                        Array.prototype.push.apply(authorities,retrieveTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '607' :
-                        Array.prototype.push.apply(authorities,retrieveTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '608' :
-                        Array.prototype.push.apply(authorities,retrieveTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '616' :
-                        Array.prototype.push.apply(authorities,retrieveTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    case '617' :
-                        Array.prototype.push.apply(authorities,retrieveTextsFromMultipleSubfields(datafield, ['a','j','x','y']));
-                        break;
-                    default:
-                        break;
-                }
-            });
-
-            var bibliodocument = {
-                title : title,
-                isbn : isbn,
-                issn : issn,
-                authors : authors,
-                nbPages : nbPages,
-                description : description,
-                editor : editor,
-                datePub : datePub,
-                authorities : authorities
-            }
-            
-            writeStream.write(JSON.stringify(bibliodocument)+'\n');
-            ++nbDocumentsImported;
-
-        });
-
-        xml.on('endElement: ListRecords', function (element) {
-            writeStream.end();
-            console.log(`${nbDocumentsImported} documents imported.`);
-            Logger.log('info',`${nbDocumentsImported} documents imported.`);
-            resolve();
-        })
-
-        xml.on('error', function(message) {
-                Logger.log('error', 'Problem while reading Koha XML export', message);
-                reject(message);
-        });
-    });
-};
 
 module.exports = KohaImporter;
