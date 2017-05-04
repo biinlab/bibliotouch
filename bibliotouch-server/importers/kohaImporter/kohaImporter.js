@@ -405,10 +405,12 @@ KohaImporter.prototype.parseRecordObject = function(record){
                 return;
             }
 
+            /* Do not download covers yet
             coverDownloader.dlCover({
                 isbn : isbn,
                 issn : issn
-            })
+            });
+            */
 
             var bibliodocument = {
                 id : id,

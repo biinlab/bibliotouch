@@ -33,13 +33,15 @@ var createDownloadDir = function () {
 
 var downloadFromCode = function (code, type) {
     let cleanedCode = code.replace(/[^0-9]/g,'');
-    //let url = `https://www.googleapis.com/books/v1/volumes?q=${type}:${cleanedCode}`;
+    let url = `https://www.googleapis.com/books/v1/volumes?q=${type}:${cleanedCode}`;
+    /*
     let url;
     if(type == 'isbn'){
         url  = `http://api.lib.sfu.ca/covers/redirect?isn=&issn=&isbn=${cleanedCode}&size=l`;
     } else {
         url  = `http://api.lib.sfu.ca/covers/redirect?isn=&issn=${cleanedCode}&isbn=&size=l`
     }
+    */
     console.log(`${cleanedCode} : Start ${type} search`);
     request(url, function(error, response, body){
         if(!error){
