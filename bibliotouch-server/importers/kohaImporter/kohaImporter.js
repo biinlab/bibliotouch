@@ -22,9 +22,29 @@ var KohaImporter = function() {
         Logger.log('error',err);
     });
 }
+var updateLastUpdateFile = function(date){
+    let updateDate = date ||new Date();
+    let importDate = {
+        lastUpdate : updateDate.getTime()
+    };
+
+    fs.writeFile(lastUpdateFilename, JSON.stringify(importDate), function(err){
+        if (err) {
+            Logger.log('error',err);
+        }
+    });
+}
+
+var getMostRecentTimestamp = function(oldTimeStamp, newTimeStamp){
+    if(oldTimeStamp < newTimeStamp){
+        oldTimeStamp = newTimeStamp
+    }
+    return oldTimeStamp;
+}
 
 KohaImporter.prototype.import = function(){
     let self = this;
+    var mostRecentTimeStamp = new Date(1970,00,01);
     async function importPromise(resolve, reject){
         var recordStream = new Readable( {objectMode: true} )
         
@@ -63,6 +83,8 @@ KohaImporter.prototype.import = function(){
                         })
                     });
                     record = await self.parseRecordObject(jsonRecord.record);
+                    let mostRecentTimeStamp2 = getMostRecentTimestamp(mostRecentTimeStamp, instance.get('timestamp'));//Weird behaviour
+                    mostRecentTimeStamp = mostRecentTimeStamp2;
                     recordStream.push(record);
                 } catch(e){
                     console.log(e);
@@ -73,15 +95,7 @@ KohaImporter.prototype.import = function(){
         }
         recordStream.push(null);
 
-        let importDate = {
-            lastUpdate : Date.now()
-        };
-
-        fs.writeFile(lastUpdateFilename, JSON.stringify(importDate), function(err){
-            if (err) {
-                Logger.log('error',err);
-            }
-        })
+        updateLastUpdateFile(mostRecentTimeStamp);
 
         resolve(recordStream);
     }
@@ -146,15 +160,7 @@ KohaImporter.prototype.update = function(){
         recordStream.push(null);
 
         
-        let newImportDate = {
-            lastUpdate : Date.now()
-        };
-
-        fs.writeFile(lastUpdateFilename, JSON.stringify(newImportDate), function(err){
-            if (err) {
-                Logger.log('error',err);
-            }
-        });
+        updateLastUpdateFile();
 
 
         resolve(recordStream);
@@ -191,79 +197,6 @@ KohaImporter.prototype.parseRecordObject = function(record){
             }
         });
         return returnValue;
-    }
-
-    //Datafield extractors
-    var getTitle = function(datafield){
-        if(kohaTags.title.tag.indexOf(datafield.$.tag) === -1){
-            return null;
-        } else {
-            return retrieveTextFromMultipleSubfields(datafield, kohaTags.title.code);
-        }
-    }
-
-    var getIsbn = function(datafield){
-        if(kohaTags.isbn.tag.indexOf(datafield.$.tag) === -1){
-            return null;
-        } else {
-            return retrieveTextFromMultipleSubfields(datafield, kohaTags.isbn.code);
-        }
-    }
-
-    var getIssn = function(datafield){
-        if(kohaTags.issn.tag.indexOf(datafield.$.tag) === -1){
-            return null;
-        } else {
-            return retrieveTextFromMultipleSubfields(datafield, kohaTags.issn.code);
-        }
-    }
-
-    var getAuthor = function(datafield){
-        if(kohaTags.authors.tag.indexOf(datafield.$.tag) === -1){
-            return null;
-        } else {
-            return retrieveTextFromMultipleSubfields(datafield, kohaTags.authors.code);
-        }
-    }
-
-    var getNbPages = function(datafield){
-        if(kohaTags.nbPages.tag.indexOf(datafield.$.tag) === -1){
-            return null;
-        } else {
-            return retrieveTextFromMultipleSubfields(datafield, kohaTags.nbPages.code);
-        }
-    }
-
-    var getDescription = function(datafield){
-        if(kohaTags.description.tag.indexOf(datafield.$.tag) === -1){
-            return null;
-        } else {
-            return retrieveTextFromMultipleSubfields(datafield, kohaTags.description.code);
-        }
-    }
-
-    var getEditor = function(datafield){
-        if(kohaTags.editor.tag.indexOf(datafield.$.tag) === -1){
-            return null;
-        } else {
-            return retrieveTextFromMultipleSubfields(datafield, kohaTags.editor.code);
-        }
-    }
-
-    var getDatePub = function(datafield){
-        if(kohaTags.datePub.tag.indexOf(datafield.$.tag) === -1){
-            return null;
-        } else {
-            return retrieveTextFromMultipleSubfields(datafield, kohaTags.datePub.code);
-        }
-    }
-
-    var getAuthorities = function(datafield){
-        if(kohaTags.authority.tag.indexOf(datafield.$.tag) === -1){
-            return null;
-        } else {
-            return retrieveMultipleTextsFromMultipleSubfields(datafield, kohaTags.authority.code);
-        }
     }
 
     var getTextFromSubfields = function (datafield, tag, separator) {
