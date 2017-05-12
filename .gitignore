@@ -3,6 +3,7 @@ mapgrid-js/node_modules
 bibliotouch-server/node_modules
 bibliotouch-server/bibliotouch-rejects.log
 bibliotouch-server/si
+bibliotouch-server/data
 bibliotouch-server/oai*.xml
 .vscode
 *.str

@@ -7,13 +7,14 @@ var Logger = require('../../helpers/logger');
 var config = require('config');
 var BiblioItems = require('./biblioitems');
 var coverDownloader = require('../../helpers/coverDownloader');
+var authorityManager = require('../../models/authorities');
 
-var Readable = require('stream').Readable
+var Readable = require('stream').Readable;
 
 var batchSize = 3000;
 var maxOAIPMHExports = 3000;
 var kohaTags = config.get('Bibliotouch.koha.kohaTags');
-var lastUpdateFilename = 'lastUpdate.json';
+var lastUpdateFilename = 'data/lastUpdate.json';
 var oaipmhEndpoint = `http://cataloguebib.enssib.fr/cgi-bin/koha/oai.pl`;
 
 var KohaImporter = function() {
@@ -96,6 +97,7 @@ KohaImporter.prototype.import = function(){
         recordStream.push(null);
 
         updateLastUpdateFile(mostRecentTimeStamp);
+        authorityManager.saveAuthorities();
 
         resolve(recordStream);
     }
@@ -151,7 +153,6 @@ KohaImporter.prototype.update = function(){
                     });
             } catch(e){
                     Logger.log('error',e);
-                    reject(e);
             }
             index += nbProcessed;
         }
@@ -161,6 +162,7 @@ KohaImporter.prototype.update = function(){
 
         
         updateLastUpdateFile();
+        authorityManager.saveAuthorities();
 
 
         resolve(recordStream);
@@ -175,15 +177,17 @@ KohaImporter.prototype.parseRecordObject = function(record){
     //Helper functions
     var retrieveTextFromMultipleSubfields = function(datafield, codes, separator) {
         var returnValue=null;
-        separator = (typeof separator === 'undefined') ? ' ' : separator;
+        separator = (separator === undefined) ? ' ' : separator;
         datafield.subfield.forEach(function(subfield){
             if(codes.indexOf(subfield.$.code) != -1){
-                if(returnValue===null){
-                    returnValue = '';
-                } else {
-                    returnValue += separator;
+                if(subfield._){
+                    if(returnValue===null){
+                        returnValue = '';
+                    } else {
+                        returnValue += separator;
+                    }
+                    returnValue += subfield._;
                 }
-                returnValue += subfield._;
             }
         });
         return returnValue;
@@ -193,7 +197,9 @@ KohaImporter.prototype.parseRecordObject = function(record){
         var returnValue=[];
         datafield.subfield.forEach(function(subfield){
             if(codes.indexOf(subfield.$.code) > -1){
-                returnValue.push(subfield._);
+                if(subfield._){
+                    returnValue.push(subfield._);
+                }
             }
         });
         return returnValue;
@@ -247,6 +253,13 @@ KohaImporter.prototype.parseRecordObject = function(record){
 
 
             record.datafield.forEach(function(datafield){
+                
+                let authorityObject = {
+                    sub : [],
+                    geo : [],
+                    form : []
+                };
+
                 let tmp_isbn = getTextFromSubfields(datafield, kohaTags.isbn);
                 isbn = tmp_isbn ? tmp_isbn : isbn;
 
@@ -298,8 +311,20 @@ KohaImporter.prototype.parseRecordObject = function(record){
                 let tmp_formTitle = getTextFromSubfields(datafield, kohaTags.formTitle);
                 formTitle = tmp_formTitle ? tmp_formTitle : formTitle;
 
-                let tmp_authorities = getMultipleTextsFromSubfields(datafield, kohaTags.authorities);
-                Array.prototype.push.apply(authorities,tmp_authorities);
+                let tmp_mainAuthority = getTextFromSubfields(datafield, kohaTags.mainAuthority);
+                tmp_mainAuthority ? authorityObject.main = tmp_mainAuthority : null;
+
+                let tmp_subAuthority = getMultipleTextsFromSubfields(datafield, kohaTags.subAuthority);
+                Array.prototype.push.apply(authorityObject.sub, tmp_subAuthority);
+
+                let tmp_geoAuthority = getMultipleTextsFromSubfields(datafield, kohaTags.geoAuthority);
+                Array.prototype.push.apply(authorityObject.geo,tmp_geoAuthority);
+
+                let tmp_dateAuthority = getTextFromSubfields(datafield, kohaTags.dateAuthority);
+                tmp_dateAuthority ? authorityObject.date = tmp_dateAuthority : null;
+
+                let tmp_formAuthority = getMultipleTextsFromSubfields(datafield, kohaTags.formAuthority);
+                Array.prototype.push.apply(authorityObject.form, tmp_formAuthority);
 
                 let tmp_freeIndex = getMultipleTextsFromSubfields(datafield, kohaTags.freeIndex);
                 Array.prototype.push.apply(freeIndex, tmp_freeIndex);
@@ -319,14 +344,21 @@ KohaImporter.prototype.parseRecordObject = function(record){
                 let tmp_author = getTextFromSubfields(datafield, kohaTags.authors);
                 tmp_author ? authors.push(tmp_author) : null;
 
+                //If authorityObject has main, we add it to authorities
+                if(authorityObject.main){
+                    authorities.push(authorityObject);
+                    //Here we should add content of auhtorityObject to Authority module
+                }
             });
 
             //Remove duplicates from authorities
+            /*
             let authorities_uniq = authorities.filter(function(elem, index,self){
                 return index==self.indexOf(elem);
-            })
+            });
+            */
 
-            
+            //Find Koha id of the record
             record.controlfield.forEach(function(controlfield){
                 if(controlfield.$.tag == '001'){
                     id = controlfield._;
@@ -337,6 +369,9 @@ KohaImporter.prototype.parseRecordObject = function(record){
                 reject('No ID found.');
                 return;
             }
+
+            //Reference record in authority tree
+            authorityManager.addBook(id, authorities);
 
             /* Do not download covers yet
             coverDownloader.dlCover({
@@ -364,7 +399,7 @@ KohaImporter.prototype.parseRecordObject = function(record){
                 collection : collection,
                 uniformTitle : uniformTitle,
                 formTitle : formTitle,
-                authorities : authorities_uniq,
+                authorities : authorities,
                 freeIndex : freeIndex,
                 cdu : cdu,
                 dewey : dewey,
