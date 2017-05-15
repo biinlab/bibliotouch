@@ -116,7 +116,7 @@ Search.prototype.search = function(query){
     return new Promise(async function(resolve, reject){
         if(!self.index){
             await self.initIndex();
-        };
+        }
 
         self.index.search(query)
             .on('data',function(doc){
@@ -124,9 +124,33 @@ Search.prototype.search = function(query){
             })
             .on('end',function(bleh){
                 resolve(results);
+            })
+            .on('error',function(err){
+                reject(err);
             });
     });
     
+}
+
+Search.prototype.match = function(query){
+    let self = this;
+    let results = [];
+
+    return new Promise(async function(resolve, reject){
+        if(!self.index){
+            await self.initIndex();
+        }
+        self.index.match(query)
+                    .on('data', function(match){
+                        results.push(match);
+                    })
+                    .on('end', function(){
+                        resolve(results);
+                    })
+                    .on('error', function(err){
+                        reject(err);
+                    });
+    })
 }
 
 module.exports = new Search();
