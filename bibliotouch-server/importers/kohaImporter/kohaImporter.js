@@ -16,6 +16,17 @@ var maxOAIPMHExports = 3000;
 var kohaTags = config.get('Bibliotouch.koha.kohaTags');
 var lastUpdateFilename = 'data/lastUpdate.json';
 var oaipmhEndpoint = `http://cataloguebib.enssib.fr/cgi-bin/koha/oai.pl`;
+var weirdWordRegex = /([\w]*[áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+[\w]*([áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+[\w]*)*)/g;
+var weirdA = /[áàâäãåÁÀÂÄÃÅ]/g;
+var weirdC = /[çÇ]/g;
+var weirdE = /[éèêëÉÈÊË]/g;
+var weirdI = /[íìîïÍÌÎÏ]/g;
+var weirdN = /[ñÑ]/g;
+var weirdO = /[óòôöõÓÒÔÖÕ]/g;
+var weirdU = /[úùûüÚÙÛÜ]/g;
+var weirdY = /[ýÿÝŸ]/g;
+var weirdAE = /[æÆ]/g;
+var weirdOE = /[œŒ]/g;
 
 var KohaImporter = function() {
     BiblioItems.sync().catch(function (err) {
@@ -23,6 +34,29 @@ var KohaImporter = function() {
         Logger.log('error',err);
     });
 }
+
+
+var getNormalizedWords = function(biblioObject){
+    let normalizedWords = [];
+    JSON.stringify(biblioObject).replace(weirdWordRegex,function(match){
+        let normalizedWord = match
+                                .replace(weirdA,'a')
+                                .replace(weirdAE,'ae')
+                                .replace(weirdC,'c')
+                                .replace(weirdE,'e')
+                                .replace(weirdI,'i')
+                                .replace(weirdN,'n')
+                                .replace(weirdO,'o')
+                                .replace(weirdOE,'oe')
+                                .replace(weirdU,'u')
+                                .replace(weirdY,'y');
+        if(normalizedWords.indexOf(normalizedWord) == -1){
+            normalizedWords.push(normalizedWord);
+        }
+    });
+    return normalizedWords;
+}
+
 var updateLastUpdateFile = function(date){
     let updateDate = date ||new Date();
     let importDate = {
@@ -407,6 +441,9 @@ KohaImporter.prototype.parseRecordObject = function(record){
                 otherClass : otherClass,
                 authors : authors
             }
+
+            bibliodocument.normalizedWords = getNormalizedWords(bibliodocument);
+
             resolve(bibliodocument);
         } else {
             let cause = 'Marcxml is null';
