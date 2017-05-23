@@ -6,5 +6,6 @@ bibliotouch-server/si
 bibliotouch-server/data
 bibliotouch-server/oai*.xml
 bibliotouch-front/node_modules
+bibliotouch-front/scripts/bundle.js
 .vscode
 *.str

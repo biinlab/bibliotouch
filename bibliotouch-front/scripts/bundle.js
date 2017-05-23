@@ -83235,8 +83235,8 @@ var ThemeMap = Vue.extend({
                     self.loading = false;
 
                     let sortedThemes = self.sortThemes(themes);
-                    self.pack(sortedThemes);
-                    sortedThemes.forEach(function(element) {
+                    let packedThemes = self.pack(sortedThemes);
+                    packedThemes.forEach(function(element) {
                         self.cthemes.push(element);
                     });
                     
@@ -83275,12 +83275,75 @@ var ThemeMap = Vue.extend({
             return sortedThemes;
         },
         pack : function(sortedThemes){
+            let getBiggestSizePack = function(roots){
+                let biggestW = -1;
+                let biggestH = -1;
+                for(let i = 0 ; i<roots.length ; i++){
+                    if(roots[i].w > biggestW){
+                        biggestW = roots[i].w;
+                    }
+                    if(roots[i].h > biggestH){
+                        biggestH = roots[i].h;
+                    }
+                }
+                return {w : biggestW, h : biggestH};
+            }
+
             if(sortedThemes.length == 0){
                 return;
             }
 
+            let multi = [];
+            multi[0] = [];  //upleft
+            multi[1] = [];  //upright
+            multi[2] = [];  //downleft
+            multi[3] = [];  //downright
+
+            let i = 0;
+            sortedThemes.forEach(function(theme){
+                multi[i%4].push(theme);
+                i++;
+            }, this)
+
             let packer = new PackerGrowing();
-            packer.fit(sortedThemes);
+            let roots = [];
+            for(i = 0 ; i<multi.length ; i++){
+                packer.fit(multi[i]);
+                roots.push({w : packer.root.w, h : packer.root.h});
+            }
+
+            let maxSizes = getBiggestSizePack(roots);
+
+            //Upleft
+            multi[0].forEach(function(theme){
+                theme.fit.x = maxSizes.w - theme.w - theme.fit.x;
+                theme.fit.y = maxSizes.h - theme.h - theme.fit.y;
+            });
+
+            //Upright
+            multi[1].forEach(function(theme){
+                theme.fit.x = theme.fit.x + maxSizes.w;
+                theme.fit.y = maxSizes.h - theme.h - theme.fit.y;
+            });
+
+            //DownLeft
+            multi[2].forEach(function(theme){
+                theme.fit.x = maxSizes.w - theme.w - theme.fit.x;
+                theme.fit.y = theme.fit.y + maxSizes.h;
+            });
+
+            //Downright
+            multi[3].forEach(function(theme){
+                theme.fit.x = theme.fit.x + maxSizes.w;
+                theme.fit.y = theme.fit.y + maxSizes.h;
+            });
+
+            let packedThemes = [];
+            for(i = 0 ; i < multi.length ; i++){
+                Array.prototype.push.apply(packedThemes, multi[i]);
+            }
+
+            return packedThemes;
         }
     }
 });
