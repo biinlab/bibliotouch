@@ -17,9 +17,9 @@ describe('Basic server running', function(){
             });
         });
         
-        it('returns "Yo!"', function(done){
+        it('returns "Hello"', function(done){
             chai.request(app).get('/').then(function(res){
-                expect(res.text).to.contain('Yo!');
+                expect(res.text).to.contain('Hello');
                 done();
             }).catch(function(err){
                 done(err);
