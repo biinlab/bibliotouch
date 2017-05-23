@@ -1,9 +1,7 @@
-
 var fs = require('fs');
 var Logger = require('../helpers/logger');
 
 var authoritiesFile = 'data/authorities.json';
-
 var mainLength = 0;
 var authorities = {};
 authorities.nbMain = 0;
@@ -12,6 +10,10 @@ authorities.books = [];
 
 var Authorities = function(){
     this.loadAuthorities();
+}
+
+Authorities.prototype.getAuthorities = function(){
+    return authorities;
 }
 
 Authorities.prototype.saveAuthorities = function(){

@@ -1,10 +1,12 @@
 var express = require('express');
+var compression = require('compression');
 var controllers = require('./controllers');
 var KohaImporter = require('./importers/kohaImporter/kohaImporter');
 var indexer = require('./helpers/searchIndex');
 var parseArgs = require('minimist');
 var schedule = require('node-schedule');
 var config = require('config');
+var fs = require('fs');
 
 
 var argv = parseArgs(process.argv.slice(2));
@@ -13,9 +15,12 @@ var argv = parseArgs(process.argv.slice(2));
 var app = express();
 var serverPort = argv.port ? argv.port : 8080;
 
+app.use(compression());
 app.use(controllers);
+app.use('/', express.static('../bibliotouch-front'));
 
-
+//Initialize data directory
+fs.mkdir('data', err => console.log('Did not create "data" directory'));
 
 var importer;
 if(argv.adapter == 'koha'){
