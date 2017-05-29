@@ -93,6 +93,7 @@ KohaImporter.prototype.import = function(){
         }
         let nbToProcess = nbDocs;
         let nbProcessed = 0;
+        authorityManager.flushAuthorities();
 
         while (nbToProcess > 0) {
             let nbToRetrieve = nbToProcess >= batchSize ? batchSize : nbToProcess;
@@ -278,6 +279,7 @@ KohaImporter.prototype.parseRecordObject = function(record){
             let uniformTitle = null;//500a N
             let formTitle = null;   //503a N
             let authorities = [];   //600-607,616ajxy   -- several
+            let mainAuthorities = [];
             let freeIndex = [];     //610[a] N          -- several
             let cdu = [];           //675[a] N          -- several
             let dewey = null;       //676a N
@@ -346,7 +348,10 @@ KohaImporter.prototype.parseRecordObject = function(record){
                 formTitle = tmp_formTitle ? tmp_formTitle : formTitle;
 
                 let tmp_mainAuthority = getTextFromSubfields(datafield, kohaTags.mainAuthority);
-                tmp_mainAuthority ? authorityObject.main = tmp_mainAuthority : null;
+                if(tmp_mainAuthority){
+                    authorityObject.main = tmp_mainAuthority;
+                    mainAuthorities.push(tmp_mainAuthority);
+                }
 
                 let tmp_subAuthority = getMultipleTextsFromSubfields(datafield, kohaTags.subAuthority);
                 Array.prototype.push.apply(authorityObject.sub, tmp_subAuthority);
@@ -434,6 +439,7 @@ KohaImporter.prototype.parseRecordObject = function(record){
                 uniformTitle : uniformTitle,
                 formTitle : formTitle,
                 authorities : authorities,
+                mainAuthorities : mainAuthorities,
                 freeIndex : freeIndex,
                 cdu : cdu,
                 dewey : dewey,

@@ -132,6 +132,41 @@ Search.prototype.search = function(query){
     
 }
 
+Search.prototype.totalHits = function(query){
+    let self = this;
+    return new Promise(async function(resolve, reject){
+        if(!self.index){
+            await self.initIndex();
+        }
+
+        self.index.totalHits(query, function(err,counts){
+            if(err){
+                reject(err);
+            } else {
+                resolve(counts);
+            }
+        })
+    });
+}
+
+Search.prototype.get = function(ids){
+    let self = this;
+    let docs = [];
+    return new Promise(async function(resolve, reject){
+        if(!self.index){
+            await self.initIndex();
+        }
+
+        self.index.get(ids).on('data', function(doc){
+            docs.push(doc);
+        }).on('end', function(){
+            resolve(docs);
+        }).on('error', function(err){
+            reject(err);
+        })
+    })
+}
+
 Search.prototype.match = function(query){
     let self = this;
     let results = [];

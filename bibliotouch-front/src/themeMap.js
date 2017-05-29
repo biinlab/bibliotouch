@@ -1,20 +1,58 @@
 var Vue = require('vue');
+var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
-var PackerGrowing = require('./packerGrowing');
+var PackerGrowing = require('./helpers/packerGrowing');
 
-
-Vue.component('theme-wrapper', {
-    template : `<div v-bind:style="{
-                        border : '1px solid black',
-                        position : 'absolute',
-                        left : theme.fit.x + 'px',
-                        top : theme.fit.y + 'px',
-                        width : theme.w + 'px',
-                        height : theme.h + 'px'}">
-    
-                </div>`,
-    props : ['theme']
+Vue.use(VueLazyLoad, {
+    preLoad : 2,
+    lazyComponent : true
 });
+
+var BookElement = {
+    template : `<div>
+                    <img></img>
+                    <p>{{book.title}}</p>
+                </div>`,
+    props : ['book']
+}
+
+var ThemeWrapper = {
+    template : `<lazy-component 
+                            @show="loadBooks"
+                            v-bind:style="{
+                            border : '1px solid black',
+                            position : 'absolute',
+                            left : theme.fit.x + 'px',
+                            top : theme.fit.y + 'px',
+                            width : theme.w + 'px',
+                            height : theme.h + 'px'}">
+                    <book-element
+                                v-for="book in books"
+                                v-bind:key="book.id"
+                                v-bind:book="book">
+                    </book-element>
+                </lazy-component>`,
+    props : ['theme'],
+    data : function () {
+        return {
+            books : []
+        }
+    },
+    methods : {
+        loadBooks : function(component){
+            let self = this;
+            requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/themes/${component.$parent.theme.name}/books`)
+                .then(function(retrievedBooks){
+                    JSON.parse(retrievedBooks).forEach(function(book){
+                        self.books.push(book);
+                    })
+                });
+        }
+    },
+    components : {
+        'book-element' : BookElement
+    }
+};
 
 var ThemeMap = Vue.extend({
     template : `<div>
@@ -150,6 +188,9 @@ var ThemeMap = Vue.extend({
 
             return packedThemes;
         }
+    },
+    components : {
+        'theme-wrapper' : ThemeWrapper
     }
 });
 

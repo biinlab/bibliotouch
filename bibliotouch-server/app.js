@@ -51,7 +51,8 @@ if(argv.flush){
         schedule.scheduleJob(cron, function(){
             importer.update();
         })
-    })
+    });
+    indexer.initIndex();
     //Start server app
     app.listen(serverPort, function () {
         console.log(`Server running on port ${serverPort}`);

@@ -16,6 +16,13 @@ Authorities.prototype.getAuthorities = function(){
     return authorities;
 }
 
+Authorities.prototype.flushAuthorities = function(){
+    authorities = {};
+    authorities.nbMain = 0;
+    authorities.nbBooks = 0;
+    authorities.books = [];
+}
+
 Authorities.prototype.saveAuthorities = function(){
     fs.writeFile(authoritiesFile, JSON.stringify(authorities), function(err){
         if (err) {
@@ -44,7 +51,7 @@ Authorities.prototype.addMain = function(mainAuth){
         authorities.nbMain++;
     }
 }
-
+/*
 Authorities.prototype.addSub = function(main, sub){
     this.addMain(main);
     if(!authorities[main][sub]){
@@ -65,7 +72,7 @@ Authorities.prototype.addSubSub = function(main, sub, subsub){
         authorities[main][sub].nbSubSub++;
     }
 }
-
+*/
 Authorities.prototype.addBook = function(book, authorityList){
     
     let vedetteTree = {};
@@ -91,11 +98,11 @@ Authorities.prototype.addBook = function(book, authorityList){
             case 0 :
                 authorities.books.push(book);
                 break;
-            case 1 :
+            default :
                 vedetteTree[vedettes[0]] = {};
                 this.addMain(vedettes[0]);
                 authorities[vedettes[0]].books.push(book);
-                break;
+                break;/*
             case 2 :
                 vedetteTree[vedettes[0]] = {};
                 vedetteTree[vedettes[0]][vedettes[1]] = {};
@@ -107,18 +114,18 @@ Authorities.prototype.addBook = function(book, authorityList){
                 vedetteTree[vedettes[0]][vedettes[1]] = {};
                 vedetteTree[vedettes[0]][vedettes[1]][vedettes[2]] = {};
                 this.addSubSub(vedettes[0],vedettes[1],vedettes[2]);
-                authorities[vedettes[0]][vedettes[1]][vedettes[2]].books.push(book);
+                authorities[vedettes[0]][vedettes[1]][vedettes[2]].books.push(book);*/
         }
     }, this);
 
     for(var vedette in vedetteTree){
         authorities[vedette].nbBooks++;
-        for(var ssvedette in vedetteTree[vedette]){
+        /*for(var ssvedette in vedetteTree[vedette]){
             authorities[vedette][ssvedette].nbBooks++;
             for(var ssssvedette in vedetteTree[vedette][ssvedette]){
                 authorities[vedette][ssvedette][ssssvedette].nbBooks++;
             }
-        }
+        }*/
     }
     authorities.nbBooks++;
 

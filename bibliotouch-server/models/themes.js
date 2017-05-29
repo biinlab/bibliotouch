@@ -36,7 +36,8 @@ Themes.prototype.defineThemes = function(){
                 themes[item] = {
                     occ : 1,
                     vedettes : [vedette],
-                    nbBooks : authorities[vedette].nbBooks
+                    nbBooks : authorities[vedette].nbBooks,
+                    name : item
                 };
             } else {
                 themes[item].occ++;
@@ -109,6 +110,14 @@ Themes.prototype.getThemes = function(){
         this.defineThemes();
     }
     return themes;
+}
+
+Themes.prototype.getEmptyTheme = function(){
+    return {
+        occ : 0,
+        vedettes : [],
+        nbBooks : 0
+    }
 }
 
 module.exports = new Themes();

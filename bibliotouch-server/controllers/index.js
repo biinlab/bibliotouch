@@ -5,6 +5,6 @@ var router = express.Router();
 
 router.use('/search', require('./search'));
 router.use('/autocomplete', require('./autocomplete'));
-router.use('/themes', require('./themes'));
+router.use('/themes', require('./themesController'));
 
 module.exports = router;
