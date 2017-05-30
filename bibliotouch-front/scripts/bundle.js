@@ -83001,6 +83001,26 @@ function extend() {
 }
 
 },{}],368:[function(require,module,exports){
+//require('dragscroll');
+
+var FixedGridDispatcher = function () {
+}
+
+FixedGridDispatcher.prototype.dispatch = function(elements, columns, cellWidth, cellHeight) {
+    let i = 0;
+
+    elements.forEach(function(element) {
+        element.dispatch = {
+            x : (i%columns)*cellWidth,
+            y : Math.trunc(i/columns)*cellHeight
+        };
+        i++;
+    }, this);
+}
+
+
+module.exports = new FixedGridDispatcher();
+},{}],369:[function(require,module,exports){
 /******************************************************************************
 
 Copyright (c) 2011 Jake Gordon and contributors
@@ -83168,7 +83188,7 @@ GrowingPacker.prototype = {
 }
 
 module.exports = GrowingPacker;
-},{}],369:[function(require,module,exports){
+},{}],370:[function(require,module,exports){
 var Vue = require('vue');
 var VueRouter = require('vue-router');
 
@@ -83199,19 +83219,64 @@ const app = new Vue({
   router
 }).$mount('#app')
 
-},{"./themeMap":370,"vue":366,"vue-router":365}],370:[function(require,module,exports){
+},{"./themeMap":371,"vue":366,"vue-router":365}],371:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
 var PackerGrowing = require('./helpers/packerGrowing');
+var gridDispatcher = require('./helpers/fixedGRidDispatcher');
+//var dragscroll = require('dragscroll');
+
+var bookcellHeight = 96,
+    bookcellWidth = 72;
+
+var mousemove, mousedown, mouseup;
 
 Vue.use(VueLazyLoad, {
-    preLoad : 2,
+    preLoad : 3,
     lazyComponent : true
 });
 
+var enableDragScroll = function(){
+    var curYPos, curXPos, curDown;
+
+    mousemove = function(e){ 
+        if(curDown){
+            window.scrollTo(scrollX - e.movementX, scrollY - e.movementY);
+        }
+    };
+
+    mousedown = function(e){ 
+        curYPos = e.pageY; 
+        curXPos = e.pageX; 
+        curDown = true; 
+    };
+
+    mouseup =  function(e){ 
+        curDown = false; 
+    };
+
+    window.addEventListener('mousemove', mousemove);
+
+    window.addEventListener('mousedown', mousedown);
+
+    window.addEventListener('mouseup', mouseup);
+};
+
+var disableDragScroll = function(){
+    window.removeEventListener('mousemove', mousemove);
+    window.removeEventListener('mousedown', mousedown);
+    window.removeEventListener('mouseup', mouseup);
+}
+
 var BookElement = {
-    template : `<div>
+    template : `<div v-bind:style="{
+                        border : '1px solid blue',
+                        position : 'absolute',
+                        left : book.dispatch.x + 'px',
+                        top : book.dispatch.y + 'px',
+                        width : ${bookcellWidth} + 'px',
+                        height : ${bookcellHeight} + 'px'}">
                     <img></img>
                     <p>{{book.title}}</p>
                 </div>`,
@@ -83227,7 +83292,8 @@ var ThemeWrapper = {
                             left : theme.fit.x + 'px',
                             top : theme.fit.y + 'px',
                             width : theme.w + 'px',
-                            height : theme.h + 'px'}">
+                            height : theme.h + 'px',         
+                            userSelect: 'none'}">
                     <book-element
                                 v-for="book in books"
                                 v-bind:key="book.id"
@@ -83245,9 +83311,11 @@ var ThemeWrapper = {
             let self = this;
             requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/themes/${component.$parent.theme.name}/books`)
                 .then(function(retrievedBooks){
-                    JSON.parse(retrievedBooks).forEach(function(book){
+                    let parsedBooks = JSON.parse(retrievedBooks);
+                    gridDispatcher.dispatch(parsedBooks,component.$parent.theme.w/bookcellWidth, bookcellWidth, bookcellHeight);
+                    parsedBooks.forEach(function(book){
                         self.books.push(book);
-                    })
+                    });
                 });
         }
     },
@@ -83268,8 +83336,8 @@ var ThemeMap = Vue.extend({
             cthemes : [],
             error : null,
             loading : false,
-            bookcellHeight : 96,
-            bookcellWidth : 72
+            bookcellHeight : bookcellHeight,
+            bookcellWidth : bookcellWidth
         }
     },
     created: function(){
@@ -83284,12 +83352,16 @@ var ThemeMap = Vue.extend({
                     packedThemes.forEach(function(element) {
                         self.cthemes.push(element);
                     });
+                    enableDragScroll();
                     
                 },function(err){
                     self.error = err;
                     self.loading = false;
                     console.error(err);
                 })
+    },
+    beforeDestroy: function(){
+        disableDragScroll();
     },
     methods: {
         retrieveThemeMapJson : function(){
@@ -83397,4 +83469,4 @@ var ThemeMap = Vue.extend({
 });
 
 module.exports = ThemeMap;
-},{"./helpers/packerGrowing":368,"request-promise-native":286,"vue":366,"vue-lazyload":364}]},{},[369]);
+},{"./helpers/fixedGRidDispatcher":368,"./helpers/packerGrowing":369,"request-promise-native":286,"vue":366,"vue-lazyload":364}]},{},[370]);

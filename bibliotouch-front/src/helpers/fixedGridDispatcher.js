@@ -16,4 +16,4 @@ FixedGridDispatcher.prototype.dispatch = function(elements, columns, cellWidth, 
 }
 
 
-module.exports = FixedGridDispatcher;
+module.exports = new FixedGridDispatcher();

@@ -7,7 +7,6 @@ var themesFile = 'data/themes.json';
 
 var themes;
 var sortable;
-var authorities;
 var lastThemeDefinition;
 
 var Themes = function(){
@@ -18,11 +17,11 @@ var Themes = function(){
 
 Themes.prototype.defineThemes = function(){
     
-    authorities = Authorities.getAuthorities();
     themes = {};
     sortable = [];
     var stringToWrite = '', stringToWriteBinPack = '';
     var minOcc = 10;
+    let authorities = Authorities.getAuthorities();
 
     for(var vedette in authorities){
         let vedette_inter = vedette
@@ -36,13 +35,11 @@ Themes.prototype.defineThemes = function(){
                 themes[item] = {
                     occ : 1,
                     vedettes : [vedette],
-                    nbBooks : authorities[vedette].nbBooks,
                     name : item
                 };
             } else {
                 themes[item].occ++;
                 themes[item].vedettes.push(vedette);
-                themes[item].nbBooks += authorities[vedette].nbBooks;
             }
         },this);
     }
@@ -51,7 +48,6 @@ Themes.prototype.defineThemes = function(){
     for(var key in themes){
         if(key.endsWith('s') && key.length > 1 && themes[key.slice(0,-1)] != undefined){
             themes[key.slice(0,-1)].occ += themes[key].occ;
-            themes[key.slice(0,-1)].nbBooks += themes[key].nbBooks;
             Array.prototype.push.apply(themes[key.slice(0,-1)].vedettes, themes[key].vedettes);
             delete themes[key];
         }
@@ -61,16 +57,17 @@ Themes.prototype.defineThemes = function(){
     for(var key in themes){
         if(key.endsWith('e') && key.length > 1 && themes[key.slice(0,-1)] != undefined){
             themes[key].occ += themes[key.slice(0,-1)].occ;
-            themes[key].nbBooks += themes[key.slice(0,-1)].nbBooks;
             Array.prototype.push.apply(themes[key].vedettes, themes[key.slice(0,-1)].vedettes);
             delete themes[key.slice(0,-1)];
         }
     }
 
-    //Remove themes with less than 10 occ
+    //Remove themes with less than 10 occ, else get number of books
     for(var key in themes){
         if(themes[key].occ < minOcc){
             delete themes[key];
+        } else {
+            themes[key].nbBooks = this.getNbBooksInTheme(key);
         }
     }
 
@@ -102,6 +99,20 @@ Themes.prototype.defineThemes = function(){
     fs.writeFile('data/pouet3.txt', stringToWriteBinPack, err => console.log('File written'));
     fs.writeFile(themesFile, JSON.stringify(themes), err => console.log('File written'));
     */
+}
+
+Themes.prototype.getNbBooksInTheme = function(theme){
+    let idsToRetrieve = [];
+
+    themes[theme].vedettes.forEach(function(vedette) {
+        Array.prototype.push.apply(idsToRetrieve, Authorities.getAuthorities()[vedette].books)
+    });
+
+    let uniqueIds = idsToRetrieve.filter(function(elem, index, self) {
+        return index == self.indexOf(elem);
+    })
+
+    return uniqueIds.length;
 }
 
 Themes.prototype.getThemes = function(){
