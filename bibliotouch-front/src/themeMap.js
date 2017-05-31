@@ -2,7 +2,7 @@ var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
 var PackerGrowing = require('./helpers/packerGrowing');
-var gridDispatcher = require('./helpers/fixedGRidDispatcher');
+var gridDispatcher = require('./helpers/fixedGridDispatcher');
 
 var bookcellHeight = 140,
     bookcellWidth = 116,
