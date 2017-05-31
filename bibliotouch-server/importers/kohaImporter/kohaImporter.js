@@ -412,12 +412,11 @@ KohaImporter.prototype.parseRecordObject = function(record){
             //Reference record in authority tree
             authorityManager.addBook(id, authorities);
 
-            /* Do not download covers yet
+            //Do not download covers yet - Do downlaod
             coverDownloader.dlCover({
                 isbn : isbn,
                 issn : issn
             });
-            */
 
             var bibliodocument = {
                 id : id,

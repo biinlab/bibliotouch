@@ -4,6 +4,7 @@ bibliotouch-server/node_modules
 bibliotouch-server/bibliotouch-rejects.log
 bibliotouch-server/si
 bibliotouch-server/data
+bibliotouch-server/covers
 bibliotouch-server/oai*.xml
 bibliotouch-front/node_modules
 bibliotouch-front/scripts/bundle.js

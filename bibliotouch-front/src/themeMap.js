@@ -4,8 +4,10 @@ var requestp = require('request-promise-native');
 var PackerGrowing = require('./helpers/packerGrowing');
 var gridDispatcher = require('./helpers/fixedGRidDispatcher');
 
-var bookcellHeight = 96,
-    bookcellWidth = 72;
+var bookcellHeight = 140,
+    bookcellWidth = 116,
+    bookcoverHeight = 80,
+    bookcoverWidth = 56;
 
 var mousemove, mousedown, mouseup;
 
@@ -54,7 +56,11 @@ var BookElement = {
                         top : book.dispatch.y + 'px',
                         width : ${bookcellWidth} + 'px',
                         height : ${bookcellHeight} + 'px'}">
-                    <img></img>
+                    <img v-bind:style="{
+                            width : ${bookcoverWidth} + 'px',
+                            height : ${bookcoverHeight} + 'px
+                    }">
+                    </img>
                     <p>{{book.title}}</p>
                 </div>`,
     props : ['book']
