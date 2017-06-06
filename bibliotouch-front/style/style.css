@@ -1,0 +1,17 @@
+p {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0
+}
+
+.book-enter-active, .book-leave-active {
+  transition: opacity .2s
+}
+.book-enter, .book-leave-to /* .book-leave-active in <2.1.8 */ {
+  opacity: 0
+}

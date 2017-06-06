@@ -412,11 +412,6 @@ KohaImporter.prototype.parseRecordObject = function(record){
             //Reference record in authority tree
             authorityManager.addBook(id, authorities);
 
-            //Do not download covers yet - Do downlaod
-            coverDownloader.dlCover({
-                isbn : isbn,
-                issn : issn
-            });
 
             var bibliodocument = {
                 id : id,
@@ -446,6 +441,9 @@ KohaImporter.prototype.parseRecordObject = function(record){
                 otherClass : otherClass,
                 authors : authors
             }
+
+            //Do not download covers yet - Do downlaod
+            coverDownloader.dlCover(bibliodocument);
 
             bibliodocument.normalizedWords = getNormalizedWords(bibliodocument);
 

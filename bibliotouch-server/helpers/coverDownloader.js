@@ -2,6 +2,12 @@ var queue = require('queue');
 var request = require('request');
 var sharp  = require('sharp');
 var fs = require('fs');
+var Logger = require('./logger');
+var index = require('./searchIndex');
+
+
+var coversFile = 'data/covers.json';
+var covers = {};
 
 function convertISBN(isbn)
 {
@@ -93,15 +99,41 @@ function convertISBN(isbn)
 
 
 var CoverDownloader = function () {
+    let self = this;
     this.q = queue({
         concurrency : 15,
         autostart : true,
         timeout : 5000
     });
 
+    this.loadCoversFile();
+
     this.q.on('error', function (err) {
         console.log(err);
     });
+
+    this.q.on('end', function (){
+        self.saveCoversFile()
+    })
+}
+
+CoverDownloader.prototype.saveCoversFile = function(){
+    fs.writeFile(coversFile, JSON.stringify(covers), function(err){
+        if (err) {
+            Logger.log('error',err);
+        }
+    });
+}
+
+CoverDownloader.prototype.loadCoversFile = function(){
+    try{
+        covers = require('../'+coversFile);
+        console.log('Covers file succesfully loaded');
+    } catch(e){
+        let msg = 'Error while loading covers file.';
+        console.log(msg);
+        Logger.log('error', msg);
+    }
 }
 
 var createDownloadDir = function () {
@@ -154,11 +186,11 @@ var downloadFromCode = function (code, type) {
     })
 };
 
-var getFromIsbnOnAmazonSecretApi = function(isbn){
+var getFromIsbnOnAmazonSecretApi = function(book){
     let type = 'isbn';
-    let cleanedCode = isbn.replace(/[^0-9]/g,'');
+    let cleanedCode = book.isbn.replace(/[^0-9]/g,'');
     if(cleanedCode.length == 13) {
-        cleanedCode = convertISBN(isbn);
+        cleanedCode = convertISBN(book.isbn);
     } else if(cleanedCode != 10){
         return;
     }
@@ -171,30 +203,33 @@ var getFromIsbnOnAmazonSecretApi = function(isbn){
     let jpeg = req.pipe(sharp().jpeg());
     jpeg.metadata().then(function(metadata){
         if(metadata.width != 1 && metadata.height != 1){
-            jpeg.pipe(fs.createWriteStream(`./covers/${type}/${isbn}.jpg`));
+            covers[book.id] = true;
+            jpeg.pipe(fs.createWriteStream(`./covers/${type}/${book.isbn}.jpg`));
             jpeg.pipe(sharp().resize(56).jpeg())
-                .pipe(fs.createWriteStream(`./covers/${type}/${isbn}-56.jpg`));
+                .pipe(fs.createWriteStream(`./covers/${type}/${book.isbn}-56.jpg`));
         }
     }).catch(function(err){
-
     })
                 
 }
 
-CoverDownloader.prototype.dlCover = function(idObject){
-    if(idObject.isbn) {
+CoverDownloader.prototype.dlCover = function(book){
+    if(book.isbn) {
         this.q.push(function () {
-            //downloadFromCode(idObject.isbn, 'isbn');
-            getFromIsbnOnAmazonSecretApi(idObject.isbn);
+            //downloadFromCode(book.isbn, 'isbn');
+            getFromIsbnOnAmazonSecretApi(book);
         });
-    } else if (idObject.issn) {
+    } else if (book.issn) {
         /*
         this.q.push(function () {
-            downloadFromCode(idObject.issn, 'issn');
+            downloadFromCode(book.issn, 'issn');
         });*/
     }
 }
 
+CoverDownloader.prototype.hasCover = function(id) {
+    return covers[id] ? true : false;
+}
 
 
 module.exports = new CoverDownloader();

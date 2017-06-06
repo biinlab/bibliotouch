@@ -18,6 +18,7 @@ var serverPort = argv.port ? argv.port : 8080;
 app.use(compression());
 app.use(controllers);
 app.use('/', express.static('../bibliotouch-front'));
+app.use('/covers', express.static('./covers'));
 
 //Initialize data directory
 fs.mkdir('data', err => console.log('Did not create "data" directory'));

@@ -3,6 +3,7 @@ const fs = require('fs');
 var path = require('path');
 var searchIndex = require('search-index');
 var Logger = require('./logger');
+var coverDownloader = require('./coverDownloader');
 
 
 var searchIndexOption = {
@@ -120,6 +121,7 @@ Search.prototype.search = function(query){
 
         self.index.search(query)
             .on('data',function(doc){
+                doc.document.hasCover = coverDownloader.hasCover(doc.id);
                 results.push(doc);
             })
             .on('end',function(bleh){
@@ -158,6 +160,7 @@ Search.prototype.get = function(ids){
         }
 
         self.index.get(ids).on('data', function(doc){
+            doc.hasCover = coverDownloader.hasCover(doc.id);
             docs.push(doc);
         }).on('end', function(){
             resolve(docs);
