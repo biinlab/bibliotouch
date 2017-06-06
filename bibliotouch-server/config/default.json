@@ -15,6 +15,9 @@
                 "user" : "bibliotouch",
                 "pwd" : "bibliotouch"
             },
+            "oaipmhEndpoint" : {
+                "url" : "http://cataloguebib.enssib.fr/cgi-bin/koha/oai.pl"
+            },
             "kohaTags" :{
                 "isbn" : {
                     "tag" : ["010"],

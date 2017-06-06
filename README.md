@@ -32,12 +32,20 @@ The db should have a table `BIBLIOITEMS` (corresponding to an export of the Koha
 
 ### Server initial import
 `npm --prefix ./bibliotouch-server/ run flush`
+This will empty the index when run and then is going to look for a mysql server to import documents from. Once the import from the mysql server is done it is going to update its records using the Koha OAIPMH url given in the config file.
 
 ### Server test
 `npm --prefix ./bibliotouch-server/ test`
+This will run the Express server and check that the homepage is showing
 
 ### Server start
 `npm --prefix ./bibliotouch-server/ start`
+This will start the web server and a bunch of processes to make sure the index is kept updated.
+1. Update from the Koha OAIPMH endpoint (using the date from `data/lastUpdate.json` file)
+    1. Authorities tree (`models/authorities.js`) is going to be updated
+    2. Themes (`models/themes.js`) are recalculated
+2. Set a cron job (editable in config file) to update again
+3. Start the Express server
 
 The website is then available on [http://localhost:8080](http://localhost:8080)
 
