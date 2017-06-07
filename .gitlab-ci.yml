@@ -18,7 +18,6 @@ cache:
 before_script:
   - apt-get update
   - apt-get install -y mysql-client libmysqlclient-dev
-before_script:
   # Install ssh-agent if not already installed, it is required by Docker.
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
   # Run ssh-agent (inside the build environment)
