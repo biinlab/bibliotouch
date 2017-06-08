@@ -19,6 +19,10 @@ Vue.use(VueLazyLoad, {
     lazyComponent : true
 });
 
+var getDistance = function(x1, y1, x2, y2){
+    return Math.hypot(x2-x1, y2-y1)
+}
+
 var enableDragScroll = function(){
     var curYPos, curXPos, curDown;
 
@@ -186,35 +190,57 @@ var ThemeMap = Vue.extend({
                                     v-bind:key="theme.id"
                                     v-bind:theme="theme">
                     </theme-wrapper>
-                    <transition name="fade">
-                        <div   v-bind:style="{
-                                        position : 'fixed',
-                                        left : '33%',
-                                        top : '33%',
-                                        fontFamily : 'Montserrat',
-                                        color: '#000000',
-                                        zIndex : '-5',         
-                                        userSelect: 'none'
+                    <div   v-bind:style="{
+                                    position : 'fixed',
+                                    left: '50%',
+                                    top: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    fontFamily : 'Montserrat',
+                                    color: '#000000',
+                                    zIndex : '-5',         
+                                    userSelect: 'none'
+                                }">
+                        <p  v-bind:style="{
+                                    fontSize : '150px',
+                                    textTransform : 'capitalize',
+                                    letterSpacing: '0',
+                                    lineHeight: '200px',
+                                    margin : '0px'
                                     }">
-                                <p  v-bind:style="{
-                                            fontSize : '150px',
-                                            textTransform : 'capitalize',
-                                            letterSpacing: '0',
-                                            lineHeight: '200px',
-                                            margin : '0px'
-                                            }">
-                                    {{currentTheme}}
-                                </p>
-                                <p  v-if="nbBooks > 0"
-                                    v-bind:style="{
-                                            fontSize : '30px',
-                                            lineHeight: '15px',
-                                            margin : '0'
-                                            }">
-                                    {{nbBooks}} documents
-                                </p>
-                        </div>
-                    </transition>
+                            {{currentTheme}}
+                        </p>
+                        <p  v-if="nbBooks > 0"
+                            v-bind:style="{
+                                    fontSize : '30px',
+                                    lineHeight: '15px',
+                                    margin : '0'
+                                    }">
+                            {{nbBooks}} documents
+                        </p>
+                    </div>
+                        <div v-if="showLeftNeighbour && leftNeighbour"
+                            v-bind:style="{
+                                    position : 'fixed',
+                                    left : '0px',
+                                    top : '50%',
+                                    transform: 'translate(0, -50%)',
+                                    margin : '10px'
+                            }">
+                            <div v-bind:style="{
+                                        width : '12px',
+                                        height : '12px',
+                                        borderRadius : '6px',
+                                        backgroundColor : 'black'
+                                    }">
+                            </div>
+                            <div v-bind:style="{
+                                    color : 'white',
+                                    backgroundColor : 'black',
+                                    borderRadius : '100px'
+                                }">
+                                <p>{{leftNeighbour.name}}</p>
+                            </div>
+                    </div>
                 </div>`,
     data : function(){
         return {
@@ -224,7 +250,16 @@ var ThemeMap = Vue.extend({
             currentTheme : '',
             nbBooks : 0,
             bookcellHeight : bookcellHeight,
-            bookcellWidth : bookcellWidth
+            bookcellWidth : bookcellWidth,
+            mapSize : null,
+            topNeighbour : null,
+            botNeighbour : null,
+            leftNeighbour : null,
+            rightNeighbour : null,
+            showTopNeighbour : false,
+            showBotNeighbour : false,
+            showLeftNeighbour : false,
+            showRightNeighbour : false
         }
     },
     created: function(){
@@ -242,16 +277,55 @@ var ThemeMap = Vue.extend({
                     enableDragScroll();
                     window.setInterval(function(){
                         let curX = window.scrollX+window.innerWidth/2, curY = window.scrollY+window.innerHeight/2;
-                        self.cthemes.forEach(function(element){
+                        for(let element of self.cthemes){
                             if(curX >= element.fit.x && curX < (element.fit.x + element.w) && curY >= element.fit.y && curY < (element.fit.y + element.h)){
                                 if(self.currentTheme != element.name){
                                     self.currentTheme = element.name;
                                     self.nbBooks = element.nbBooks;
+                                    self.findNeighbours(element);
+                                    break;
                                 }
                             }
-                        });
-                    }, 200);
-                    
+                        }
+                    }, 300);
+                    window.setTimeout(function(){
+                        if(self.mapSize){
+                            window.scrollTo(self.mapSize.w/2,self.mapSize.h/2);
+                        }
+                    }, 500);
+
+                    self.scrollTimer = -1;
+                    window.onscroll = function(e){
+                        var hideNeighbour = function(){
+                            self.showTopNeighbour = self.showBotNeighbour = self.showLeftNeighbour = self.showRightNeighbour = false;
+                        }
+
+                        var showNeighbours = function(event){
+                            if(self.lastXPos && self.lastYPos){
+                                if(event.pageY < self.lastYPos){
+                                    self.showTopNeighbour = true;
+                                }
+                                if(event.pageY > self.lastYPos){
+                                    self.showBotNeighbour = true;
+                                }
+                                if(event.pageX < self.lastXPos){
+                                    self.showLeftNeighbour = true;
+                                }
+                                if(event.pageX > self.lastXPos){
+                                    self.showRightNeighbour = true;
+                                }
+                            }
+                            self.lastXPos = event.pageX;
+                            self.lastYPos = event.pageY;
+                        }
+
+                        showNeighbours(e);
+                        if(self.scrollTimer != -1){
+                            clearTimeout(self.scrollTimer);
+                        }
+                        self.scrollTimer = window.setTimeout(hideNeighbour, 500);
+                    };
+                    window.on
                 },function(err){
                     self.error = err;
                     self.loading = false;
@@ -328,7 +402,12 @@ var ThemeMap = Vue.extend({
             }
 
             let maxSizes = getBiggestSizePack(roots);
-
+            this.mapSize = {
+                w : maxSizes.w*2,
+                h : maxSizes.h*2
+            }
+            //Now we have 4 packs oriented each of them to the top-left
+            //We transform each of the elements to obtain a 2x2 square of the 4 packs and all of them oriented to center of the 2x2 square
             //Upleft
             multi[0].forEach(function(theme){
                 theme.fit.x = maxSizes.w - theme.w - theme.fit.x;
@@ -359,6 +438,53 @@ var ThemeMap = Vue.extend({
             }
 
             return packedThemes;
+        },
+        findNeighbours : function(currentElement){
+            this.topNeighbour = this.botNeighbour = this.leftNeighbour = this.rightNeighbour = null;
+            let topDist = Infinity,
+                botDist = Infinity,
+                leftDist = Infinity,
+                rightDist = Infinity;
+            let tmpTopNeighbour = null,
+                tmpBotNeighbour = null,
+                tmpLeftNeighbour = null,
+                tmpRightNeighbour = null;
+            let topX = currentElement.fit.x + currentElement.w/2;
+            let topY = currentElement.fit.y;
+            let botX = topX;
+            let botY = topY + currentElement.h;
+            let leftX = currentElement.fit.x;
+            let leftY = currentElement.fit.y + currentElement.h/2;
+            let rightX = currentElement.fit.x + currentElement.w;
+            let rightY = leftY;
+
+            for(let element of this.cthemes){
+                tmpTopDist = getDistance(topX, topY,element.fit.x + element.w/2, element.fit.y + element.h);
+                tmpBotDist = getDistance(botX, botY, element.fit.x + element.w/2, element.fit.y);
+                tmpLeftDist = getDistance(leftX, leftY, element.fit.x + element.w, element.fit.y + element.h/2);
+                tmpRightDist = getDistance(rightX, rightY, element.fit.x, element.fit.y + element.h/2);
+
+                if(tmpTopDist < topDist){
+                    topDist = tmpTopDist;
+                    tmpTopNeighbour = element;
+                }
+                if(tmpBotDist < botDist){
+                    botDist = tmpBotDist;
+                    tmpBotNeighbour = element;
+                }
+                if(tmpLeftDist < leftDist){
+                    leftDist = tmpLeftDist;
+                    tmpLeftNeighbour = element;
+                }
+                if(tmpRightDist < rightDist){
+                    rightDist = tmpRightDist;
+                    tmpRightNeighbour = element;
+                }
+            }
+            this.topNeighbour = tmpTopNeighbour;
+            this.botNeighbour = tmpBotNeighbour;
+            this.leftNeighbour = tmpLeftNeighbour;
+            this.rightNeighbour = tmpRightNeighbour;
         }
     },
     components : {
