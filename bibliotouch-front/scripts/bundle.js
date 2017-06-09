@@ -82973,6 +82973,7 @@ var VueRouter = require('vue-router');
 Vue.use(VueRouter);
 
 var ThemeMap = require('./themeMap');
+var InnerThemeMap = require('./innerThemeMap');
 
 // 2. Define some routes
 // Each route should map to a component. The "component" can
@@ -82980,7 +82981,8 @@ var ThemeMap = require('./themeMap');
 // Vue.extend(), or just a component options object.
 // We'll talk about nested routes later.
 const routes = [
-  { path: '/theme-map', component: ThemeMap }
+  { path: '/theme-map', component: ThemeMap },
+  { path: '/inner-theme-map/:theme_id', component: InnerThemeMap}
 ];
 
 // 3. Create the router instance and pass the `routes` option
@@ -82997,7 +82999,143 @@ const app = new Vue({
   router
 }).$mount('#app')
 
-},{"./themeMap":370,"vue":365,"vue-router":364}],370:[function(require,module,exports){
+},{"./innerThemeMap":370,"./themeMap":371,"vue":365,"vue-router":364}],370:[function(require,module,exports){
+var Vue = require('vue');
+var VueLazyLoad = require('vue-lazyload');
+var gridDispatcher = require('./helpers/fixedGridDispatcher');
+var requestp = require('request-promise-native');
+
+
+var bookcellHeight = 168+60,
+    bookcellWidth = 184+60,
+    bookcoverHeight = 168,
+    bookcoverWidth = 100;
+
+var imgTopMargin = 60;
+var imgLeftMargin = 60;
+
+Vue.use(VueLazyLoad, {
+    preLoad : 3,
+    lazyComponent : true
+});
+
+var BookElement = {
+    template : `<div v-bind:style="{
+                        position : 'absolute',
+                        left : book.dispatch.x + 'px',
+                        top : book.dispatch.y + 'px',
+                        width : ${bookcellWidth} + 'px',
+                        height : ${bookcellHeight} + 'px',}"
+                        @show="setOnScreen">
+                    <!--<transition name="fade">-->
+                        <div    v-if="!imgAvailable"
+                                v-bind:style="{
+                                        position : 'absolute',
+                                        width : ${bookcoverWidth} + 'px',
+                                        height : ${bookcoverHeight} + 'px',
+                                        left : ${imgTopMargin}+'px',
+                                        top : ${imgLeftMargin}+'px',
+                                        boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
+                                        userDrag : 'none',
+                                        userSelect : 'none',
+                                        overflow : 'hidden',
+                                        backgroundColor : getRndColor()}">
+                                <p  v-bind:style="{
+                                            fontSize : '8px',
+                                            margin : '5px'}">
+                                    {{book.title}}
+                                </p>
+                        </div>
+                    <!--</transition>-->
+                    <lazy-component v-if="book.hasCover"
+                                    @show="loadCover">
+                                    
+                        <transition name="fade">
+                            <img    v-if="imgAvailable"
+                                    v-bind:style="{
+                                        position : 'absolute',
+                                        width : ${bookcoverWidth} + 'px',
+                                        height : ${bookcoverHeight} + 'px',
+                                        left : ${imgTopMargin}+'px',
+                                        top : ${imgLeftMargin}+'px',
+                                        boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
+                                        userDrag : 'none',
+                                        userSelect : 'none',
+                                        backgroundColor : 'lightgrey'}"
+                                    v-bind:src="imgSrc">
+                            </img>
+                        </transition>
+                    </lazy-component>
+                </div>`,
+    props : ['book'],
+    data : function(){
+        return {
+            onScreen : false,
+            imgAvailable : false,
+            imgSrc : ''
+        }
+    },
+    methods:{
+        loadCover: function(component){
+            let self = this;
+            let isbn = this.book.isbn;
+            if(isbn){
+                requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/covers/isbn/${isbn}.jpg`)
+                    .then(function(body){
+                        self.imgAvailable = true;
+                        self.imgSrc = './covers/isbn/'+isbn+'.jpg';
+                    })
+                    .catch(function(err){});
+            }
+        },
+        setOnScreen : function(component){
+            this.onScreen = true;
+        },
+        getRndColor : function(){
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++ ) {
+                color += letters[Math.floor(Math.random() * 10)+6];
+            }
+            return color;
+        }
+    }
+}
+
+var InnerThemeMap = Vue.extend({
+    template : `<div>
+                    <book-element
+                            v-for="book in books"
+                            v-bind:key="book.id"
+                            v-bind:book="book">
+                    </book-element>
+                </div>`,
+    data : function () {
+        return {
+            books : []
+        }
+    },
+    created : function(component){
+        let self = this;
+        requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/themes/${this.$route.params.theme_id}/books`)
+            .then(function(retrievedBooks){
+                let parsedBooks = JSON.parse(retrievedBooks);
+                let larg = Math.trunc((Math.sqrt(parsedBooks.length)+1));
+                let haut = Math.trunc(parsedBooks.length/larg)+1;
+
+                gridDispatcher.dispatch(parsedBooks,larg, bookcellWidth, bookcellHeight);
+                parsedBooks.forEach(function(book){
+                    self.books.push(book);
+                });
+            });
+    },
+    components : {
+        'book-element' : BookElement
+    }
+});
+
+module.exports = InnerThemeMap;
+},{"./helpers/fixedGridDispatcher":367,"request-promise-native":285,"vue":365,"vue-lazyload":363}],371:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -83197,7 +83335,7 @@ var ThemeMap = Vue.extend({
                                     transform: 'translate(-50%, -50%)',
                                     fontFamily : 'Montserrat',
                                     color: '#000000',
-                                    zIndex : '-5',         
+                                    zIndex : '-1',         
                                     userSelect: 'none'
                                 }">
                         <p  v-bind:style="{
@@ -83218,29 +83356,122 @@ var ThemeMap = Vue.extend({
                             {{nbBooks}} documents
                         </p>
                     </div>
-                        <div v-if="showLeftNeighbour && leftNeighbour"
-                            v-bind:style="{
-                                    position : 'fixed',
-                                    left : '0px',
-                                    top : '50%',
-                                    transform: 'translate(0, -50%)',
-                                    margin : '10px'
-                            }">
+                    <!--LEFT INDICATOR-->
+                    <transition name="fade">
+                        <div    v-if="showLeftNeighbour && leftNeighbour"
+                                v-bind:style="{
+                                        position : 'fixed',
+                                        left : '0px',
+                                        top : '50%',
+                                        transform: 'translate(0, -50%)',
+                                        margin : '10px'
+                                    }">
                             <div v-bind:style="{
                                         width : '12px',
                                         height : '12px',
                                         borderRadius : '6px',
-                                        backgroundColor : 'black'
+                                        backgroundColor : 'black',
+                                        float : 'left',
+                                        position : 'absolute',
+                                        left : '0px',
+                                        top : '50%',
+                                        transform: 'translate(0, -50%)'
                                     }">
                             </div>
-                            <div v-bind:style="{
-                                    color : 'white',
-                                    backgroundColor : 'black',
-                                    borderRadius : '100px'
-                                }">
-                                <p>{{leftNeighbour.name}}</p>
+                            <div    class="indicator"
+                                    v-bind:style="{
+                                        marginLeft : '18px'
+                                        }">
+                                {{leftNeighbour.name}}
                             </div>
-                    </div>
+                        </div>
+                    </transition>
+                    <!--RIGHT INDICATOR-->
+                    <transition name="fade">
+                        <div    v-if="showRightNeighbour && rightNeighbour"
+                                v-bind:style="{
+                                        position : 'fixed',
+                                        right : '0px',
+                                        top : '50%',
+                                        transform: 'translate(0, -50%)',
+                                        margin : '10px'
+                                    }">
+                            <div v-bind:style="{
+                                        width : '12px',
+                                        height : '12px',
+                                        borderRadius : '6px',
+                                        backgroundColor : 'black',
+                                        float : 'right',
+                                        position : 'absolute',
+                                        right : '0px',
+                                        top : '50%',
+                                        transform: 'translate(0, -50%)'
+                                    }">
+                            </div>
+                            <div    class="indicator"
+                                    v-bind:style="{
+                                        marginRight : '18px'
+                                        }">
+                                {{rightNeighbour.name}}
+                            </div>
+                        </div>
+                    </transition>
+                    <!--TOP INDICATOR-->
+                    <transition name="fade">
+                        <div    v-if="showTopNeighbour && topNeighbour"
+                                v-bind:style="{
+                                        position : 'fixed',
+                                        left : '50%',
+                                        top : '0px',
+                                        transform: 'translate(-50%, 0)',
+                                        margin : '10px'
+                                    }">
+                            <div v-bind:style="{
+                                        width : '12px',
+                                        height : '12px',
+                                        borderRadius : '6px',
+                                        backgroundColor : 'black',
+                                        transform: 'translate(-50%, 0)'
+                                    }">
+                            </div>
+                            <div    class="indicator"
+                                    v-bind:style="{
+                                        transform: 'translate(-50%, 0)',
+                                        marginTop : '6px'
+                                        }">
+                                {{topNeighbour.name}}
+                            </div>
+                        </div>
+                    </transition>
+                    <!--BOT INDICATOR-->
+                    <transition name="fade">
+                        <div    v-if="showBotNeighbour && botNeighbour"
+                                v-bind:style="{
+                                        position : 'fixed',
+                                        left : '50%',
+                                        bottom : '0px',
+                                        transform: 'translate(-50%, 0)',
+                                        margin : '10px'
+                                    }">
+                            <div    class="indicator"
+                                    v-bind:style="{
+                                        transform: 'translate(-50%, 0)',
+                                        marginBottom : '18px'
+                                        }">
+                                {{botNeighbour.name}}
+                            </div>
+                            <div v-bind:style="{
+                                        position : 'absolute',
+                                        bottom: '0px',
+                                        width : '12px',
+                                        height : '12px',
+                                        borderRadius : '6px',
+                                        backgroundColor : 'black',
+                                        transform: 'translate(-50%, 0)'
+                                    }">
+                            </div>
+                        </div>
+                    </transition>
                 </div>`,
     data : function(){
         return {
@@ -83300,23 +83531,24 @@ var ThemeMap = Vue.extend({
                             self.showTopNeighbour = self.showBotNeighbour = self.showLeftNeighbour = self.showRightNeighbour = false;
                         }
 
-                        var showNeighbours = function(event){
+                        var showNeighbours = function(){
                             if(self.lastXPos && self.lastYPos){
-                                if(event.pageY < self.lastYPos){
+                                hideNeighbour();
+                                if( window.scrollY < self.lastYPos){
                                     self.showTopNeighbour = true;
                                 }
-                                if(event.pageY > self.lastYPos){
+                                if( window.scrollY > self.lastYPos){
                                     self.showBotNeighbour = true;
                                 }
-                                if(event.pageX < self.lastXPos){
+                                if(window.scrollX < self.lastXPos){
                                     self.showLeftNeighbour = true;
                                 }
-                                if(event.pageX > self.lastXPos){
+                                if(window.scrollX > self.lastXPos){
                                     self.showRightNeighbour = true;
                                 }
                             }
-                            self.lastXPos = event.pageX;
-                            self.lastYPos = event.pageY;
+                            self.lastXPos = window.scrollX;
+                            self.lastYPos = window.scrollY;
                         }
 
                         showNeighbours(e);

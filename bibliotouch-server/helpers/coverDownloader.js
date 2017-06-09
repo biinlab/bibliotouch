@@ -207,6 +207,8 @@ var getFromIsbnOnAmazonSecretApi = function(book){
             jpeg.pipe(fs.createWriteStream(`./covers/${type}/${book.isbn}.jpg`));
             jpeg.pipe(sharp().resize(56).jpeg())
                 .pipe(fs.createWriteStream(`./covers/${type}/${book.isbn}-56.jpg`));
+            jpeg.pipe(sharp().resize(100).jpeg())
+                .pipe(fs.createWriteStream(`./covers/${type}/${book.isbn}-100.jpg`));
         }
     }).catch(function(err){
     })
