@@ -25,26 +25,19 @@ var BookElement = {
                         width : ${bookcellWidth} + 'px',
                         height : ${bookcellHeight} + 'px',}"
                         @show="setOnScreen">
-                    <!--<transition name="fade">-->
-                        <div    v-if="!imgAvailable"
-                                v-bind:style="{
-                                        position : 'absolute',
-                                        width : ${bookcoverWidth} + 'px',
-                                        height : ${bookcoverHeight} + 'px',
-                                        left : ${imgTopMargin}+'px',
-                                        top : ${imgLeftMargin}+'px',
-                                        boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
-                                        userDrag : 'none',
-                                        userSelect : 'none',
-                                        overflow : 'hidden',
-                                        backgroundColor : getRndColor()}">
-                                <p  v-bind:style="{
-                                            fontSize : '8px',
-                                            margin : '5px'}">
-                                    {{book.title}}
-                                </p>
-                        </div>
-                    <!--</transition>-->
+                    <div    v-if="!imgAvailable"
+                            v-bind:style="{
+                                    position : 'absolute',
+                                    width : ${bookcoverWidth} + 'px',
+                                    height : ${bookcoverHeight} + 'px',
+                                    left : ${imgTopMargin}+'px',
+                                    top : ${imgLeftMargin}+'px',
+                                    boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
+                                    userDrag : 'none',
+                                    userSelect : 'none',
+                                    overflow : 'hidden',
+                                    backgroundColor : getRndColor()}">
+                    </div>
                     <lazy-component v-if="book.hasCover"
                                     @show="loadCover">
                                     
@@ -59,18 +52,111 @@ var BookElement = {
                                         boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
                                         userDrag : 'none',
                                         userSelect : 'none',
+                                        overflow : 'hidden',
+                                        objectFit : 'cover',
                                         backgroundColor : 'lightgrey'}"
                                     v-bind:src="imgSrc">
                             </img>
                         </transition>
                     </lazy-component>
+                    <div    v-bind:style="{
+                                        top : '100px',
+                                        left : '116px',
+                                        position : 'absolute',
+                                        color : 'white',
+                                        backgroundColor : 'black',
+                                        width : '128px',
+                                        height : '84px'
+                                    }">
+                        <p  v-bind:style="{
+                                    fontFamily : 'Montserrat, sans-serif',
+                                    fontWeight : '600',
+                                    fontSize : '12px',
+                                    color : 'white',
+                                    letterSpacing : '0',
+                                    lineHeight : '15px',
+                                    marginLeft : '7px',
+                                    marginTop : '7px',
+                                    marginRight : '9px',
+                                    marginBottom : '0px',
+                                    height : '30px',
+                                    overflow : 'hidden'}"
+                            v-bind:id="titleId"
+                            class="block-with-text"
+                                    >
+                            {{book.title}}
+                        </p>
+                        <p  v-if="isOverflown"
+                            v-bind:style="{
+                                    fontFamily: 'Montserrat, sans-serif',
+                                    margin : '0',
+                                    marginLeft : '8px',
+                                    lineHeight : '3px'
+                                }">...</p>
+                        <p  v-bind:style="{
+                                    fontFamily : 'Montserrat, sans-serif',
+                                    fontWeight : '400',
+                                    fontSize : '8px',
+                                    textTransform : 'uppercase',
+                                    color : 'rgba(255,255,255,0.60)',
+                                    marginLeft : '8px',
+                                    marginTop : '10px',
+                                    marginBottom : '0px',
+                                    position : 'absolute',
+                                    bottom : '21px',
+                                    height : '10px',
+                                    width : '112px',
+                                    whiteSpace : 'nowrap',
+                                    overflow : 'hidden',
+                                    textOverflow : 'ellipsis'
+                                }"
+                            v-bind:id="authorsId"
+                                >
+                            {{firstAuthor}}
+                        </p>
+                        <p  v-bind:style="{
+                                    fontFamily : 'Montserrat, sans-serif',
+                                    fontWeight : '400',
+                                    fontSize : '8px',
+                                    color : 'rgba(255,255,255,0.60)',
+                                    marginLeft : '8px',
+                                    marginTop : '5px',
+                                    marginBottom : '7px',
+                                    bottom : '0px',
+                                    position : 'absolute'
+                                }">
+                            {{parsedDatePub}}
+                        </p>
+                    </div>
                 </div>`,
     props : ['book'],
     data : function(){
         return {
             onScreen : false,
             imgAvailable : false,
-            imgSrc : ''
+            imgSrc : '',
+            isOverflown : false
+        }
+    },
+    mounted : function(){
+        let element = document.getElementById(this.titleId);
+        this.isOverflown = element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+    },
+    computed: {
+        authorsId : function(){
+            return `${this.book.id}authors`
+        },
+        titleId : function(){
+            return `${this.book.id}title`;
+        },
+        firstAuthor : function(){
+            if(!this.book.authors) return '';
+            return this.book.authors.length >= 1 ? this.book.authors[0] : '';
+        },
+        parsedDatePub: function(){
+            if(!this.book.datePub) return '';
+            let matches = this.book.datePub.match(/\d{4}/);
+            return (matches && matches.length >= 1) ? matches[0] : '';
         }
     },
     methods:{
