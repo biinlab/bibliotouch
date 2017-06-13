@@ -3,6 +3,7 @@ var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
 var PackerGrowing = require('./helpers/packerGrowing');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
+require('./components/searchBox');
 
 var bookcellHeight = 140,
     bookcellWidth = 116,

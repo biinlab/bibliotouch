@@ -82779,6 +82779,35 @@ function extend() {
 }
 
 },{}],367:[function(require,module,exports){
+var Vue = require('vue');
+
+Vue.component('search-box', {
+    template : `<div id="search-box">
+                    <img id="search-icon"
+                        alt="research"
+                        src="/res/research.png"></img>
+                    <input id="search-input"
+                            autocomplete="false"
+                            type="text"
+                            placeholder="Je cherche..."
+                            size="32"></input>
+                    <div id="others-reading-div">
+                        Que lisent les autres ?
+                    </div>
+                </div>`
+})
+},{"vue":365}],368:[function(require,module,exports){
+var Vue = require('vue');
+
+Vue.component('zoom-nav-box', {
+    template : `<div id="zoom-nav-box">
+                    <p id="zoom-nav-label">Vues</p>
+                    <div class="pin pin-active" zoomName="Vue éloignée"></div>
+                    <div class="pin" zoomName="Vue bibliothèque"></div>
+                    <div class="pin" zoomName="Vue thème"></div>
+                </div>`
+});
+},{"vue":365}],369:[function(require,module,exports){
 //require('dragscroll');
 
 var FixedGridDispatcher = function () {
@@ -82798,7 +82827,7 @@ FixedGridDispatcher.prototype.dispatch = function(elements, columns, cellWidth, 
 
 
 module.exports = new FixedGridDispatcher();
-},{}],368:[function(require,module,exports){
+},{}],370:[function(require,module,exports){
 /******************************************************************************
 
 Copyright (c) 2011 Jake Gordon and contributors
@@ -82966,11 +82995,14 @@ GrowingPacker.prototype = {
 }
 
 module.exports = GrowingPacker;
-},{}],369:[function(require,module,exports){
+},{}],371:[function(require,module,exports){
 var Vue = require('vue');
 var VueRouter = require('vue-router');
 
 Vue.use(VueRouter);
+
+require('./components/searchBox');
+require('./components/zoomNavBox');
 
 var ThemeMap = require('./themeMap');
 var InnerThemeMap = require('./innerThemeMap');
@@ -82999,11 +83031,12 @@ const app = new Vue({
   router
 }).$mount('#app')
 
-},{"./innerThemeMap":370,"./themeMap":371,"vue":365,"vue-router":364}],370:[function(require,module,exports){
+},{"./components/searchBox":367,"./components/zoomNavBox":368,"./innerThemeMap":372,"./themeMap":373,"vue":365,"vue-router":364}],372:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
 var requestp = require('request-promise-native');
+require('./components/searchBox');
 
 
 var bookcellHeight = 168+60,
@@ -83044,9 +83077,12 @@ var BookElement = {
                             <p  v-if="!imgAvailable"
                                 v-bind:style="{
                                     position : 'absolute',
-                                    left : ${imgLeftMargin+10}+'px',
-                                    top : ${imgTopMargin+7}+'px',
-                                    width : '64px',
+                                    left : ${imgLeftMargin}+'px',
+                                    top : ${imgTopMargin}+'px',
+                                    margin : '7px',
+                                    width : ${bookcoverWidth-14}+'px',
+                                    height : ${bookcoverHeight-14}+'px',
+                                    overflow : 'hidden',
                                     fontFamily: 'Montserrat, sans-serif',
                                     fontSize: '10px',
                                     color: '#000000'
@@ -83239,12 +83275,13 @@ var InnerThemeMap = Vue.extend({
 });
 
 module.exports = InnerThemeMap;
-},{"./helpers/fixedGridDispatcher":367,"request-promise-native":285,"vue":365,"vue-lazyload":363}],371:[function(require,module,exports){
+},{"./components/searchBox":367,"./helpers/fixedGridDispatcher":369,"request-promise-native":285,"vue":365,"vue-lazyload":363}],373:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
 var PackerGrowing = require('./helpers/packerGrowing');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
+require('./components/searchBox');
 
 var bookcellHeight = 140,
     bookcellWidth = 116,
@@ -83843,4 +83880,4 @@ var ThemeMap = Vue.extend({
 });
 
 module.exports = ThemeMap;
-},{"./helpers/fixedGridDispatcher":367,"./helpers/packerGrowing":368,"request-promise-native":285,"vue":365,"vue-lazyload":363}]},{},[369]);
+},{"./components/searchBox":367,"./helpers/fixedGridDispatcher":369,"./helpers/packerGrowing":370,"request-promise-native":285,"vue":365,"vue-lazyload":363}]},{},[371]);

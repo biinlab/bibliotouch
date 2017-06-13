@@ -2,6 +2,7 @@ var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
 var requestp = require('request-promise-native');
+require('./components/searchBox');
 
 
 var bookcellHeight = 168+60,
@@ -42,9 +43,12 @@ var BookElement = {
                             <p  v-if="!imgAvailable"
                                 v-bind:style="{
                                     position : 'absolute',
-                                    left : ${imgLeftMargin+10}+'px',
-                                    top : ${imgTopMargin+7}+'px',
-                                    width : '64px',
+                                    left : ${imgLeftMargin}+'px',
+                                    top : ${imgTopMargin}+'px',
+                                    margin : '7px',
+                                    width : ${bookcoverWidth-14}+'px',
+                                    height : ${bookcoverHeight-14}+'px',
+                                    overflow : 'hidden',
                                     fontFamily: 'Montserrat, sans-serif',
                                     fontSize: '10px',
                                     color: '#000000'

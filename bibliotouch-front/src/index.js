@@ -3,6 +3,9 @@ var VueRouter = require('vue-router');
 
 Vue.use(VueRouter);
 
+require('./components/searchBox');
+require('./components/zoomNavBox');
+
 var ThemeMap = require('./themeMap');
 var InnerThemeMap = require('./innerThemeMap');
 
