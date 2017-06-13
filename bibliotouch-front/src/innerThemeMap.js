@@ -25,7 +25,7 @@ var BookElement = {
                         width : ${bookcellWidth} + 'px',
                         height : ${bookcellHeight} + 'px',}"
                         @show="setOnScreen">
-                    <div    v-if="!imgAvailable"
+                    <img    v-if="!imgAvailable"
                             v-bind:style="{
                                     position : 'absolute',
                                     width : ${bookcoverWidth} + 'px',
@@ -36,8 +36,22 @@ var BookElement = {
                                     userDrag : 'none',
                                     userSelect : 'none',
                                     overflow : 'hidden',
-                                    backgroundColor : getRndColor()}">
-                    </div>
+                                    objectFit : 'cover',
+                                    backgroundColor : 'lightgrey'}"
+                            v-bind:src="generatedCoverSrc">
+                            <p  v-if="!imgAvailable"
+                                v-bind:style="{
+                                    position : 'absolute',
+                                    left : ${imgLeftMargin+10}+'px',
+                                    top : ${imgTopMargin+7}+'px',
+                                    width : '64px',
+                                    fontFamily: 'Montserrat, sans-serif',
+                                    fontSize: '10px',
+                                    color: '#000000'
+                                    }">
+                                {{book.title}}
+                            </p>
+                    </img>
                     <lazy-component v-if="book.hasCover"
                                     @show="loadCover">
                                     
@@ -143,6 +157,10 @@ var BookElement = {
         this.isOverflown = element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
     },
     computed: {
+        generatedCoverSrc : function(){
+            let rnd = Math.trunc((Math.random()*5)+1);
+            return `/res/covers/cover_generate_${rnd}.png`;
+        },
         authorsId : function(){
             return `${this.book.id}authors`
         },

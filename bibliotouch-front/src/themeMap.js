@@ -64,7 +64,7 @@ var BookElement = {
                         height : ${bookcellHeight} + 'px',}"
                         @show="setOnScreen">
                     <!--<transition name="fade">-->
-                        <div    v-if="!imgAvailable"
+                        <img    v-if="!imgAvailable"
                                 v-bind:style="{
                                         position : 'absolute',
                                         width : ${bookcoverWidth} + 'px',
@@ -74,14 +74,21 @@ var BookElement = {
                                         boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
                                         userDrag : 'none',
                                         userSelect : 'none',
-                                        overflow : 'hidden',
-                                        backgroundColor : getRndColor()}">
-                                <p  v-bind:style="{
+                                        backgroundColor : getRndColor()}"
+                                v-bind:src="generatedCoverSrc">
+                                <p  v-if="!imgAvailable"
+                                    v-bind:style="{
+                                            position : 'absolute',
+                                            width : ${bookcoverWidth-10} + 'px',
+                                            height : ${bookcoverHeight-10} + 'px',
+                                            left : ${imgTopMargin}+'px',
+                                            top : ${imgLeftMargin}+'px',
                                             fontSize : '8px',
-                                            margin : '5px'}">
+                                            margin : '5px',
+                                            overflow : 'hidden'}">
                                     {{book.title}}
                                 </p>
-                        </div>
+                        </img>
                     <!--</transition>-->
                     <lazy-component v-if="book.hasCover"
                                     @show="loadCover">
@@ -97,7 +104,8 @@ var BookElement = {
                                         boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
                                         userDrag : 'none',
                                         userSelect : 'none',
-                                        backgroundColor : 'lightgrey'}"
+                                        objectFit : 'cover',
+                                        backgroundColor : getRndColor()}"
                                     v-bind:src="imgSrc">
                             </img>
                         </transition>
@@ -109,6 +117,12 @@ var BookElement = {
             onScreen : false,
             imgAvailable : false,
             imgSrc : ''
+        }
+    },
+    computed: {
+        generatedCoverSrc : function(){
+            let rnd = Math.trunc((Math.random()*5)+1);
+            return `/res/covers/cover_generate_${rnd}.png`;
         }
     },
     methods:{
