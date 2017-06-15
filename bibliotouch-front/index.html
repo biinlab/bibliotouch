@@ -15,8 +15,13 @@
                     <router-link to="/theme-map">Go to theme-map</router-link>
                 </p>
             <router-view></router-view>
-            <search-box></search-box>
-            <zoom-nav-box></zoom-nav-box>
+            <div id="footer-wrapper">
+                <active-theme-box></active-theme-box>
+                <div id="constant-footer-wrapper">
+                    <search-box></search-box>
+                    <zoom-nav-box></zoom-nav-box>
+                </div>
+            </div>
         </div>
         <script src="scripts/bundle.js"></script>
 	</body>

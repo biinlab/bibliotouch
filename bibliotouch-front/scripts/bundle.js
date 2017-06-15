@@ -82781,6 +82781,40 @@ function extend() {
 },{}],367:[function(require,module,exports){
 var Vue = require('vue');
 
+Vue.component('active-theme-box', {
+    template: `<div id="active-theme-box"
+                    v-if="showActiveTheme">
+                    <p id="active-theme-label">
+                        {{currentTheme}}
+                    </p>
+                </div>`,
+    data : function() {
+        return {
+            showActiveTheme : false,
+            currentTheme : ''
+        }
+    },
+    created : function(){
+        if(this.$route.fullPath.match(/^\/inner-theme-map/)) {
+            this.showActiveTheme = true;
+            this.currentTheme = this.$route.params.theme_id;
+        }
+    },
+    watch : {
+        '$route' (to, from) {
+            if(to.fullPath.match(/^\/inner-theme-map/)) {
+                this.showActiveTheme = true;
+                this.currentTheme = to.params.theme_id;
+            } else {
+                this.showActiveTheme = false;
+                this.currentTheme = '';
+            }
+        }
+    }
+})
+},{"vue":365}],368:[function(require,module,exports){
+var Vue = require('vue');
+
 Vue.component('search-box', {
     template : `<div id="search-box">
                     <img id="search-icon"
@@ -82796,18 +82830,62 @@ Vue.component('search-box', {
                     </div>
                 </div>`
 })
-},{"vue":365}],368:[function(require,module,exports){
+},{"vue":365}],369:[function(require,module,exports){
 var Vue = require('vue');
 
 Vue.component('zoom-nav-box', {
     template : `<div id="zoom-nav-box">
                     <p id="zoom-nav-label">Vues</p>
-                    <div class="pin pin-active" zoomName="Vue éloignée"></div>
-                    <div class="pin" zoomName="Vue bibliothèque"></div>
-                    <div class="pin" zoomName="Vue thème"></div>
-                </div>`
+                    <div    v-bind:class="{'pin-active':isFarZoom}"
+                            class="pin"
+                            zoomName="Vue éloignée"
+                            v-on:click="$router.push('/outer-theme-map')">
+                    </div>
+                    <div    v-bind:class="{'pin-active':isMiddleZoom}"
+                            class="pin"
+                            zoomName="Vue bibliothèque"
+                            v-on:click="$router.push('/theme-map')">
+                    </div>
+                    <div    v-bind:class="{'pin-active':isCloseZoom}"
+                            class="pin"
+                            zoomName="Vue thème"
+                            v-on:click="$router.push('/inner-theme-map')">
+                    </div>
+                </div>`,
+    data : function() {
+        return {
+            isFarZoom : false,
+            isMiddleZoom : false,
+            isCloseZoom : false
+        }
+    },
+    created : function() {
+        this.setCurrentZoom(this.$route);
+    },
+    watch : {
+        '$route' (to, from) {
+            this.setCurrentZoom(to);
+        }
+    },
+    methods : {
+        setCurrentZoom(route){
+            if(route.fullPath.match(/^\/outer-theme-map/)){
+                this.isMiddleZoom = false;
+                this.isCloseZoom = false;
+                this.isFarZoom = true;
+            } else if(route.fullPath.match(/^\/theme-map/)){
+                this.isMiddleZoom = true;
+                this.isCloseZoom = false;
+                this.isFarZoom = false;
+            } else if(route.fullPath.match(/^\/inner-theme-map/)){
+                this.isMiddleZoom = false;
+                this.isCloseZoom = true;
+                this.isFarZoom = false;
+            }
+        }
+    }
 });
-},{"vue":365}],369:[function(require,module,exports){
+},{"vue":365}],370:[function(require,module,exports){
 //require('dragscroll');
 
 var FixedGridDispatcher = function () {
@@ -82827,7 +82905,7 @@ FixedGridDispatcher.prototype.dispatch = function(elements, columns, cellWidth, 
 
 
 module.exports = new FixedGridDispatcher();
-},{}],370:[function(require,module,exports){
+},{}],371:[function(require,module,exports){
 /******************************************************************************
 
 Copyright (c) 2011 Jake Gordon and contributors
@@ -82995,7 +83073,7 @@ GrowingPacker.prototype = {
 }
 
 module.exports = GrowingPacker;
-},{}],371:[function(require,module,exports){
+},{}],372:[function(require,module,exports){
 var Vue = require('vue');
 var VueRouter = require('vue-router');
 
@@ -83003,6 +83081,7 @@ Vue.use(VueRouter);
 
 require('./components/searchBox');
 require('./components/zoomNavBox');
+require('./components/activeThemeBox');
 
 var ThemeMap = require('./themeMap');
 var InnerThemeMap = require('./innerThemeMap');
@@ -83031,7 +83110,7 @@ const app = new Vue({
   router
 }).$mount('#app')
 
-},{"./components/searchBox":367,"./components/zoomNavBox":368,"./innerThemeMap":372,"./themeMap":373,"vue":365,"vue-router":364}],372:[function(require,module,exports){
+},{"./components/activeThemeBox":367,"./components/searchBox":368,"./components/zoomNavBox":369,"./innerThemeMap":373,"./themeMap":374,"vue":365,"vue-router":364}],373:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
@@ -83052,145 +83131,90 @@ Vue.use(VueLazyLoad, {
     lazyComponent : true
 });
 
+var bookCoverStyleObject = {
+    position : 'absolute',
+    width : `${bookcoverWidth}px`,
+    height : `${bookcoverHeight}px`,
+    left : `${imgTopMargin}px`,
+    top : `${imgLeftMargin}px`,
+    boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
+    userDrag : 'none',
+    userSelect : 'none',
+    overflow : 'hidden',
+    objectFit : 'cover',
+    backgroundColor : 'lightgrey'
+}
+
+var generatedBookCoverTitleStyleObject = {
+    position : 'absolute',
+    left : `${imgLeftMargin}px`,
+    top : `${imgTopMargin}px`,
+    margin : '7px',
+    width : `${bookcoverWidth-14}px`,
+    height : `${bookcoverHeight-14}px`,
+    overflow : 'hidden',
+    fontFamily: 'Montserrat, sans-serif',
+    fontSize: '10px',
+    color: '#000000'
+}
+
 var BookElement = {
-    template : `<div v-bind:style="{
+    template : `<!--<lazy-component @show="setOnScreen">-->
+                    <div v-bind:style="{
                         position : 'absolute',
                         left : book.dispatch.x + 'px',
                         top : book.dispatch.y + 'px',
-                        width : ${bookcellWidth} + 'px',
-                        height : ${bookcellHeight} + 'px',}"
-                        @show="setOnScreen">
-                    <img    v-if="!imgAvailable"
-                            v-bind:style="{
-                                    position : 'absolute',
-                                    width : ${bookcoverWidth} + 'px',
-                                    height : ${bookcoverHeight} + 'px',
-                                    left : ${imgTopMargin}+'px',
-                                    top : ${imgLeftMargin}+'px',
-                                    boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
-                                    userDrag : 'none',
-                                    userSelect : 'none',
-                                    overflow : 'hidden',
-                                    objectFit : 'cover',
-                                    backgroundColor : 'lightgrey'}"
-                            v-bind:src="generatedCoverSrc">
-                            <p  v-if="!imgAvailable"
-                                v-bind:style="{
-                                    position : 'absolute',
-                                    left : ${imgLeftMargin}+'px',
-                                    top : ${imgTopMargin}+'px',
-                                    margin : '7px',
-                                    width : ${bookcoverWidth-14}+'px',
-                                    height : ${bookcoverHeight-14}+'px',
-                                    overflow : 'hidden',
-                                    fontFamily: 'Montserrat, sans-serif',
-                                    fontSize: '10px',
-                                    color: '#000000'
-                                    }">
+                        width : '${bookcellWidth}px',
+                        height : '${bookcellHeight}px'}">
+                        <img    v-if="!imgAvailable"
+                                v-bind:style="bookCoverStyleObject"
+                                v-bind:src="generatedCoverSrc">
+                                <p  v-if="!imgAvailable"
+                                    v-bind:style="generatedBookCoverTitleStyleObject">
+                                    {{book.title}}
+                                </p>
+                        </img>
+                        <lazy-component v-if="book.hasCover"
+                                        @show="loadCover">
+                                        
+                            <transition name="fade">
+                                <img    v-if="imgAvailable"
+                                        v-bind:style="bookCoverStyleObject"
+                                        v-bind:src="imgSrc">
+                                </img>
+                            </transition>
+                        </lazy-component>
+                        <div    class="cartouche-box">
+                            <p  class="cartouche-title"
+                                v-bind:id="titleId">
                                 {{book.title}}
                             </p>
-                    </img>
-                    <lazy-component v-if="book.hasCover"
-                                    @show="loadCover">
-                                    
-                        <transition name="fade">
-                            <img    v-if="imgAvailable"
-                                    v-bind:style="{
-                                        position : 'absolute',
-                                        width : ${bookcoverWidth} + 'px',
-                                        height : ${bookcoverHeight} + 'px',
-                                        left : ${imgTopMargin}+'px',
-                                        top : ${imgLeftMargin}+'px',
-                                        boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
-                                        userDrag : 'none',
-                                        userSelect : 'none',
-                                        overflow : 'hidden',
-                                        objectFit : 'cover',
-                                        backgroundColor : 'lightgrey'}"
-                                    v-bind:src="imgSrc">
-                            </img>
-                        </transition>
-                    </lazy-component>
-                    <div    v-bind:style="{
-                                        top : '100px',
-                                        left : '116px',
-                                        position : 'absolute',
-                                        color : 'white',
-                                        backgroundColor : 'black',
-                                        width : '128px',
-                                        height : '84px'
-                                    }">
-                        <p  v-bind:style="{
-                                    fontFamily : 'Montserrat, sans-serif',
-                                    fontWeight : '600',
-                                    fontSize : '12px',
-                                    color : 'white',
-                                    letterSpacing : '0',
-                                    lineHeight : '15px',
-                                    marginLeft : '7px',
-                                    marginTop : '7px',
-                                    marginRight : '9px',
-                                    marginBottom : '0px',
-                                    height : '30px',
-                                    overflow : 'hidden'}"
-                            v-bind:id="titleId"
-                            class="block-with-text"
-                                    >
-                            {{book.title}}
-                        </p>
-                        <p  v-if="isOverflown"
-                            v-bind:style="{
-                                    fontFamily: 'Montserrat, sans-serif',
-                                    margin : '0',
-                                    marginLeft : '8px',
-                                    lineHeight : '3px'
-                                }">...</p>
-                        <p  v-bind:style="{
-                                    fontFamily : 'Montserrat, sans-serif',
-                                    fontWeight : '400',
-                                    fontSize : '8px',
-                                    textTransform : 'uppercase',
-                                    color : 'rgba(255,255,255,0.60)',
-                                    marginLeft : '8px',
-                                    marginTop : '10px',
-                                    marginBottom : '0px',
-                                    position : 'absolute',
-                                    bottom : '21px',
-                                    height : '10px',
-                                    width : '112px',
-                                    whiteSpace : 'nowrap',
-                                    overflow : 'hidden',
-                                    textOverflow : 'ellipsis'
-                                }"
-                            v-bind:id="authorsId"
-                                >
-                            {{firstAuthor}}
-                        </p>
-                        <p  v-bind:style="{
-                                    fontFamily : 'Montserrat, sans-serif',
-                                    fontWeight : '400',
-                                    fontSize : '8px',
-                                    color : 'rgba(255,255,255,0.60)',
-                                    marginLeft : '8px',
-                                    marginTop : '5px',
-                                    marginBottom : '7px',
-                                    bottom : '0px',
-                                    position : 'absolute'
-                                }">
-                            {{parsedDatePub}}
-                        </p>
+                            <p  class="cartouche-ellipsis"
+                                v-if="isOverflown">
+                                ...
+                            </p>
+                            <p  class="cartouche-author"
+                                v-bind:id="authorsId">
+                                {{firstAuthor}}
+                            </p>
+                            <p  class="cartouche-date">
+                                {{parsedDatePub}}
+                            </p>
+                        </div>
                     </div>
-                </div>`,
+                <!--</lazy-component>-->`,
     props : ['book'],
     data : function(){
         return {
             onScreen : false,
             imgAvailable : false,
             imgSrc : '',
-            isOverflown : false
+            isOverflown : false,
+            bookCoverStyleObject : bookCoverStyleObject,
+            generatedBookCoverTitleStyleObject : generatedBookCoverTitleStyleObject
         }
     },
-    mounted : function(){
+    mounted: function(){
         let element = document.getElementById(this.titleId);
         this.isOverflown = element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
     },
@@ -83255,27 +83279,40 @@ var InnerThemeMap = Vue.extend({
             books : []
         }
     },
+    watch: {
+        '$route' (to, from) {
+            //console.log(to);
+            this.populateMap(to.params.theme_id);
+        }
+    },
     created : function(component){
-        let self = this;
-        requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/themes/${this.$route.params.theme_id}/books`)
-            .then(function(retrievedBooks){
-                let parsedBooks = JSON.parse(retrievedBooks);
-                let larg = Math.trunc((Math.sqrt(parsedBooks.length)+1));
-                let haut = Math.trunc(parsedBooks.length/larg)+1;
-
-                gridDispatcher.dispatch(parsedBooks,larg, bookcellWidth, bookcellHeight);
-                parsedBooks.forEach(function(book){
-                    self.books.push(book);
-                });
-            });
+        this.populateMap(this.$route.params.theme_id);
     },
     components : {
         'book-element' : BookElement
+    },
+    methods : {
+        populateMap : function(theme){
+            let self = this;
+            //Remove currently charged books
+            this.books.splice(0, this.books.length);
+            requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/themes/${theme}/books`)
+                .then(function(retrievedBooks){
+                    let parsedBooks = JSON.parse(retrievedBooks);
+                    let larg = Math.trunc((Math.sqrt(parsedBooks.length)+1));
+                    let haut = Math.trunc(parsedBooks.length/larg)+1;
+
+                    gridDispatcher.dispatch(parsedBooks,larg, bookcellWidth, bookcellHeight);
+                    parsedBooks.forEach(function(book){
+                        self.books.push(book);
+                    });
+                });
+        }
     }
 });
 
 module.exports = InnerThemeMap;
-},{"./components/searchBox":367,"./helpers/fixedGridDispatcher":369,"request-promise-native":285,"vue":365,"vue-lazyload":363}],373:[function(require,module,exports){
+},{"./components/searchBox":368,"./helpers/fixedGridDispatcher":370,"request-promise-native":285,"vue":365,"vue-lazyload":363}],374:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -83334,6 +83371,29 @@ var disableDragScroll = function(){
     window.removeEventListener('mouseup', mouseup);
 }
 
+var bookCoverStyleObject = {
+    position : 'absolute',
+    width : `${bookcoverWidth}px`,
+    height : `${bookcoverHeight}`,
+    left : `${imgTopMargin}px`,
+    top : `${imgLeftMargin}px`,
+    boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
+    userDrag : 'none',
+    userSelect : 'none',
+    backgroundColor : 'lightgrey'
+}
+
+var generatedBookCoverTitleStyleObject = {
+    position : 'absolute',
+    width : `${bookcoverWidth-10}px`,
+    height : `${bookcoverHeight-10}px`,
+    left : `${imgTopMargin}px`,
+    top : `${imgLeftMargin}px`,
+    fontSize : '8px',
+    margin : '5px',
+    overflow : 'hidden'
+}
+
 var BookElement = {
     template : `<div v-bind:style="{
                         position : 'absolute',
@@ -83344,47 +83404,19 @@ var BookElement = {
                         @show="setOnScreen">
                     <!--<transition name="fade">-->
                         <img    v-if="!imgAvailable"
-                                v-bind:style="{
-                                        position : 'absolute',
-                                        width : ${bookcoverWidth} + 'px',
-                                        height : ${bookcoverHeight} + 'px',
-                                        left : ${imgTopMargin}+'px',
-                                        top : ${imgLeftMargin}+'px',
-                                        boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
-                                        userDrag : 'none',
-                                        userSelect : 'none',
-                                        backgroundColor : getRndColor()}"
+                                v-bind:style="bookCoverStyleObject"
                                 v-bind:src="generatedCoverSrc">
                                 <p  v-if="!imgAvailable"
-                                    v-bind:style="{
-                                            position : 'absolute',
-                                            width : ${bookcoverWidth-10} + 'px',
-                                            height : ${bookcoverHeight-10} + 'px',
-                                            left : ${imgTopMargin}+'px',
-                                            top : ${imgLeftMargin}+'px',
-                                            fontSize : '8px',
-                                            margin : '5px',
-                                            overflow : 'hidden'}">
+                                    v-bind:style="generatedBookCoverTitleStyleObject">
                                     {{book.title}}
                                 </p>
                         </img>
                     <!--</transition>-->
                     <lazy-component v-if="book.hasCover"
                                     @show="loadCover">
-                                    
                         <transition name="fade">
                             <img    v-if="imgAvailable"
-                                    v-bind:style="{
-                                        position : 'absolute',
-                                        width : ${bookcoverWidth} + 'px',
-                                        height : ${bookcoverHeight} + 'px',
-                                        left : ${imgTopMargin}+'px',
-                                        top : ${imgLeftMargin}+'px',
-                                        boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
-                                        userDrag : 'none',
-                                        userSelect : 'none',
-                                        objectFit : 'cover',
-                                        backgroundColor : getRndColor()}"
+                                    v-bind:style="bookCoverStyleObject"
                                     v-bind:src="imgSrc">
                             </img>
                         </transition>
@@ -83395,7 +83427,9 @@ var BookElement = {
         return {
             onScreen : false,
             imgAvailable : false,
-            imgSrc : ''
+            imgSrc : '',
+            bookCoverStyleObject : bookCoverStyleObject,
+            generatedBookCoverTitleStyleObject : generatedBookCoverTitleStyleObject
         }
     },
     computed: {
@@ -83880,4 +83914,4 @@ var ThemeMap = Vue.extend({
 });
 
 module.exports = ThemeMap;
-},{"./components/searchBox":367,"./helpers/fixedGridDispatcher":369,"./helpers/packerGrowing":370,"request-promise-native":285,"vue":365,"vue-lazyload":363}]},{},[371]);
+},{"./components/searchBox":368,"./helpers/fixedGridDispatcher":370,"./helpers/packerGrowing":371,"request-promise-native":285,"vue":365,"vue-lazyload":363}]},{},[372]);

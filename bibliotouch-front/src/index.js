@@ -5,6 +5,7 @@ Vue.use(VueRouter);
 
 require('./components/searchBox');
 require('./components/zoomNavBox');
+require('./components/activeThemeBox');
 
 var ThemeMap = require('./themeMap');
 var InnerThemeMap = require('./innerThemeMap');

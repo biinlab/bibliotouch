@@ -56,6 +56,29 @@ var disableDragScroll = function(){
     window.removeEventListener('mouseup', mouseup);
 }
 
+var bookCoverStyleObject = {
+    position : 'absolute',
+    width : `${bookcoverWidth}px`,
+    height : `${bookcoverHeight}`,
+    left : `${imgTopMargin}px`,
+    top : `${imgLeftMargin}px`,
+    boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
+    userDrag : 'none',
+    userSelect : 'none',
+    backgroundColor : 'lightgrey'
+}
+
+var generatedBookCoverTitleStyleObject = {
+    position : 'absolute',
+    width : `${bookcoverWidth-10}px`,
+    height : `${bookcoverHeight-10}px`,
+    left : `${imgTopMargin}px`,
+    top : `${imgLeftMargin}px`,
+    fontSize : '8px',
+    margin : '5px',
+    overflow : 'hidden'
+}
+
 var BookElement = {
     template : `<div v-bind:style="{
                         position : 'absolute',
@@ -66,47 +89,19 @@ var BookElement = {
                         @show="setOnScreen">
                     <!--<transition name="fade">-->
                         <img    v-if="!imgAvailable"
-                                v-bind:style="{
-                                        position : 'absolute',
-                                        width : ${bookcoverWidth} + 'px',
-                                        height : ${bookcoverHeight} + 'px',
-                                        left : ${imgTopMargin}+'px',
-                                        top : ${imgLeftMargin}+'px',
-                                        boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
-                                        userDrag : 'none',
-                                        userSelect : 'none',
-                                        backgroundColor : getRndColor()}"
+                                v-bind:style="bookCoverStyleObject"
                                 v-bind:src="generatedCoverSrc">
                                 <p  v-if="!imgAvailable"
-                                    v-bind:style="{
-                                            position : 'absolute',
-                                            width : ${bookcoverWidth-10} + 'px',
-                                            height : ${bookcoverHeight-10} + 'px',
-                                            left : ${imgTopMargin}+'px',
-                                            top : ${imgLeftMargin}+'px',
-                                            fontSize : '8px',
-                                            margin : '5px',
-                                            overflow : 'hidden'}">
+                                    v-bind:style="generatedBookCoverTitleStyleObject">
                                     {{book.title}}
                                 </p>
                         </img>
                     <!--</transition>-->
                     <lazy-component v-if="book.hasCover"
                                     @show="loadCover">
-                                    
                         <transition name="fade">
                             <img    v-if="imgAvailable"
-                                    v-bind:style="{
-                                        position : 'absolute',
-                                        width : ${bookcoverWidth} + 'px',
-                                        height : ${bookcoverHeight} + 'px',
-                                        left : ${imgTopMargin}+'px',
-                                        top : ${imgLeftMargin}+'px',
-                                        boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
-                                        userDrag : 'none',
-                                        userSelect : 'none',
-                                        objectFit : 'cover',
-                                        backgroundColor : getRndColor()}"
+                                    v-bind:style="bookCoverStyleObject"
                                     v-bind:src="imgSrc">
                             </img>
                         </transition>
@@ -117,7 +112,9 @@ var BookElement = {
         return {
             onScreen : false,
             imgAvailable : false,
-            imgSrc : ''
+            imgSrc : '',
+            bookCoverStyleObject : bookCoverStyleObject,
+            generatedBookCoverTitleStyleObject : generatedBookCoverTitleStyleObject
         }
     },
     computed: {
