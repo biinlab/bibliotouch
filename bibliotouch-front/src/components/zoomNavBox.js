@@ -6,17 +6,17 @@ Vue.component('zoom-nav-box', {
                     <div    v-bind:class="{'pin-active':isFarZoom}"
                             class="pin"
                             zoomName="Vue éloignée"
-                            v-on:click="$router.push('/outer-theme-map')">
+                            v-on:click="$router.push('/outer-theme-map/'+currentTheme)">
                     </div>
                     <div    v-bind:class="{'pin-active':isMiddleZoom}"
                             class="pin"
                             zoomName="Vue bibliothèque"
-                            v-on:click="$router.push('/theme-map')">
+                            v-on:click="$router.push('/theme-map/'+currentTheme)">
                     </div>
                     <div    v-bind:class="{'pin-active':isCloseZoom}"
                             class="pin"
                             zoomName="Vue thème"
-                            v-on:click="$router.push('/inner-theme-map')">
+                            v-on:click="$router.push('/inner-theme-map/'+currentTheme)">
                     </div>
                 </div>`,
     data : function() {
@@ -26,6 +26,7 @@ Vue.component('zoom-nav-box', {
             isCloseZoom : false
         }
     },
+    props : ['currentTheme'],
     created : function() {
         this.setCurrentZoom(this.$route);
     },

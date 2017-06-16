@@ -17,6 +17,7 @@ var InnerThemeMap = require('./innerThemeMap');
 // We'll talk about nested routes later.
 const routes = [
   { path: '/theme-map', component: ThemeMap },
+  { path: '/theme-map/:theme_id', component: ThemeMap },
   { path: '/inner-theme-map/:theme_id', component: InnerThemeMap}
 ];
 
@@ -31,5 +32,13 @@ const router = new VueRouter({
 // Make sure to inject the router with the router option to make the
 // whole app router-aware.
 const app = new Vue({
-  router
+  router,
+  data : {
+    currentTheme : ''
+  },
+  methods : {
+    updateCurrentTheme : function(newTheme){
+      this.currentTheme = newTheme;
+    }
+  }
 }).$mount('#app')

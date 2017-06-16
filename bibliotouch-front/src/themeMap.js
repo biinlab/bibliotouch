@@ -380,19 +380,9 @@ var ThemeMap = Vue.extend({
                         self.cthemes.push(element);
                     });
                     enableDragScroll();
-                    window.setInterval(function(){
-                        let curX = window.scrollX+window.innerWidth/2, curY = window.scrollY+window.innerHeight/2;
-                        for(let element of self.cthemes){
-                            if(curX >= element.fit.x && curX < (element.fit.x + element.w) && curY >= element.fit.y && curY < (element.fit.y + element.h)){
-                                if(self.currentTheme != element.name){
-                                    self.currentTheme = element.name;
-                                    self.nbBooks = element.nbBooks;
-                                    self.findNeighbours(element);
-                                    break;
-                                }
-                            }
-                        }
-                    }, 300);
+                    //FIND CURRENT THEME
+                    self.setCurrentThemeFinderInterval()
+                    //Go to center of the map
                     window.setTimeout(function(){
                         if(self.mapSize){
                             window.scrollTo(self.mapSize.w/2,self.mapSize.h/2);
@@ -431,7 +421,6 @@ var ThemeMap = Vue.extend({
                         }
                         self.scrollTimer = window.setTimeout(hideNeighbour, 500);
                     };
-                    window.on
                 },function(err){
                     self.error = err;
                     self.loading = false;
@@ -442,6 +431,23 @@ var ThemeMap = Vue.extend({
         disableDragScroll();
     },
     methods: {
+        setCurrentThemeFinderInterval : function() {
+            let self = this;
+            window.setInterval(function(){
+                let curX = window.scrollX+window.innerWidth/2, curY = window.scrollY+window.innerHeight/2;
+                for(let element of self.cthemes){
+                    if(curX >= element.fit.x && curX < (element.fit.x + element.w) && curY >= element.fit.y && curY < (element.fit.y + element.h)){
+                        if(self.currentTheme != element.name){
+                            self.currentTheme = element.name;
+                            self.nbBooks = element.nbBooks;
+                            self.findNeighbours(element);
+                            self.$emit('current-theme-changed', self.currentTheme);
+                            return;
+                        }
+                    }
+                }
+            }, 300);
+        },
         retrieveThemeMapJson : function(){
             this.loading = true;
             return requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/themes`);
