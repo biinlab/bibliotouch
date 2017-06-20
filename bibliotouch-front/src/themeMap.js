@@ -3,6 +3,11 @@ var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
 var PackerGrowing = require('./helpers/packerGrowing');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
+var ZoomHandler = require('./helpers/pinchToZoomHandler');
+var mouseDragScroll = require('./helpers/mouseDragScroll');
+var QuadBinPacker = require('./helpers/quadBinPacker');
+var packedThemeMapMixin = require('./mixins/packedThemeMap');
+require('./components/borderIndicators');
 require('./components/searchBox');
 
 var bookcellHeight = 140,
@@ -13,48 +18,12 @@ var bookcellHeight = 140,
 var imgTopMargin = (bookcellHeight-bookcoverHeight)/2;
 var imgLeftMargin = (bookcellWidth-bookcoverWidth)/2;
 
-var mousemove, mousedown, mouseup;
 
 Vue.use(VueLazyLoad, {
     preLoad : 3,
     lazyComponent : true
 });
 
-var getDistance = function(x1, y1, x2, y2){
-    return Math.hypot(x2-x1, y2-y1)
-}
-
-var enableDragScroll = function(){
-    var curYPos, curXPos, curDown;
-
-    mousemove = function(e){ 
-        if(curDown){
-            window.scrollTo(scrollX - e.movementX, scrollY - e.movementY);
-        }
-    };
-
-    mousedown = function(e){ 
-        curYPos = e.pageY; 
-        curXPos = e.pageX; 
-        curDown = true; 
-    };
-
-    mouseup =  function(e){ 
-        curDown = false; 
-    };
-
-    window.addEventListener('mousemove', mousemove);
-
-    window.addEventListener('mousedown', mousedown);
-
-    window.addEventListener('mouseup', mouseup);
-};
-
-var disableDragScroll = function(){
-    window.removeEventListener('mousemove', mousemove);
-    window.removeEventListener('mousedown', mousedown);
-    window.removeEventListener('mouseup', mouseup);
-}
 
 var bookCoverStyleObject = {
     position : 'absolute',
@@ -119,8 +88,8 @@ var BookElement = {
     },
     computed: {
         generatedCoverSrc : function(){
-            let rnd = Math.trunc((Math.random()*5)+1);
-            return `/res/covers/cover_generate_${rnd}.png`;
+            let rnd = Math.trunc((Math.random()*7)+1);
+            return `/res/covers/cover_${rnd}.png`;
         }
     },
     methods:{
@@ -197,7 +166,7 @@ var ThemeWrapper = {
 };
 
 var ThemeMap = Vue.extend({
-    template : `<div>
+    template : `<div id="theme-map">
                     <theme-wrapper  v-for="theme in cthemes" 
                                     v-bind:key="theme.id"
                                     v-bind:theme="theme">
@@ -230,123 +199,14 @@ var ThemeMap = Vue.extend({
                             {{nbBooks}} documents
                         </p>
                     </div>
-                    <!--LEFT INDICATOR-->
-                    <transition name="fade">
-                        <div    v-if="showLeftNeighbour && leftNeighbour"
-                                v-bind:style="{
-                                        position : 'fixed',
-                                        left : '0px',
-                                        top : '50%',
-                                        transform: 'translate(0, -50%)',
-                                        margin : '10px'
-                                    }">
-                            <div v-bind:style="{
-                                        width : '12px',
-                                        height : '12px',
-                                        borderRadius : '6px',
-                                        backgroundColor : 'black',
-                                        float : 'left',
-                                        position : 'absolute',
-                                        left : '0px',
-                                        top : '50%',
-                                        transform: 'translate(0, -50%)'
-                                    }">
-                            </div>
-                            <div    class="indicator"
-                                    v-bind:style="{
-                                        marginLeft : '18px'
-                                        }">
-                                {{leftNeighbour.name}}
-                            </div>
-                        </div>
-                    </transition>
-                    <!--RIGHT INDICATOR-->
-                    <transition name="fade">
-                        <div    v-if="showRightNeighbour && rightNeighbour"
-                                v-bind:style="{
-                                        position : 'fixed',
-                                        right : '0px',
-                                        top : '50%',
-                                        transform: 'translate(0, -50%)',
-                                        margin : '10px'
-                                    }">
-                            <div v-bind:style="{
-                                        width : '12px',
-                                        height : '12px',
-                                        borderRadius : '6px',
-                                        backgroundColor : 'black',
-                                        float : 'right',
-                                        position : 'absolute',
-                                        right : '0px',
-                                        top : '50%',
-                                        transform: 'translate(0, -50%)'
-                                    }">
-                            </div>
-                            <div    class="indicator"
-                                    v-bind:style="{
-                                        marginRight : '18px'
-                                        }">
-                                {{rightNeighbour.name}}
-                            </div>
-                        </div>
-                    </transition>
-                    <!--TOP INDICATOR-->
-                    <transition name="fade">
-                        <div    v-if="showTopNeighbour && topNeighbour"
-                                v-bind:style="{
-                                        position : 'fixed',
-                                        left : '50%',
-                                        top : '0px',
-                                        transform: 'translate(-50%, 0)',
-                                        margin : '10px'
-                                    }">
-                            <div v-bind:style="{
-                                        width : '12px',
-                                        height : '12px',
-                                        borderRadius : '6px',
-                                        backgroundColor : 'black',
-                                        transform: 'translate(-50%, 0)'
-                                    }">
-                            </div>
-                            <div    class="indicator"
-                                    v-bind:style="{
-                                        transform: 'translate(-50%, 0)',
-                                        marginTop : '6px'
-                                        }">
-                                {{topNeighbour.name}}
-                            </div>
-                        </div>
-                    </transition>
-                    <!--BOT INDICATOR-->
-                    <transition name="fade">
-                        <div    v-if="showBotNeighbour && botNeighbour"
-                                v-bind:style="{
-                                        position : 'fixed',
-                                        left : '50%',
-                                        bottom : '0px',
-                                        transform: 'translate(-50%, 0)',
-                                        margin : '10px'
-                                    }">
-                            <div    class="indicator"
-                                    v-bind:style="{
-                                        transform: 'translate(-50%, 0)',
-                                        marginBottom : '18px'
-                                        }">
-                                {{botNeighbour.name}}
-                            </div>
-                            <div v-bind:style="{
-                                        position : 'absolute',
-                                        bottom: '0px',
-                                        width : '12px',
-                                        height : '12px',
-                                        borderRadius : '6px',
-                                        backgroundColor : 'black',
-                                        transform: 'translate(-50%, 0)'
-                                    }">
-                            </div>
-                        </div>
-                    </transition>
+                    <border-indicators
+                                        v-bind:topNeighbour="topNeighbour"
+                                        v-bind:botNeighbour="botNeighbour"
+                                        v-bind:leftNeighbour="leftNeighbour"
+                                        v-bind:rightNeighbour="rightNeighbour">
+                    </border-indicators>
                 </div>`,
+    mixins : [packedThemeMapMixin],
     data : function(){
         return {
             cthemes : [],
@@ -361,243 +221,29 @@ var ThemeMap = Vue.extend({
             botNeighbour : null,
             leftNeighbour : null,
             rightNeighbour : null,
-            showTopNeighbour : false,
-            showBotNeighbour : false,
-            showLeftNeighbour : false,
-            showRightNeighbour : false
+            zoomHandler : null
         }
     },
-    created: function(){
+    mounted: function(){
         let self = this;
-        this.retrieveThemeMapJson()
-            .then(function(res){
-                    let themes = JSON.parse(res);
-                    self.loading = false;
 
-                    let sortedThemes = self.sortThemes(themes);
-                    let packedThemes = self.pack(sortedThemes);
-                    packedThemes.forEach(function(element) {
-                        self.cthemes.push(element);
-                    });
-                    enableDragScroll();
-                    //FIND CURRENT THEME
-                    self.setCurrentThemeFinderInterval()
-                    //Go to center of the map
-                    window.setTimeout(function(){
-                        if(self.mapSize){
-                            window.scrollTo(self.mapSize.w/2,self.mapSize.h/2);
-                        }
-                    }, 500);
+        let zoomInHandler = function (x,y) {
+            let element = self.getThemeElementFromPos(x,y);
+            if(element) {
+                self.$router.push('/inner-theme-map/'+element.name);
+            } else {
+                self.$router.push('/inner-theme-map/'+self.currentTheme);
+            }
+        }
 
-                    self.scrollTimer = -1;
-                    window.onscroll = function(e){
-                        var hideNeighbour = function(){
-                            self.showTopNeighbour = self.showBotNeighbour = self.showLeftNeighbour = self.showRightNeighbour = false;
-                        }
-
-                        var showNeighbours = function(){
-                            if(self.lastXPos && self.lastYPos){
-                                hideNeighbour();
-                                if( window.scrollY < self.lastYPos){
-                                    self.showTopNeighbour = true;
-                                }
-                                if( window.scrollY > self.lastYPos){
-                                    self.showBotNeighbour = true;
-                                }
-                                if(window.scrollX < self.lastXPos){
-                                    self.showLeftNeighbour = true;
-                                }
-                                if(window.scrollX > self.lastXPos){
-                                    self.showRightNeighbour = true;
-                                }
-                            }
-                            self.lastXPos = window.scrollX;
-                            self.lastYPos = window.scrollY;
-                        }
-
-                        showNeighbours(e);
-                        if(self.scrollTimer != -1){
-                            clearTimeout(self.scrollTimer);
-                        }
-                        self.scrollTimer = window.setTimeout(hideNeighbour, 500);
-                    };
-                },function(err){
-                    self.error = err;
-                    self.loading = false;
-                    console.error(err);
-                })
+        let zoomOutHandler = function () {
+            self.$router.push('/outer-theme-map/'+self.currentTheme);
+        }
+        self.zoomHandler = new ZoomHandler(document.getElementById('theme-map'));
+        self.zoomHandler.setZoomHandlers(zoomInHandler,zoomOutHandler);
     },
     beforeDestroy: function(){
-        disableDragScroll();
-    },
-    methods: {
-        setCurrentThemeFinderInterval : function() {
-            let self = this;
-            window.setInterval(function(){
-                let curX = window.scrollX+window.innerWidth/2, curY = window.scrollY+window.innerHeight/2;
-                for(let element of self.cthemes){
-                    if(curX >= element.fit.x && curX < (element.fit.x + element.w) && curY >= element.fit.y && curY < (element.fit.y + element.h)){
-                        if(self.currentTheme != element.name){
-                            self.currentTheme = element.name;
-                            self.nbBooks = element.nbBooks;
-                            self.findNeighbours(element);
-                            self.$emit('current-theme-changed', self.currentTheme);
-                            return;
-                        }
-                    }
-                }
-            }, 300);
-        },
-        retrieveThemeMapJson : function(){
-            this.loading = true;
-            return requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/themes`);
-        },
-        sortThemes : function(themes){
-            if(!themes){
-                return;
-            }
-            let sortedThemes = [];
-
-            for (var key in themes){
-                let larg = Math.trunc((Math.sqrt(themes[key].nbBooks)+1)*1.2);
-                let haut = Math.trunc(themes[key].nbBooks/larg)+1;
-                if(larg && haut){
-                    themes[key].w = larg*this.bookcellWidth;
-                    themes[key].h = haut*this.bookcellHeight;
-                    themes[key].id = key;
-                    sortedThemes.push(themes[key]);
-                } else {
-                    console.error(themes[key]);
-                }
-            }
-            sortedThemes.sort(function(a, b) {
-                return b.h - a.h;
-            });
-            return sortedThemes;
-        },
-        pack : function(sortedThemes){
-            let getBiggestSizePack = function(roots){
-                let biggestW = -1;
-                let biggestH = -1;
-                for(let i = 0 ; i<roots.length ; i++){
-                    if(roots[i].w > biggestW){
-                        biggestW = roots[i].w;
-                    }
-                    if(roots[i].h > biggestH){
-                        biggestH = roots[i].h;
-                    }
-                }
-                return {w : biggestW, h : biggestH};
-            }
-
-            if(sortedThemes.length == 0){
-                return;
-            }
-
-            let multi = [];
-            multi[0] = [];  //upleft
-            multi[1] = [];  //upright
-            multi[2] = [];  //downleft
-            multi[3] = [];  //downright
-
-            let i = 0;
-            sortedThemes.forEach(function(theme){
-                multi[i%4].push(theme);
-                i++;
-            }, this)
-
-            let packer = new PackerGrowing();
-            let roots = [];
-            for(i = 0 ; i<multi.length ; i++){
-                packer.fit(multi[i]);
-                roots.push({w : packer.root.w, h : packer.root.h});
-            }
-
-            let maxSizes = getBiggestSizePack(roots);
-            this.mapSize = {
-                w : maxSizes.w*2,
-                h : maxSizes.h*2
-            }
-            //Now we have 4 packs oriented each of them to the top-left
-            //We transform each of the elements to obtain a 2x2 square of the 4 packs and all of them oriented to center of the 2x2 square
-            //Upleft
-            multi[0].forEach(function(theme){
-                theme.fit.x = maxSizes.w - theme.w - theme.fit.x;
-                theme.fit.y = maxSizes.h - theme.h - theme.fit.y;
-            });
-
-            //Upright
-            multi[1].forEach(function(theme){
-                theme.fit.x = theme.fit.x + maxSizes.w;
-                theme.fit.y = maxSizes.h - theme.h - theme.fit.y;
-            });
-
-            //DownLeft
-            multi[2].forEach(function(theme){
-                theme.fit.x = maxSizes.w - theme.w - theme.fit.x;
-                theme.fit.y = theme.fit.y + maxSizes.h;
-            });
-
-            //Downright
-            multi[3].forEach(function(theme){
-                theme.fit.x = theme.fit.x + maxSizes.w;
-                theme.fit.y = theme.fit.y + maxSizes.h;
-            });
-
-            let packedThemes = [];
-            for(i = 0 ; i < multi.length ; i++){
-                Array.prototype.push.apply(packedThemes, multi[i]);
-            }
-
-            return packedThemes;
-        },
-        findNeighbours : function(currentElement){
-            this.topNeighbour = this.botNeighbour = this.leftNeighbour = this.rightNeighbour = null;
-            let topDist = Infinity,
-                botDist = Infinity,
-                leftDist = Infinity,
-                rightDist = Infinity;
-            let tmpTopNeighbour = null,
-                tmpBotNeighbour = null,
-                tmpLeftNeighbour = null,
-                tmpRightNeighbour = null;
-            let topX = currentElement.fit.x + currentElement.w/2;
-            let topY = currentElement.fit.y;
-            let botX = topX;
-            let botY = topY + currentElement.h;
-            let leftX = currentElement.fit.x;
-            let leftY = currentElement.fit.y + currentElement.h/2;
-            let rightX = currentElement.fit.x + currentElement.w;
-            let rightY = leftY;
-
-            for(let element of this.cthemes){
-                tmpTopDist = getDistance(topX, topY,element.fit.x + element.w/2, element.fit.y + element.h);
-                tmpBotDist = getDistance(botX, botY, element.fit.x + element.w/2, element.fit.y);
-                tmpLeftDist = getDistance(leftX, leftY, element.fit.x + element.w, element.fit.y + element.h/2);
-                tmpRightDist = getDistance(rightX, rightY, element.fit.x, element.fit.y + element.h/2);
-
-                if(tmpTopDist < topDist){
-                    topDist = tmpTopDist;
-                    tmpTopNeighbour = element;
-                }
-                if(tmpBotDist < botDist){
-                    botDist = tmpBotDist;
-                    tmpBotNeighbour = element;
-                }
-                if(tmpLeftDist < leftDist){
-                    leftDist = tmpLeftDist;
-                    tmpLeftNeighbour = element;
-                }
-                if(tmpRightDist < rightDist){
-                    rightDist = tmpRightDist;
-                    tmpRightNeighbour = element;
-                }
-            }
-            this.topNeighbour = tmpTopNeighbour;
-            this.botNeighbour = tmpBotNeighbour;
-            this.leftNeighbour = tmpLeftNeighbour;
-            this.rightNeighbour = tmpRightNeighbour;
-        }
+        this.zoomHandler.removeZoomHandlers();
     },
     components : {
         'theme-wrapper' : ThemeWrapper

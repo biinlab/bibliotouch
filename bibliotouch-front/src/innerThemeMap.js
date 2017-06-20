@@ -2,6 +2,8 @@ var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
 var requestp = require('request-promise-native');
+var mouseDragScroll = require('./helpers/mouseDragScroll');
+var ZoomHandler = require('./helpers/pinchToZoomHandler');
 require('./components/searchBox');
 
 
@@ -98,7 +100,8 @@ var BookElement = {
             imgSrc : '',
             isOverflown : false,
             bookCoverStyleObject : bookCoverStyleObject,
-            generatedBookCoverTitleStyleObject : generatedBookCoverTitleStyleObject
+            generatedBookCoverTitleStyleObject : generatedBookCoverTitleStyleObject,
+            zoomHandler: null
         }
     },
     mounted: function(){
@@ -107,8 +110,8 @@ var BookElement = {
     },
     computed: {
         generatedCoverSrc : function(){
-            let rnd = Math.trunc((Math.random()*5)+1);
-            return `/res/covers/cover_generate_${rnd}.png`;
+            let rnd = Math.trunc((Math.random()*7)+1);
+            return `/res/covers/cover_${rnd}.png`;
         },
         authorsId : function(){
             return `${this.book.id}authors`
@@ -131,7 +134,7 @@ var BookElement = {
             let self = this;
             let isbn = this.book.isbn;
             if(isbn){
-                requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/covers/isbn/${isbn}.jpg`)
+                requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/covers/isbn/${isbn}-100.jpg`)
                     .then(function(body){
                         self.imgAvailable = true;
                         self.imgSrc = './covers/isbn/'+isbn+'.jpg';
@@ -154,7 +157,7 @@ var BookElement = {
 }
 
 var InnerThemeMap = Vue.extend({
-    template : `<div>
+    template : `<div id="inner-theme-map">
                     <book-element
                             v-for="book in books"
                             v-bind:key="book.id"
@@ -172,8 +175,16 @@ var InnerThemeMap = Vue.extend({
             this.populateMap(to.params.theme_id);
         }
     },
-    created : function(component){
+    mounted : function(component){
+        let self = this;
         this.populateMap(this.$route.params.theme_id);
+        mouseDragScroll.enableDragScroll();
+        this.zoomHandler = new ZoomHandler(document.getElementById('inner-theme-map'));
+        this.zoomHandler.setZoomHandlers(()=>{},()=>{self.$router.push(`/theme-map/${self.$route.params.theme_id}`)});
+    },
+    beforeDestroy : function(){
+        mouseDragScroll.disableDragScroll();
+        this.zoomHandler.removeZoomHandlers();
     },
     components : {
         'book-element' : BookElement
@@ -188,6 +199,7 @@ var InnerThemeMap = Vue.extend({
                     let parsedBooks = JSON.parse(retrievedBooks);
                     let larg = Math.trunc((Math.sqrt(parsedBooks.length)+1));
                     let haut = Math.trunc(parsedBooks.length/larg)+1;
+                    self.$emit('current-theme-changed',theme);
 
                     gridDispatcher.dispatch(parsedBooks,larg, bookcellWidth, bookcellHeight);
                     parsedBooks.forEach(function(book){

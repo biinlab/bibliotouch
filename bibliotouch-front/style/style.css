@@ -39,6 +39,10 @@ p {
   letter-spacing: 0;
   padding-left : 20px;
   padding-right : 20px;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 #search-box{
@@ -173,6 +177,10 @@ p {
   box-shadow: 0 0 10px 0 rgba(0,0,0,0.12);
   background-color : lightgrey;
   object-fit : cover;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 .cartouche-box {
@@ -183,6 +191,10 @@ p {
   background-color : black;
   width : 128px;
   height : 84px;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 .cartouche-title {
