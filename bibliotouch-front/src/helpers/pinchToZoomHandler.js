@@ -39,7 +39,6 @@ ZoomHandler.prototype.setZoomHandlers = function(zoomInCallback, zoomOutCallback
         }
     }
 
-    
     this.el.ontouchstart= start_handler;
     this.el.ontouchmove= move_handler;
     // Use same handler for touchcancel and touchend

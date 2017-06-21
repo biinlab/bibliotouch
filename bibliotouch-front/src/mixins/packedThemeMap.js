@@ -13,7 +13,9 @@ var packedThemeMapMixin = {
     data : function(){
         return {
             cthemes: [],
-            loading: false
+            loading: false,
+            biggestNbDocs : -Infinity,
+            smallestNbDocs : Infinity
         }
     },
     created: function(){
@@ -29,6 +31,13 @@ var packedThemeMapMixin = {
                     self.mapSize = quadBinPacker.mapSize;
                     packedThemes.forEach(function(element) {
                         self.cthemes.push(element);
+                        //find biggest and smallest nbDocs
+                        if(element.nbBooks > self.biggestNbDocs){
+                            self.biggestNbDocs = element.nbBooks;
+                        }
+                        if(element.nbBooks < self.smallestNbDocs){
+                            self.smallestNbDocs = element.nbBooks;
+                        }
                     });
                     mouseDragScroll.enableDragScroll();
                     //FIND CURRENT THEME

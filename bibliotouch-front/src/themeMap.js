@@ -1,11 +1,8 @@
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
-var PackerGrowing = require('./helpers/packerGrowing');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
 var ZoomHandler = require('./helpers/pinchToZoomHandler');
-var mouseDragScroll = require('./helpers/mouseDragScroll');
-var QuadBinPacker = require('./helpers/quadBinPacker');
 var packedThemeMapMixin = require('./mixins/packedThemeMap');
 require('./components/borderIndicators');
 require('./components/searchBox');
@@ -28,13 +25,14 @@ Vue.use(VueLazyLoad, {
 var bookCoverStyleObject = {
     position : 'absolute',
     width : `${bookcoverWidth}px`,
-    height : `${bookcoverHeight}`,
+    height : `${bookcoverHeight}px`,
     left : `${imgTopMargin}px`,
     top : `${imgLeftMargin}px`,
     boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
     userDrag : 'none',
     userSelect : 'none',
-    backgroundColor : 'lightgrey'
+    backgroundColor : 'lightgrey',
+    objectFit : 'cover'
 }
 
 var generatedBookCoverTitleStyleObject = {
@@ -53,8 +51,8 @@ var BookElement = {
                         position : 'absolute',
                         left : book.dispatch.x + 'px',
                         top : book.dispatch.y + 'px',
-                        width : ${bookcellWidth} + 'px',
-                        height : ${bookcellHeight} + 'px',}"
+                        width : '${bookcellWidth}px',
+                        height : '${bookcellHeight}px',}"
                         @show="setOnScreen">
                     <!--<transition name="fade">-->
                         <img    v-if="!imgAvailable"

@@ -9,6 +9,7 @@ require('./components/activeThemeBox');
 
 var ThemeMap = require('./themeMap');
 var InnerThemeMap = require('./innerThemeMap');
+var OuterThemeMap = require('./outerThemeMap');
 
 // 2. Define some routes
 // Each route should map to a component. The "component" can
@@ -16,6 +17,8 @@ var InnerThemeMap = require('./innerThemeMap');
 // Vue.extend(), or just a component options object.
 // We'll talk about nested routes later.
 const routes = [
+  { path: '/outer-theme-map', component: OuterThemeMap},
+  { path: '/outer-theme-map/:theme_id', component: OuterThemeMap},
   { path: '/theme-map', component: ThemeMap },
   { path: '/theme-map/:theme_id', component: ThemeMap },
   { path: '/inner-theme-map/:theme_id', component: InnerThemeMap}
@@ -42,3 +45,19 @@ const app = new Vue({
     }
   }
 }).$mount('#app')
+
+
+
+window.addEventListener("touchstart", function (event){
+    if(event.touches.length > 1){
+        //the event is multi-touch
+        event.preventDefault();
+    }
+});
+
+window.addEventListener("touchmove", function (event){
+    if(event.touches.length > 1){
+        //the event is multi-touch
+        event.preventDefault();
+    }
+});

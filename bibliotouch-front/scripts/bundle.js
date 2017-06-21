@@ -83318,7 +83318,6 @@ ZoomHandler.prototype.setZoomHandlers = function(zoomInCallback, zoomOutCallback
         }
     }
 
-    
     this.el.ontouchstart= start_handler;
     this.el.ontouchmove= move_handler;
     // Use same handler for touchcancel and touchend
@@ -83460,6 +83459,7 @@ require('./components/activeThemeBox');
 
 var ThemeMap = require('./themeMap');
 var InnerThemeMap = require('./innerThemeMap');
+var OuterThemeMap = require('./outerThemeMap');
 
 // 2. Define some routes
 // Each route should map to a component. The "component" can
@@ -83467,6 +83467,8 @@ var InnerThemeMap = require('./innerThemeMap');
 // Vue.extend(), or just a component options object.
 // We'll talk about nested routes later.
 const routes = [
+  { path: '/outer-theme-map', component: OuterThemeMap},
+  { path: '/outer-theme-map/:theme_id', component: OuterThemeMap},
   { path: '/theme-map', component: ThemeMap },
   { path: '/theme-map/:theme_id', component: ThemeMap },
   { path: '/inner-theme-map/:theme_id', component: InnerThemeMap}
@@ -83494,7 +83496,22 @@ const app = new Vue({
   }
 }).$mount('#app')
 
-},{"./components/activeThemeBox":367,"./components/searchBox":369,"./components/zoomNavBox":370,"./innerThemeMap":377,"./themeMap":379,"vue":365,"vue-router":364}],377:[function(require,module,exports){
+
+
+window.addEventListener("touchstart", function (event){
+    if(event.touches.length > 1){
+        //the event is multi-touch
+        event.preventDefault();
+    }
+});
+
+window.addEventListener("touchmove", function (event){
+    if(event.touches.length > 1){
+        //the event is multi-touch
+        event.preventDefault();
+    }
+});
+},{"./components/activeThemeBox":367,"./components/searchBox":369,"./components/zoomNavBox":370,"./innerThemeMap":377,"./outerThemeMap":379,"./themeMap":380,"vue":365,"vue-router":364}],377:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
@@ -83724,7 +83741,9 @@ var packedThemeMapMixin = {
     data : function(){
         return {
             cthemes: [],
-            loading: false
+            loading: false,
+            biggestNbDocs : -Infinity,
+            smallestNbDocs : Infinity
         }
     },
     created: function(){
@@ -83740,6 +83759,13 @@ var packedThemeMapMixin = {
                     self.mapSize = quadBinPacker.mapSize;
                     packedThemes.forEach(function(element) {
                         self.cthemes.push(element);
+                        //find biggest and smallest nbDocs
+                        if(element.nbBooks > self.biggestNbDocs){
+                            self.biggestNbDocs = element.nbBooks;
+                        }
+                        if(element.nbBooks < self.smallestNbDocs){
+                            self.smallestNbDocs = element.nbBooks;
+                        }
                     });
                     mouseDragScroll.enableDragScroll();
                     //FIND CURRENT THEME
@@ -83849,11 +83875,192 @@ module.exports = packedThemeMapMixin;
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
-var PackerGrowing = require('./helpers/packerGrowing');
+var packedThemeMapMixin = require('./mixins/packedThemeMap');
+var ZoomHandler = require('./helpers/pinchToZoomHandler');
+require('./components/borderIndicators');
+require('./components/searchBox');
+
+
+var bookcellHeight = 65,
+    bookcellWidth = 35,
+    bookcoverHeight = 35,
+    bookcoverWidth = 5;
+    
+var imgTopMargin = (bookcellHeight-bookcoverHeight)/2;
+var imgLeftMargin = (bookcellWidth-bookcoverWidth)/2;
+
+
+Vue.use(VueLazyLoad, {
+    preLoad : 3,
+    lazyComponent : true
+});
+
+var bookCoverStyleObject = {
+    width : `${bookcoverWidth}px`,
+    height : `${bookcoverHeight}px`,
+    marginLeft : `${imgTopMargin}px`,
+    marginTop : `${imgLeftMargin}px`,
+    boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
+    userDrag : 'none',
+    userSelect : 'none',
+    backgroundColor : 'lightgrey',
+    objectFit : 'cover'
+}
+
+var BookElement = {
+    template : `<div v-bind:style="{
+                        display : 'inline-block',
+                        width : '${bookcellWidth}px',
+                        height : '${bookcellHeight}px',}">
+                    <img    v-bind:style="bookCoverStyleObject"
+                            v-bind:src="generatedCoverSrc">
+                    </img>
+                </div>`,
+    props : ['book'],
+    data : function(){
+        return {
+            bookCoverStyleObject : bookCoverStyleObject,
+        }
+    },
+    computed: {
+        generatedCoverSrc : function(){
+            let rnd = Math.trunc((Math.random()*7)+1);
+            return `/res/covers/cover_${rnd}.png`;
+        }
+    }
+}
+
+var ThemeWrapper = {
+    template : `
+                    <lazy-component 
+                                @show="loadBooks"
+                                v-bind:style="{
+                                    position : 'absolute',
+                                    left : theme.fit.x + 'px',
+                                    top : theme.fit.y + 'px',
+                                    width : theme.w + 'px',
+                                    height : theme.h + 'px',         
+                                    userSelect: 'none'}">
+                        <book-element
+                                    v-for="book in books"
+                                    v-bind:key="book"
+                                    v-bind:book="book">
+                        </book-element>
+                        <div v-bind:style="{
+                            position : 'absolute',
+                            top : '50%',
+                            left : '50%',
+                            transform: 'translate(-50%, -50%)',
+                            zIndex : '-5'
+                            }">
+                            <p v-bind:style="{
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: '600',
+                                    fontSize: themeFontSize+'px',
+                                    textTransform : 'capitalize',
+                                    color: '#000000',
+                                    letterSpacing: '0',
+                                    margin: '4px',
+                                    textAlign: 'center'}">
+                                {{theme.name}}
+                            </p>
+                            <p v-bind:style="{
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: '600',
+                                    fontSize: '14px',
+                                    color: '#000000',
+                                    marginTop: '0',
+                                    textAlign: 'center'
+                                }">
+                                {{theme.nbBooks}} documents
+                            </p>
+                        </div>
+                    </lazy-component>`,
+    props : ['theme', 'biggestNbDocs', 'smallestNbDocs'],
+    data : function () {
+        return {
+            books : []
+        }
+    },
+    computed : {
+        themeFontSize : function(){
+            let maxSize = 58, minSize = 22;
+            return Math.trunc(minSize + ((this.theme.nbBooks - this.smallestNbDocs)/(this.biggestNbDocs-this.smallestNbDocs))*(maxSize-minSize));
+        }
+    },
+    methods : {
+        loadBooks : function(component){
+            this.books = new Array(this.theme.nbBooks);
+        }
+    },
+    components : {
+        'book-element' : BookElement
+    }
+};
+
+var ThemeMap = Vue.extend({
+    template : `<div id="outer-theme-map">
+                    <theme-wrapper  v-for="theme in cthemes" 
+                                    v-bind:key="theme.id"
+                                    v-bind:theme="theme"
+                                    v-bind:biggestNbDocs="biggestNbDocs"
+                                    v-bind:smallestNbDocs="smallestNbDocs">
+                    </theme-wrapper>
+                    <border-indicators
+                                        v-bind:topNeighbour="topNeighbour"
+                                        v-bind:botNeighbour="botNeighbour"
+                                        v-bind:leftNeighbour="leftNeighbour"
+                                        v-bind:rightNeighbour="rightNeighbour">
+                    </border-indicators>
+                </div>`,
+    mixins : [packedThemeMapMixin],
+    data : function(){
+        return {
+            cthemes : [],
+            error : null,
+            loading : false,
+            currentTheme : '',
+            nbBooks : 0,
+            bookcellHeight : bookcellHeight,
+            bookcellWidth : bookcellWidth,
+            mapSize : null,
+            topNeighbour : null,
+            botNeighbour : null,
+            leftNeighbour : null,
+            rightNeighbour : null,
+            zoomHandler : null
+        }
+    },
+    mounted: function(){
+        let self = this;
+
+        let zoomInHandler = function (x,y) {
+            let element = self.getThemeElementFromPos(x,y);
+            if(element) {
+                self.$router.push('/theme-map/'+element.name);
+            } else {
+                self.$router.push('/theme-map/'+self.currentTheme);
+            }
+        }
+
+        self.zoomHandler = new ZoomHandler(document.getElementById('outer-theme-map'));
+        self.zoomHandler.setZoomHandlers(zoomInHandler,()=>{});
+    },
+    beforeDestroy: function(){
+        this.zoomHandler.removeZoomHandlers();
+    },
+    components : {
+        'theme-wrapper' : ThemeWrapper
+    }
+});
+
+module.exports = ThemeMap;
+},{"./components/borderIndicators":368,"./components/searchBox":369,"./helpers/pinchToZoomHandler":374,"./mixins/packedThemeMap":378,"request-promise-native":285,"vue":365,"vue-lazyload":363}],380:[function(require,module,exports){
+var Vue = require('vue');
+var VueLazyLoad = require('vue-lazyload');
+var requestp = require('request-promise-native');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
 var ZoomHandler = require('./helpers/pinchToZoomHandler');
-var mouseDragScroll = require('./helpers/mouseDragScroll');
-var QuadBinPacker = require('./helpers/quadBinPacker');
 var packedThemeMapMixin = require('./mixins/packedThemeMap');
 require('./components/borderIndicators');
 require('./components/searchBox');
@@ -83876,13 +84083,14 @@ Vue.use(VueLazyLoad, {
 var bookCoverStyleObject = {
     position : 'absolute',
     width : `${bookcoverWidth}px`,
-    height : `${bookcoverHeight}`,
+    height : `${bookcoverHeight}px`,
     left : `${imgTopMargin}px`,
     top : `${imgLeftMargin}px`,
     boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
     userDrag : 'none',
     userSelect : 'none',
-    backgroundColor : 'lightgrey'
+    backgroundColor : 'lightgrey',
+    objectFit : 'cover'
 }
 
 var generatedBookCoverTitleStyleObject = {
@@ -83901,8 +84109,8 @@ var BookElement = {
                         position : 'absolute',
                         left : book.dispatch.x + 'px',
                         top : book.dispatch.y + 'px',
-                        width : ${bookcellWidth} + 'px',
-                        height : ${bookcellHeight} + 'px',}"
+                        width : '${bookcellWidth}px',
+                        height : '${bookcellHeight}px',}"
                         @show="setOnScreen">
                     <!--<transition name="fade">-->
                         <img    v-if="!imgAvailable"
@@ -84092,85 +84300,11 @@ var ThemeMap = Vue.extend({
     },
     beforeDestroy: function(){
         this.zoomHandler.removeZoomHandlers();
-    },/*
-    methods: {
-        getThemeElementFromPos : function (x,y) {
-            for(let element of this.cthemes){
-                    if(x >= element.fit.x && x < (element.fit.x + element.w) && y >= element.fit.y && y < (element.fit.y + element.h)){
-                        return element;
-                    }
-                }
-        },
-        setCurrentThemeFinderInterval : function() {
-            let self = this;
-            window.setInterval(function(){
-                let curX = window.scrollX+window.innerWidth/2, curY = window.scrollY+window.innerHeight/2;
-                let element = self.getThemeElementFromPos(curX, curY);
-                if(element && self.currentTheme != element.name){
-                    self.currentTheme = element.name;
-                    self.nbBooks = element.nbBooks;
-                    self.findNeighbours(element);
-                    self.$emit('current-theme-changed', self.currentTheme);
-                    return;
-                }
-            }, 300);
-        },
-        retrieveThemeMapJson : function(){
-            this.loading = true;
-            return requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/themes`);
-        },
-        findNeighbours : function(currentElement){
-            this.topNeighbour = this.botNeighbour = this.leftNeighbour = this.rightNeighbour = null;
-            let topDist = Infinity,
-                botDist = Infinity,
-                leftDist = Infinity,
-                rightDist = Infinity;
-            let tmpTopNeighbour = null,
-                tmpBotNeighbour = null,
-                tmpLeftNeighbour = null,
-                tmpRightNeighbour = null;
-            let topX = currentElement.fit.x + currentElement.w/2;
-            let topY = currentElement.fit.y;
-            let botX = topX;
-            let botY = topY + currentElement.h;
-            let leftX = currentElement.fit.x;
-            let leftY = currentElement.fit.y + currentElement.h/2;
-            let rightX = currentElement.fit.x + currentElement.w;
-            let rightY = leftY;
-
-            for(let element of this.cthemes){
-                tmpTopDist = getDistance(topX, topY,element.fit.x + element.w/2, element.fit.y + element.h);
-                tmpBotDist = getDistance(botX, botY, element.fit.x + element.w/2, element.fit.y);
-                tmpLeftDist = getDistance(leftX, leftY, element.fit.x + element.w, element.fit.y + element.h/2);
-                tmpRightDist = getDistance(rightX, rightY, element.fit.x, element.fit.y + element.h/2);
-
-                if(tmpTopDist < topDist){
-                    topDist = tmpTopDist;
-                    tmpTopNeighbour = element;
-                }
-                if(tmpBotDist < botDist){
-                    botDist = tmpBotDist;
-                    tmpBotNeighbour = element;
-                }
-                if(tmpLeftDist < leftDist){
-                    leftDist = tmpLeftDist;
-                    tmpLeftNeighbour = element;
-                }
-                if(tmpRightDist < rightDist){
-                    rightDist = tmpRightDist;
-                    tmpRightNeighbour = element;
-                }
-            }
-            this.topNeighbour = tmpTopNeighbour;
-            this.botNeighbour = tmpBotNeighbour;
-            this.leftNeighbour = tmpLeftNeighbour;
-            this.rightNeighbour = tmpRightNeighbour;
-        }
-    },*/
+    },
     components : {
         'theme-wrapper' : ThemeWrapper
     }
 });
 
 module.exports = ThemeMap;
-},{"./components/borderIndicators":368,"./components/searchBox":369,"./helpers/fixedGridDispatcher":371,"./helpers/mouseDragScroll":372,"./helpers/packerGrowing":373,"./helpers/pinchToZoomHandler":374,"./helpers/quadBinPacker":375,"./mixins/packedThemeMap":378,"request-promise-native":285,"vue":365,"vue-lazyload":363}]},{},[376]);
+},{"./components/borderIndicators":368,"./components/searchBox":369,"./helpers/fixedGridDispatcher":371,"./helpers/pinchToZoomHandler":374,"./mixins/packedThemeMap":378,"request-promise-native":285,"vue":365,"vue-lazyload":363}]},{},[376]);
