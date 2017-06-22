@@ -11,7 +11,7 @@ Vue.component('search-box', {
                             placeholder="Je cherche..."
                             size="32"></input>
                     <div id="others-reading-div">
-                        Que lisent les autres ?
+                        Donnez moi une idée
                     </div>
                 </div>`
 })

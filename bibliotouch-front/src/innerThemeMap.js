@@ -6,6 +6,7 @@ var mouseDragScroll = require('./helpers/mouseDragScroll');
 var ZoomHandler = require('./helpers/pinchToZoomHandler');
 require('./components/searchBox');
 
+var eventBus = new Vue();
 
 var bookcellHeight = 168+60,
     bookcellWidth = 184+60,
@@ -54,7 +55,8 @@ var BookElement = {
                         left : book.dispatch.x + 'px',
                         top : book.dispatch.y + 'px',
                         width : '${bookcellWidth}px',
-                        height : '${bookcellHeight}px'}">
+                        height : '${bookcellHeight}px'}"
+                        v-on:click="showBookDetail">
                         <img    v-if="!imgAvailable"
                                 v-bind:style="bookCoverStyleObject"
                                 v-bind:src="generatedCoverSrc">
@@ -152,6 +154,9 @@ var BookElement = {
                 color += letters[Math.floor(Math.random() * 10)+6];
             }
             return color;
+        },
+        showBookDetail : function(){
+            eventBus.$emit('show-book-detail', this.book);
         }
     }
 }
@@ -177,6 +182,7 @@ var InnerThemeMap = Vue.extend({
     },
     mounted : function(component){
         let self = this;
+        eventBus.$on('show-book-detail',(book)=>{self.$emit('show-book-detail', book)})
         this.populateMap(this.$route.params.theme_id);
         mouseDragScroll.enableDragScroll();
         this.zoomHandler = new ZoomHandler(document.getElementById('inner-theme-map'));

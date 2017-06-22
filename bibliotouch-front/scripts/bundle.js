@@ -82814,6 +82814,71 @@ Vue.component('active-theme-box', {
 })
 },{"vue":365}],368:[function(require,module,exports){
 var Vue = require('vue');
+var requestp = require('request-promise-native');
+
+var BookDetail = Vue.component('book-detail', {
+    template : `<div    id="blurrer"
+                        class="modal"
+                        v-on:click="$emit('close-book-modal')">
+                    <div id="book-modal-wrapper">
+                        <div id="cover-title-wrapper">
+                        <img v-bind:src="imgSrc" id="cover-image"/>
+                        <div id="title-wrapper">
+                            <p>{{book.title}}</p>
+                        </div>
+                        </div>
+                        <div id="disponibility-wrapper">
+                            <p id="disponibility-text">disponible</p>
+                            <p id="disponibility-cote">côte <span>15457521</span></p>
+                        </div>
+                        <div id="authors-wrapper">
+                            <span v-for="author in book.authors">{{author}}</span>
+                        </div>
+                        <div id="publication-wrapper">
+                            <p id="editor-name">{{book.editor}}</p>
+                            <p id="collection-name">{{book.collection}}</p>
+                            <p id="publication-date">{{book.datePub}}</p>
+                        </div>
+                        <div id="vedettes-wrapper">
+                            <div v-for="authority in book.mainAuthorities">{{authority}}</div>
+                        </div>
+                        <div id="book-description">
+                            {{book.description}}
+                        </div>
+                        <span   id="close-button"
+                                v-on:click="close-book-modal">
+                                <img src="/res/cross.png"/>
+                        </span>
+                    </div>
+                    </div>
+                    `,
+    props: ['book'],
+    data : function(){
+        return {
+            imgSrc: ''
+        }
+    },
+    created : function(){
+            let rnd = Math.trunc((Math.random()*7)+1);
+            this.imgSrc =  `/res/covers/cover_${rnd}.png`;
+            this.getTrueCover();
+    },
+    methods : {
+        getTrueCover : function () {
+            let self = this;
+            let isbn = this.book.isbn;
+            if(isbn){
+                requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/covers/isbn/${isbn}-100.jpg`)
+                    .then(function(body){
+                        self.imgSrc = './covers/isbn/'+isbn+'.jpg';
+                    })
+                    .catch(function(err){});
+            }
+        }
+    }
+})
+},{"request-promise-native":285,"vue":365}],369:[function(require,module,exports){
+var Vue = require('vue');
 
 Vue.component('border-indicators', {
     template : `<!--LEFT INDICATOR-->
@@ -82979,7 +83044,7 @@ Vue.component('border-indicators', {
         };
     }
 })
-},{"vue":365}],369:[function(require,module,exports){
+},{"vue":365}],370:[function(require,module,exports){
 var Vue = require('vue');
 
 Vue.component('search-box', {
@@ -82993,11 +83058,11 @@ Vue.component('search-box', {
                             placeholder="Je cherche..."
                             size="32"></input>
                     <div id="others-reading-div">
-                        Que lisent les autres ?
+                        Donnez moi une idée
                     </div>
                 </div>`
 })
-},{"vue":365}],370:[function(require,module,exports){
+},{"vue":365}],371:[function(require,module,exports){
 var Vue = require('vue');
 
 Vue.component('zoom-nav-box', {
@@ -83053,7 +83118,7 @@ Vue.component('zoom-nav-box', {
         }
     }
 });
-},{"vue":365}],371:[function(require,module,exports){
+},{"vue":365}],372:[function(require,module,exports){
 //require('dragscroll');
 
 var FixedGridDispatcher = function () {
@@ -83073,7 +83138,7 @@ FixedGridDispatcher.prototype.dispatch = function(elements, columns, cellWidth, 
 
 
 module.exports = new FixedGridDispatcher();
-},{}],372:[function(require,module,exports){
+},{}],373:[function(require,module,exports){
 var curYPos, curXPos, curDown;
 
 var mousemove = function(e){ 
@@ -83108,7 +83173,7 @@ MouseDragScroll.prototype.disableDragScroll = function(){
 }
 
 module.exports = new MouseDragScroll();
-},{}],373:[function(require,module,exports){
+},{}],374:[function(require,module,exports){
 /******************************************************************************
 
 Copyright (c) 2011 Jake Gordon and contributors
@@ -83276,7 +83341,7 @@ GrowingPacker.prototype = {
 }
 
 module.exports = GrowingPacker;
-},{}],374:[function(require,module,exports){
+},{}],375:[function(require,module,exports){
 
 var ZoomHandler = function (el) {
     this.el = el;
@@ -83333,16 +83398,17 @@ ZoomHandler.prototype.removeZoomHandlers = function(){
 }
 
 module.exports = ZoomHandler;
-},{}],375:[function(require,module,exports){
+},{}],376:[function(require,module,exports){
 var PackerGrowing = require('./packerGrowing');
 
-var QuadBinPacker = function (bookcellHeight, bookcellWidth) {
+var QuadBinPacker = function (bookcellHeight, bookcellWidth, ratio) {
     this.bookcellHeight = bookcellHeight;
     this.bookcellWidth = bookcellWidth;
     this.mapSize = {
         w : -1,
         h : -1
     }
+    this.ratio = ratio;
 }
 
 QuadBinPacker.prototype.sortThemes = function(themes){
@@ -83354,6 +83420,10 @@ QuadBinPacker.prototype.sortThemes = function(themes){
     for (var key in themes){
         let larg = Math.trunc((Math.sqrt(themes[key].nbBooks)+1)*1.2);
         let haut = Math.trunc(themes[key].nbBooks/larg)+1;
+        if(this.ratio != 0){
+            larg = Math.trunc((Math.sqrt(themes[key].nbBooks/this.ratio)+1)*1.2);
+            haut = Math.trunc((themes[key].nbBooks/this.ratio)/larg)+1;
+        }
         if(larg && haut){
             themes[key].w = larg*this.bookcellWidth;
             themes[key].h = haut*this.bookcellHeight;
@@ -83447,7 +83517,7 @@ QuadBinPacker.prototype.pack = function(sortedThemes){
 }
 
 module.exports = QuadBinPacker;
-},{"./packerGrowing":373}],376:[function(require,module,exports){
+},{"./packerGrowing":374}],377:[function(require,module,exports){
 var Vue = require('vue');
 var VueRouter = require('vue-router');
 
@@ -83456,6 +83526,7 @@ Vue.use(VueRouter);
 require('./components/searchBox');
 require('./components/zoomNavBox');
 require('./components/activeThemeBox');
+require('./components/bookDetail');
 
 var ThemeMap = require('./themeMap');
 var InnerThemeMap = require('./innerThemeMap');
@@ -83487,11 +83558,20 @@ const router = new VueRouter({
 const app = new Vue({
   router,
   data : {
-    currentTheme : ''
+    currentTheme : '',
+    bookToShow: {},
+    showBookModal: false
   },
   methods : {
     updateCurrentTheme : function(newTheme){
       this.currentTheme = newTheme;
+    },
+    showBookDetail : function(bookToShow){
+      this.currentBook = bookToShow;
+      this.showBookModal = true;
+    },
+    closeBookModal : function(){
+      this.showBookModal = false;
     }
   }
 }).$mount('#app')
@@ -83511,7 +83591,7 @@ window.addEventListener("touchmove", function (event){
         event.preventDefault();
     }
 });
-},{"./components/activeThemeBox":367,"./components/searchBox":369,"./components/zoomNavBox":370,"./innerThemeMap":377,"./outerThemeMap":379,"./themeMap":380,"vue":365,"vue-router":364}],377:[function(require,module,exports){
+},{"./components/activeThemeBox":367,"./components/bookDetail":368,"./components/searchBox":370,"./components/zoomNavBox":371,"./innerThemeMap":378,"./outerThemeMap":380,"./themeMap":381,"vue":365,"vue-router":364}],378:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
@@ -83520,6 +83600,7 @@ var mouseDragScroll = require('./helpers/mouseDragScroll');
 var ZoomHandler = require('./helpers/pinchToZoomHandler');
 require('./components/searchBox');
 
+var eventBus = new Vue();
 
 var bookcellHeight = 168+60,
     bookcellWidth = 184+60,
@@ -83568,7 +83649,8 @@ var BookElement = {
                         left : book.dispatch.x + 'px',
                         top : book.dispatch.y + 'px',
                         width : '${bookcellWidth}px',
-                        height : '${bookcellHeight}px'}">
+                        height : '${bookcellHeight}px'}"
+                        v-on:click="showBookDetail">
                         <img    v-if="!imgAvailable"
                                 v-bind:style="bookCoverStyleObject"
                                 v-bind:src="generatedCoverSrc">
@@ -83666,6 +83748,9 @@ var BookElement = {
                 color += letters[Math.floor(Math.random() * 10)+6];
             }
             return color;
+        },
+        showBookDetail : function(){
+            eventBus.$emit('show-book-detail', this.book);
         }
     }
 }
@@ -83691,6 +83776,7 @@ var InnerThemeMap = Vue.extend({
     },
     mounted : function(component){
         let self = this;
+        eventBus.$on('show-book-detail',(book)=>{self.$emit('show-book-detail', book)})
         this.populateMap(this.$route.params.theme_id);
         mouseDragScroll.enableDragScroll();
         this.zoomHandler = new ZoomHandler(document.getElementById('inner-theme-map'));
@@ -83725,7 +83811,7 @@ var InnerThemeMap = Vue.extend({
 });
 
 module.exports = InnerThemeMap;
-},{"./components/searchBox":369,"./helpers/fixedGridDispatcher":371,"./helpers/mouseDragScroll":372,"./helpers/pinchToZoomHandler":374,"request-promise-native":285,"vue":365,"vue-lazyload":363}],378:[function(require,module,exports){
+},{"./components/searchBox":370,"./helpers/fixedGridDispatcher":372,"./helpers/mouseDragScroll":373,"./helpers/pinchToZoomHandler":375,"request-promise-native":285,"vue":365,"vue-lazyload":363}],379:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -83743,7 +83829,8 @@ var packedThemeMapMixin = {
             cthemes: [],
             loading: false,
             biggestNbDocs : -Infinity,
-            smallestNbDocs : Infinity
+            smallestNbDocs : Infinity,
+            ratio : 0
         }
     },
     created: function(){
@@ -83753,7 +83840,7 @@ var packedThemeMapMixin = {
                     let themes = JSON.parse(res);
                     self.loading = false;
 
-                    this.quadBinPacker = new QuadBinPacker(self.bookcellHeight, self.bookcellWidth);
+                    this.quadBinPacker = new QuadBinPacker(self.bookcellHeight, self.bookcellWidth, self.ratio);
                     let sortedThemes = quadBinPacker.sortThemes(themes);
                     let packedThemes = quadBinPacker.pack(sortedThemes);
                     self.mapSize = quadBinPacker.mapSize;
@@ -83871,7 +83958,7 @@ var packedThemeMapMixin = {
 }
 
 module.exports = packedThemeMapMixin;
-},{"../helpers/mouseDragScroll":372,"../helpers/quadBinPacker":375,"request-promise-native":285,"vue":365,"vue-lazyload":363}],379:[function(require,module,exports){
+},{"../helpers/mouseDragScroll":373,"../helpers/quadBinPacker":376,"request-promise-native":285,"vue":365,"vue-lazyload":363}],380:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -83975,8 +84062,16 @@ var ThemeWrapper = {
                                 {{theme.nbBooks}} documents
                             </p>
                         </div>
+                        <div    class="enter-theme-button"
+                                v-bind:style="{
+                                    width: enterThemeButtonSize+'px',
+                                    height: enterThemeButtonSize+'px',
+                                }"
+                                v-on:click="$router.push('/theme-map/'+theme.name)">
+                            <img src="/res/arrow_right.png"/>
+                        </div>
                     </lazy-component>`,
-    props : ['theme', 'biggestNbDocs', 'smallestNbDocs'],
+    props : ['theme', 'biggestNbDocs', 'smallestNbDocs', 'ratio'],
     data : function () {
         return {
             books : []
@@ -83986,11 +84081,15 @@ var ThemeWrapper = {
         themeFontSize : function(){
             let maxSize = 58, minSize = 22;
             return Math.trunc(minSize + ((this.theme.nbBooks - this.smallestNbDocs)/(this.biggestNbDocs-this.smallestNbDocs))*(maxSize-minSize));
+        },
+        enterThemeButtonSize : function(){
+        let maxSize = 48, minSize = 32;
+            return Math.trunc(minSize + ((this.theme.nbBooks - this.smallestNbDocs)/(this.biggestNbDocs-this.smallestNbDocs))*(maxSize-minSize));    
         }
     },
     methods : {
         loadBooks : function(component){
-            this.books = new Array(this.theme.nbBooks);
+            this.books = new Array(this.ratio > 0 ? Math.trunc(this.theme.nbBooks/this.ratio) : this.theme.nbBooks);
         }
     },
     components : {
@@ -84004,14 +84103,9 @@ var ThemeMap = Vue.extend({
                                     v-bind:key="theme.id"
                                     v-bind:theme="theme"
                                     v-bind:biggestNbDocs="biggestNbDocs"
-                                    v-bind:smallestNbDocs="smallestNbDocs">
+                                    v-bind:smallestNbDocs="smallestNbDocs"
+                                    v-bind:ratio="ratio">
                     </theme-wrapper>
-                    <border-indicators
-                                        v-bind:topNeighbour="topNeighbour"
-                                        v-bind:botNeighbour="botNeighbour"
-                                        v-bind:leftNeighbour="leftNeighbour"
-                                        v-bind:rightNeighbour="rightNeighbour">
-                    </border-indicators>
                 </div>`,
     mixins : [packedThemeMapMixin],
     data : function(){
@@ -84023,11 +84117,8 @@ var ThemeMap = Vue.extend({
             nbBooks : 0,
             bookcellHeight : bookcellHeight,
             bookcellWidth : bookcellWidth,
+            ratio : 4,
             mapSize : null,
-            topNeighbour : null,
-            botNeighbour : null,
-            leftNeighbour : null,
-            rightNeighbour : null,
             zoomHandler : null
         }
     },
@@ -84055,7 +84146,7 @@ var ThemeMap = Vue.extend({
 });
 
 module.exports = ThemeMap;
-},{"./components/borderIndicators":368,"./components/searchBox":369,"./helpers/pinchToZoomHandler":374,"./mixins/packedThemeMap":378,"request-promise-native":285,"vue":365,"vue-lazyload":363}],380:[function(require,module,exports){
+},{"./components/borderIndicators":369,"./components/searchBox":370,"./helpers/pinchToZoomHandler":375,"./mixins/packedThemeMap":379,"request-promise-native":285,"vue":365,"vue-lazyload":363}],381:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -84064,6 +84155,8 @@ var ZoomHandler = require('./helpers/pinchToZoomHandler');
 var packedThemeMapMixin = require('./mixins/packedThemeMap');
 require('./components/borderIndicators');
 require('./components/searchBox');
+
+var eventBus = new Vue();
 
 var bookcellHeight = 140,
     bookcellWidth = 116,
@@ -84111,7 +84204,8 @@ var BookElement = {
                         top : book.dispatch.y + 'px',
                         width : '${bookcellWidth}px',
                         height : '${bookcellHeight}px',}"
-                        @show="setOnScreen">
+                        @show="setOnScreen"
+                        v-on:click="showBookDetail">
                     <!--<transition name="fade">-->
                         <img    v-if="!imgAvailable"
                                 v-bind:style="bookCoverStyleObject"
@@ -84171,6 +84265,9 @@ var BookElement = {
                 color += letters[Math.floor(Math.random() * 10)+6];
             }
             return color;
+        },
+        showBookDetail : function(){
+            eventBus.$emit('show-book-detail', this.book);
         }
     }
 }
@@ -84250,10 +84347,19 @@ var ThemeMap = Vue.extend({
                             v-bind:style="{
                                     fontSize : '30px',
                                     lineHeight: '15px',
-                                    margin : '0'
+                                    margin : '0',
+                                    textAlign: 'center'
                                     }">
                             {{nbBooks}} documents
                         </p>
+                    </div>
+                    <div    class="enter-theme-button"
+                            v-on:click="$router.push('/inner-theme-map/'+currentTheme)"
+                            v-bind:style="{
+                                position:'fixed',
+                                top: '608px'
+                            }">
+                        <img src="/res/arrow_right.png"/>
                     </div>
                     <border-indicators
                                         v-bind:topNeighbour="topNeighbour"
@@ -84282,6 +84388,7 @@ var ThemeMap = Vue.extend({
     },
     mounted: function(){
         let self = this;
+        eventBus.$on('show-book-detail',(book)=>{self.$emit('show-book-detail', book)})
 
         let zoomInHandler = function (x,y) {
             let element = self.getThemeElementFromPos(x,y);
@@ -84307,4 +84414,4 @@ var ThemeMap = Vue.extend({
 });
 
 module.exports = ThemeMap;
-},{"./components/borderIndicators":368,"./components/searchBox":369,"./helpers/fixedGridDispatcher":371,"./helpers/pinchToZoomHandler":374,"./mixins/packedThemeMap":378,"request-promise-native":285,"vue":365,"vue-lazyload":363}]},{},[376]);
+},{"./components/borderIndicators":369,"./components/searchBox":370,"./helpers/fixedGridDispatcher":372,"./helpers/pinchToZoomHandler":375,"./mixins/packedThemeMap":379,"request-promise-native":285,"vue":365,"vue-lazyload":363}]},{},[377]);

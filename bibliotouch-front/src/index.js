@@ -6,6 +6,7 @@ Vue.use(VueRouter);
 require('./components/searchBox');
 require('./components/zoomNavBox');
 require('./components/activeThemeBox');
+require('./components/bookDetail');
 
 var ThemeMap = require('./themeMap');
 var InnerThemeMap = require('./innerThemeMap');
@@ -37,11 +38,20 @@ const router = new VueRouter({
 const app = new Vue({
   router,
   data : {
-    currentTheme : ''
+    currentTheme : '',
+    bookToShow: {},
+    showBookModal: false
   },
   methods : {
     updateCurrentTheme : function(newTheme){
       this.currentTheme = newTheme;
+    },
+    showBookDetail : function(bookToShow){
+      this.currentBook = bookToShow;
+      this.showBookModal = true;
+    },
+    closeBookModal : function(){
+      this.showBookModal = false;
     }
   }
 }).$mount('#app')

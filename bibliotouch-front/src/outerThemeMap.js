@@ -101,8 +101,16 @@ var ThemeWrapper = {
                                 {{theme.nbBooks}} documents
                             </p>
                         </div>
+                        <div    class="enter-theme-button"
+                                v-bind:style="{
+                                    width: enterThemeButtonSize+'px',
+                                    height: enterThemeButtonSize+'px',
+                                }"
+                                v-on:click="$router.push('/theme-map/'+theme.name)">
+                            <img src="/res/arrow_right.png"/>
+                        </div>
                     </lazy-component>`,
-    props : ['theme', 'biggestNbDocs', 'smallestNbDocs'],
+    props : ['theme', 'biggestNbDocs', 'smallestNbDocs', 'ratio'],
     data : function () {
         return {
             books : []
@@ -112,11 +120,15 @@ var ThemeWrapper = {
         themeFontSize : function(){
             let maxSize = 58, minSize = 22;
             return Math.trunc(minSize + ((this.theme.nbBooks - this.smallestNbDocs)/(this.biggestNbDocs-this.smallestNbDocs))*(maxSize-minSize));
+        },
+        enterThemeButtonSize : function(){
+        let maxSize = 48, minSize = 32;
+            return Math.trunc(minSize + ((this.theme.nbBooks - this.smallestNbDocs)/(this.biggestNbDocs-this.smallestNbDocs))*(maxSize-minSize));    
         }
     },
     methods : {
         loadBooks : function(component){
-            this.books = new Array(this.theme.nbBooks);
+            this.books = new Array(this.ratio > 0 ? Math.trunc(this.theme.nbBooks/this.ratio) : this.theme.nbBooks);
         }
     },
     components : {
@@ -130,14 +142,9 @@ var ThemeMap = Vue.extend({
                                     v-bind:key="theme.id"
                                     v-bind:theme="theme"
                                     v-bind:biggestNbDocs="biggestNbDocs"
-                                    v-bind:smallestNbDocs="smallestNbDocs">
+                                    v-bind:smallestNbDocs="smallestNbDocs"
+                                    v-bind:ratio="ratio">
                     </theme-wrapper>
-                    <border-indicators
-                                        v-bind:topNeighbour="topNeighbour"
-                                        v-bind:botNeighbour="botNeighbour"
-                                        v-bind:leftNeighbour="leftNeighbour"
-                                        v-bind:rightNeighbour="rightNeighbour">
-                    </border-indicators>
                 </div>`,
     mixins : [packedThemeMapMixin],
     data : function(){
@@ -149,11 +156,8 @@ var ThemeMap = Vue.extend({
             nbBooks : 0,
             bookcellHeight : bookcellHeight,
             bookcellWidth : bookcellWidth,
+            ratio : 4,
             mapSize : null,
-            topNeighbour : null,
-            botNeighbour : null,
-            leftNeighbour : null,
-            rightNeighbour : null,
             zoomHandler : null
         }
     },

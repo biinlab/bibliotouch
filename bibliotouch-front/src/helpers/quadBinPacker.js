@@ -1,12 +1,13 @@
 var PackerGrowing = require('./packerGrowing');
 
-var QuadBinPacker = function (bookcellHeight, bookcellWidth) {
+var QuadBinPacker = function (bookcellHeight, bookcellWidth, ratio) {
     this.bookcellHeight = bookcellHeight;
     this.bookcellWidth = bookcellWidth;
     this.mapSize = {
         w : -1,
         h : -1
     }
+    this.ratio = ratio;
 }
 
 QuadBinPacker.prototype.sortThemes = function(themes){
@@ -18,6 +19,10 @@ QuadBinPacker.prototype.sortThemes = function(themes){
     for (var key in themes){
         let larg = Math.trunc((Math.sqrt(themes[key].nbBooks)+1)*1.2);
         let haut = Math.trunc(themes[key].nbBooks/larg)+1;
+        if(this.ratio != 0){
+            larg = Math.trunc((Math.sqrt(themes[key].nbBooks/this.ratio)+1)*1.2);
+            haut = Math.trunc((themes[key].nbBooks/this.ratio)/larg)+1;
+        }
         if(larg && haut){
             themes[key].w = larg*this.bookcellWidth;
             themes[key].h = haut*this.bookcellHeight;

@@ -14,12 +14,20 @@
                 <p>
                     <router-link to="/theme-map">Go to theme-map</router-link>
                 </p>
-            <router-view v-on:current-theme-changed="updateCurrentTheme"></router-view>
-            <div id="footer-wrapper">
-                <active-theme-box></active-theme-box>
-                <div id="constant-footer-wrapper">
-                    <search-box></search-box>
-                    <zoom-nav-box v-bind:current-theme="currentTheme"></zoom-nav-box>
+            <book-detail    v-if="showBookModal"
+                            v-bind:book="currentBook"
+                            v-on:close-book-modal="closeBookModal">
+            </book-detail>
+            <div>
+                <router-view    v-on:current-theme-changed="updateCurrentTheme"
+                                v-on:show-book-detail="showBookDetail">
+                </router-view>
+                <div id="footer-wrapper">
+                    <active-theme-box></active-theme-box>
+                    <div id="constant-footer-wrapper">
+                        <search-box></search-box>
+                        <zoom-nav-box v-bind:current-theme="currentTheme"></zoom-nav-box>
+                    </div>
                 </div>
             </div>
         </div>

@@ -15,7 +15,8 @@ var packedThemeMapMixin = {
             cthemes: [],
             loading: false,
             biggestNbDocs : -Infinity,
-            smallestNbDocs : Infinity
+            smallestNbDocs : Infinity,
+            ratio : 0
         }
     },
     created: function(){
@@ -25,7 +26,7 @@ var packedThemeMapMixin = {
                     let themes = JSON.parse(res);
                     self.loading = false;
 
-                    this.quadBinPacker = new QuadBinPacker(self.bookcellHeight, self.bookcellWidth);
+                    this.quadBinPacker = new QuadBinPacker(self.bookcellHeight, self.bookcellWidth, self.ratio);
                     let sortedThemes = quadBinPacker.sortThemes(themes);
                     let packedThemes = quadBinPacker.pack(sortedThemes);
                     self.mapSize = quadBinPacker.mapSize;

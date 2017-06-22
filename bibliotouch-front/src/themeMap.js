@@ -7,6 +7,8 @@ var packedThemeMapMixin = require('./mixins/packedThemeMap');
 require('./components/borderIndicators');
 require('./components/searchBox');
 
+var eventBus = new Vue();
+
 var bookcellHeight = 140,
     bookcellWidth = 116,
     bookcoverHeight = 80,
@@ -53,7 +55,8 @@ var BookElement = {
                         top : book.dispatch.y + 'px',
                         width : '${bookcellWidth}px',
                         height : '${bookcellHeight}px',}"
-                        @show="setOnScreen">
+                        @show="setOnScreen"
+                        v-on:click="showBookDetail">
                     <!--<transition name="fade">-->
                         <img    v-if="!imgAvailable"
                                 v-bind:style="bookCoverStyleObject"
@@ -113,6 +116,9 @@ var BookElement = {
                 color += letters[Math.floor(Math.random() * 10)+6];
             }
             return color;
+        },
+        showBookDetail : function(){
+            eventBus.$emit('show-book-detail', this.book);
         }
     }
 }
@@ -192,10 +198,19 @@ var ThemeMap = Vue.extend({
                             v-bind:style="{
                                     fontSize : '30px',
                                     lineHeight: '15px',
-                                    margin : '0'
+                                    margin : '0',
+                                    textAlign: 'center'
                                     }">
                             {{nbBooks}} documents
                         </p>
+                    </div>
+                    <div    class="enter-theme-button"
+                            v-on:click="$router.push('/inner-theme-map/'+currentTheme)"
+                            v-bind:style="{
+                                position:'fixed',
+                                top: '608px'
+                            }">
+                        <img src="/res/arrow_right.png"/>
                     </div>
                     <border-indicators
                                         v-bind:topNeighbour="topNeighbour"
@@ -224,6 +239,7 @@ var ThemeMap = Vue.extend({
     },
     mounted: function(){
         let self = this;
+        eventBus.$on('show-book-detail',(book)=>{self.$emit('show-book-detail', book)})
 
         let zoomInHandler = function (x,y) {
             let element = self.getThemeElementFromPos(x,y);
