@@ -196,7 +196,7 @@ var getFromIsbnOnAmazonSecretApi = function(book){
     }
     let url = `http://images.amazon.com/images/P/${cleanedCode}`
 
-    console.log(`${cleanedCode} : Start ${type} search`);
+    //console.log(`${cleanedCode} : Start ${type} search`);
     
     createDownloadDir();
     let req = request(url);
