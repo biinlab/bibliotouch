@@ -141,6 +141,9 @@ KohaImporter.prototype.import = function(){
 
 KohaImporter.prototype.update = function(){
     var self = this;
+    if(!config.get('Bibliotouch.koha.oaipmhEndpoint').update){
+        return new Promise(()=>{});
+    }
     
     async function updatePromise(resolve, reject){
         var recordStream = new Readable( {objectMode: true} )

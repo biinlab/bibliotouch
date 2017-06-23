@@ -11,12 +11,13 @@
             "kohadbconfig" : {
                 "host" : "localhost",
                 "port" : "3306",
-                "dbname" : "koha",
+                "dbname" : "testserver",
                 "user" : "bibliotouch",
                 "pwd" : "bibliotouch"
             },
             "oaipmhEndpoint" : {
-                "url" : "http://cataloguebib.enssib.fr/cgi-bin/koha/oai.pl"
+                "url" : "http://cataloguebib.enssib.fr/cgi-bin/koha/oai.pl",
+                "update":false
             },
             "kohaTags" :{
                 "isbn" : {
