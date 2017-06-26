@@ -56,7 +56,9 @@ var BookElement = {
                         width : '${bookcellWidth}px',
                         height : '${bookcellHeight}px',}"
                         @show="setOnScreen"
-                        v-on:click="showBookDetail">
+                        v-on:mousedown="initiateShowBookDetail"
+                        v-on:mousemove="invalidateShowBookDetail"
+                        v-on:mouseup="showBookDetail">
                     <!--<transition name="fade">-->
                         <img    v-if="!imgAvailable"
                                 v-bind:style="bookCoverStyleObject"
@@ -117,8 +119,16 @@ var BookElement = {
             }
             return color;
         },
+        initiateShowBookDetail : function(){
+            this.moved = false;
+        },
+        invalidateShowBookDetail : function(){
+            this.moved = true;
+        },
         showBookDetail : function(){
-            eventBus.$emit('show-book-detail', this.book);
+            if(!this.moved){
+                eventBus.$emit('show-book-detail', this.book);
+            }
         }
     }
 }

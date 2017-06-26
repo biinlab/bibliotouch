@@ -83650,7 +83650,9 @@ var BookElement = {
                         top : book.dispatch.y + 'px',
                         width : '${bookcellWidth}px',
                         height : '${bookcellHeight}px'}"
-                        v-on:click="showBookDetail">
+                        v-on:mousedown="initiateShowBookDetail"
+                        v-on:mousemove="invalidateShowBookDetail"
+                        v-on:mouseup="showBookDetail">
                         <img    v-if="!imgAvailable"
                                 v-bind:style="bookCoverStyleObject"
                                 v-bind:src="generatedCoverSrc">
@@ -83749,8 +83751,16 @@ var BookElement = {
             }
             return color;
         },
+        initiateShowBookDetail : function () {
+            this.moved = false;
+        },
+        invalidateShowBookDetail : function(){
+            this.moved = true;
+        },
         showBookDetail : function(){
-            eventBus.$emit('show-book-detail', this.book);
+            if(!this.moved){
+                eventBus.$emit('show-book-detail', this.book);
+            }
         }
     }
 }
@@ -84205,7 +84215,9 @@ var BookElement = {
                         width : '${bookcellWidth}px',
                         height : '${bookcellHeight}px',}"
                         @show="setOnScreen"
-                        v-on:click="showBookDetail">
+                        v-on:mousedown="initiateShowBookDetail"
+                        v-on:mousemove="invalidateShowBookDetail"
+                        v-on:mouseup="showBookDetail">
                     <!--<transition name="fade">-->
                         <img    v-if="!imgAvailable"
                                 v-bind:style="bookCoverStyleObject"
@@ -84266,8 +84278,16 @@ var BookElement = {
             }
             return color;
         },
+        initiateShowBookDetail : function(){
+            this.moved = false;
+        },
+        invalidateShowBookDetail : function(){
+            this.moved = true;
+        },
         showBookDetail : function(){
-            eventBus.$emit('show-book-detail', this.book);
+            if(!this.moved){
+                eventBus.$emit('show-book-detail', this.book);
+            }
         }
     }
 }
