@@ -123,7 +123,9 @@ var BookElement = {
             this.moved = false;
         },
         invalidateShowBookDetail : function(){
-            this.moved = true;
+            if(!this.moved){
+                this.moved = true;
+            }
         },
         showBookDetail : function(){
             if(!this.moved){

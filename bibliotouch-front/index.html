@@ -10,26 +10,24 @@
 	<body>
 
         <div id="app">
-            <h1>Hello App!</h1>
-                <p>
-                    <router-link to="/theme-map">Go to theme-map</router-link>
-                </p>
             <book-detail    v-if="showBookModal"
                             v-bind:book="currentBook"
                             v-on:close-book-modal="closeBookModal">
             </book-detail>
-            <div>
+            <div id="app-content">
                 <router-view    v-on:current-theme-changed="updateCurrentTheme"
                                 v-on:show-book-detail="showBookDetail">
                 </router-view>
                 <div id="footer-wrapper">
                     <active-theme-box></active-theme-box>
                     <div id="constant-footer-wrapper">
-                        <search-box></search-box>
+                        <search-box v-on:show-search-query-builder="showSearchQueryBuilder()"></search-box>
                         <zoom-nav-box v-bind:current-theme="currentTheme"></zoom-nav-box>
                     </div>
                 </div>
             </div>
+            <search-query-builder   v-if="showSearchQueryBuilderModal"
+                                    v-on:hide-search-query-builder="hideSearchQueryBuilder()"></search-query-builder>
         </div>
         <script src="scripts/bundle.js"></script>
 	</body>

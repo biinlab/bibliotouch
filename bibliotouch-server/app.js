@@ -7,6 +7,7 @@ var parseArgs = require('minimist');
 var schedule = require('node-schedule');
 var config = require('config');
 var fs = require('fs');
+var bodyParser = require('body-parser');
 
 
 var argv = parseArgs(process.argv.slice(2));
@@ -19,6 +20,7 @@ app.use(compression());
 app.use(controllers);
 app.use('/', express.static('../bibliotouch-front'));
 app.use('/covers', express.static('./covers'));
+app.use(bodyParser.json()); // for parsing application/json
 
 //Initialize data directory
 fs.mkdir('data', err => console.log('Did not create "data" directory'));

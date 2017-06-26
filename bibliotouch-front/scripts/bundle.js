@@ -83048,21 +83048,170 @@ Vue.component('border-indicators', {
 var Vue = require('vue');
 
 Vue.component('search-box', {
-    template : `<div id="search-box">
+    template : `<div id="search-box"
+                        v-on:click="showSearchQueryBuilder()">
                     <img id="search-icon"
                         alt="research"
                         src="/res/research.png"></img>
-                    <input id="search-input"
-                            autocomplete="false"
-                            type="text"
-                            placeholder="Je cherche..."
-                            size="32"></input>
-                    <div id="others-reading-div">
+                    <p id="search-input">Je cherche...</p>
+                    <div id="others-reading-div"
+                            v-on:click="showGiveMeAnIdea()">
                         Donnez moi une idée
                     </div>
-                </div>`
+                </div>`,
+    methods: {
+        showSearchQueryBuilder : function(){
+            this.$emit('show-search-query-builder');
+        },
+        showGiveMeAnIdea: function(){
+            alert('GIMME GIMME GIMME !')
+        }
+    }
 })
 },{"vue":365}],371:[function(require,module,exports){
+var Vue = require('vue');
+var requestp = require('request-promise-native');
+
+var SuggestionLine = {
+    template: ` <tr>
+                    <td class="suggestion-name">{{suggestion[0]}}</td>
+                    <td class="suggestion-count">{{suggestion[1]}}</td>
+                </tr>`,
+    props:['suggestion']
+}
+
+var SearchQueryBuilder = Vue.component('search-query-builder', {
+    template: ` <div id="blurred-background">
+                    <div id="search-elements-wrapper">
+                        <img src="./res/picto_search_white.png"/>
+                        <span>Je cherche</span>
+                        <div class="search-term">
+                            <img src="./res/cross.png"/>
+                            <span>imprimerie</span>
+                        </div>
+                        <div id="add-term-button">
+                            <img src="./res/icon_plus.png" />
+                        </div>
+                        <div id="search-term-input-wrapper">
+                            <div id="search-term-input">
+                                <input size="9" v-model="currentlyWritingTerm"/>
+                            </div>
+                            <div id="suggestion-wrapper">
+                                <div class="suggestion-categ">
+                                    <p class="suggestion-categ-title">Sujets</p>
+                                    <span class="suggestion-categ-voirtout">voir tout</span>
+                                    <hr/>
+                                    <table>
+                                        <suggestion-line    v-for="suggestion in subjectSuggestions"
+                                                            v-bind:key="suggestion[0]"
+                                                            v-bind:suggestion="suggestion">
+                                        </suggestion-line>
+                                    </table>
+                                </div>
+                                <div class="suggestion-categ">
+                                    <p class="suggestion-categ-title">Auteurs</p>
+                                    <span class="suggestion-categ-voirtout">voir tout</span>
+                                    <hr/>
+                                    <table>
+                                        <suggestion-line    v-for="suggestion in authorSuggestions"
+                                                            v-bind:key="suggestion[0]"
+                                                            v-bind:suggestion="suggestion">
+                                        </suggestion-line>
+                                    </table>
+                                </div>
+                                <div class="suggestion-categ">
+                                    <p class="suggestion-categ-title">Titre</p>
+                                    <span class="suggestion-categ-voirtout">voir tout</span>
+                                    <hr/>
+                                    <table>
+                                        <suggestion-line    v-for="suggestion in titleSuggestions"
+                                                            v-bind:key="suggestion[0]"
+                                                            v-bind:suggestion="suggestion">
+                                        </suggestion-line>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="search-start-button"
+                                v-on:click="launchSearch()">
+                            <p>C'est parti</p>
+                            <img src="./res/picto_search_white.png"/>
+                        </div>
+                    </div>
+                </div>`,
+    data : function(){
+        return {
+            terms: [],
+            currentlyWritingTerm: '',
+            subjectSuggestions: [],
+            authorSuggestions: [],
+            titleSuggestions: []
+        }
+    },
+    watch:{
+        currentlyWritingTerm : function(newTerm){
+            let self = this;
+            let subjectOptions = {
+                method: 'POST',
+                uri: `${window.location.protocol}//${window.location.hostname}:${window.location.port}/autocomplete/`,
+                body: {
+                    query : {
+                        field: 'mainAuthorities',
+                        text: newTerm
+                    }
+                },
+                json: true
+            };
+
+            let authorOptions = {
+                method: 'POST',
+                uri: `${window.location.protocol}//${window.location.hostname}:${window.location.port}/autocomplete/`,
+                body: {
+                    query: {
+                        field: 'authors',
+                        text: newTerm
+                    }
+                },
+                json: true
+            };
+
+            let titleOptions = {
+                method: 'POST',
+                uri: `${window.location.protocol}//${window.location.hostname}:${window.location.port}/autocomplete/`,
+                body: {
+                    query: {
+                        field: 'title',
+                        text: newTerm
+                    }
+                },
+                json: true
+            };
+    
+            requestp(subjectOptions)
+                .then(function(suggestions){
+                    self.subjectSuggestions = suggestions;
+                });
+            requestp(authorOptions)
+                .then(function(suggestions){
+                    self.authorSuggestions = suggestions;
+                });
+            requestp(titleOptions)
+                .then(function(suggestions){
+                    self.titleSuggestions = suggestions;
+                });
+        }
+    },
+    components : {
+        'suggestion-line' : SuggestionLine
+    },
+    methods : {
+        launchSearch:function(){
+            this.$emit('hide-search-query-builder');
+            this.$route.push('/inner-theme-map/');
+        }
+    }
+})
+},{"request-promise-native":285,"vue":365}],372:[function(require,module,exports){
 var Vue = require('vue');
 
 Vue.component('zoom-nav-box', {
@@ -83118,7 +83267,7 @@ Vue.component('zoom-nav-box', {
         }
     }
 });
-},{"vue":365}],372:[function(require,module,exports){
+},{"vue":365}],373:[function(require,module,exports){
 //require('dragscroll');
 
 var FixedGridDispatcher = function () {
@@ -83138,7 +83287,7 @@ FixedGridDispatcher.prototype.dispatch = function(elements, columns, cellWidth, 
 
 
 module.exports = new FixedGridDispatcher();
-},{}],373:[function(require,module,exports){
+},{}],374:[function(require,module,exports){
 var curYPos, curXPos, curDown;
 
 var mousemove = function(e){ 
@@ -83173,7 +83322,7 @@ MouseDragScroll.prototype.disableDragScroll = function(){
 }
 
 module.exports = new MouseDragScroll();
-},{}],374:[function(require,module,exports){
+},{}],375:[function(require,module,exports){
 /******************************************************************************
 
 Copyright (c) 2011 Jake Gordon and contributors
@@ -83341,7 +83490,7 @@ GrowingPacker.prototype = {
 }
 
 module.exports = GrowingPacker;
-},{}],375:[function(require,module,exports){
+},{}],376:[function(require,module,exports){
 
 var ZoomHandler = function (el) {
     this.el = el;
@@ -83398,7 +83547,7 @@ ZoomHandler.prototype.removeZoomHandlers = function(){
 }
 
 module.exports = ZoomHandler;
-},{}],376:[function(require,module,exports){
+},{}],377:[function(require,module,exports){
 var PackerGrowing = require('./packerGrowing');
 
 var QuadBinPacker = function (bookcellHeight, bookcellWidth, ratio) {
@@ -83517,7 +83666,7 @@ QuadBinPacker.prototype.pack = function(sortedThemes){
 }
 
 module.exports = QuadBinPacker;
-},{"./packerGrowing":374}],377:[function(require,module,exports){
+},{"./packerGrowing":375}],378:[function(require,module,exports){
 var Vue = require('vue');
 var VueRouter = require('vue-router');
 
@@ -83527,6 +83676,7 @@ require('./components/searchBox');
 require('./components/zoomNavBox');
 require('./components/activeThemeBox');
 require('./components/bookDetail');
+require('./components/searchQueryBuilder');
 
 var ThemeMap = require('./themeMap');
 var InnerThemeMap = require('./innerThemeMap');
@@ -83538,6 +83688,7 @@ var OuterThemeMap = require('./outerThemeMap');
 // Vue.extend(), or just a component options object.
 // We'll talk about nested routes later.
 const routes = [
+  { path: '/', component: OuterThemeMap},
   { path: '/outer-theme-map', component: OuterThemeMap},
   { path: '/outer-theme-map/:theme_id', component: OuterThemeMap},
   { path: '/theme-map', component: ThemeMap },
@@ -83560,18 +83711,35 @@ const app = new Vue({
   data : {
     currentTheme : '',
     bookToShow: {},
-    showBookModal: false
+    showBookModal: false,
+    showSearchQueryBuilderModal: false
   },
   methods : {
+    blurrAppContent : function(){
+      document.getElementById('app-content').classList.add('blurred');
+    },
+    unblurrAppContent : function(){
+      document.getElementById('app-content').classList.remove('blurred');
+    },
     updateCurrentTheme : function(newTheme){
       this.currentTheme = newTheme;
     },
     showBookDetail : function(bookToShow){
       this.currentBook = bookToShow;
       this.showBookModal = true;
+      this.blurrAppContent();
     },
     closeBookModal : function(){
       this.showBookModal = false;
+      this.unblurrAppContent();
+    },
+    showSearchQueryBuilder : function(){
+      this.showSearchQueryBuilderModal = true;
+      this.blurrAppContent();
+    },
+    hideSearchQueryBuilder : function(){
+      this.showSearchQueryBuilderModal = false;
+      this.unblurrAppContent();
     }
   }
 }).$mount('#app')
@@ -83591,7 +83759,7 @@ window.addEventListener("touchmove", function (event){
         event.preventDefault();
     }
 });
-},{"./components/activeThemeBox":367,"./components/bookDetail":368,"./components/searchBox":370,"./components/zoomNavBox":371,"./innerThemeMap":378,"./outerThemeMap":380,"./themeMap":381,"vue":365,"vue-router":364}],378:[function(require,module,exports){
+},{"./components/activeThemeBox":367,"./components/bookDetail":368,"./components/searchBox":370,"./components/searchQueryBuilder":371,"./components/zoomNavBox":372,"./innerThemeMap":379,"./outerThemeMap":381,"./themeMap":382,"vue":365,"vue-router":364}],379:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
@@ -83755,7 +83923,9 @@ var BookElement = {
             this.moved = false;
         },
         invalidateShowBookDetail : function(){
-            this.moved = true;
+            if(!this.moved){
+                this.moved = true;
+            }
         },
         showBookDetail : function(){
             if(!this.moved){
@@ -83821,7 +83991,7 @@ var InnerThemeMap = Vue.extend({
 });
 
 module.exports = InnerThemeMap;
-},{"./components/searchBox":370,"./helpers/fixedGridDispatcher":372,"./helpers/mouseDragScroll":373,"./helpers/pinchToZoomHandler":375,"request-promise-native":285,"vue":365,"vue-lazyload":363}],379:[function(require,module,exports){
+},{"./components/searchBox":370,"./helpers/fixedGridDispatcher":373,"./helpers/mouseDragScroll":374,"./helpers/pinchToZoomHandler":376,"request-promise-native":285,"vue":365,"vue-lazyload":363}],380:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -83968,7 +84138,7 @@ var packedThemeMapMixin = {
 }
 
 module.exports = packedThemeMapMixin;
-},{"../helpers/mouseDragScroll":373,"../helpers/quadBinPacker":376,"request-promise-native":285,"vue":365,"vue-lazyload":363}],380:[function(require,module,exports){
+},{"../helpers/mouseDragScroll":374,"../helpers/quadBinPacker":377,"request-promise-native":285,"vue":365,"vue-lazyload":363}],381:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -84156,7 +84326,7 @@ var ThemeMap = Vue.extend({
 });
 
 module.exports = ThemeMap;
-},{"./components/borderIndicators":369,"./components/searchBox":370,"./helpers/pinchToZoomHandler":375,"./mixins/packedThemeMap":379,"request-promise-native":285,"vue":365,"vue-lazyload":363}],381:[function(require,module,exports){
+},{"./components/borderIndicators":369,"./components/searchBox":370,"./helpers/pinchToZoomHandler":376,"./mixins/packedThemeMap":380,"request-promise-native":285,"vue":365,"vue-lazyload":363}],382:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -84282,7 +84452,9 @@ var BookElement = {
             this.moved = false;
         },
         invalidateShowBookDetail : function(){
-            this.moved = true;
+            if(!this.moved){
+                this.moved = true;
+            }
         },
         showBookDetail : function(){
             if(!this.moved){
@@ -84434,4 +84606,4 @@ var ThemeMap = Vue.extend({
 });
 
 module.exports = ThemeMap;
-},{"./components/borderIndicators":369,"./components/searchBox":370,"./helpers/fixedGridDispatcher":372,"./helpers/pinchToZoomHandler":375,"./mixins/packedThemeMap":379,"request-promise-native":285,"vue":365,"vue-lazyload":363}]},{},[377]);
+},{"./components/borderIndicators":369,"./components/searchBox":370,"./helpers/fixedGridDispatcher":373,"./helpers/pinchToZoomHandler":376,"./mixins/packedThemeMap":380,"request-promise-native":285,"vue":365,"vue-lazyload":363}]},{},[378]);
