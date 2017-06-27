@@ -11,7 +11,7 @@
             "kohadbconfig" : {
                 "host" : "localhost",
                 "port" : "3306",
-                "dbname" : "testserver",
+                "dbname" : "bibserver",
                 "user" : "bibliotouch",
                 "pwd" : "bibliotouch"
             },

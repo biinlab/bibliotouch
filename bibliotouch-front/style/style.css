@@ -529,13 +529,25 @@ p {
   margin:32px;
 }
 
-.search-term {
+.search-term-wrapper{
+  display:inline-block;
   font-family: Montserrat;
   font-weight: 600;
   font-size: 30px;
   letter-spacing: 0;
+}
+
+.search-term-boolean-operator {
+  color: white;
+}
+
+.search-term-field-desc {
+  color: white;
+}
+
+.search-term {
+  display: inline-block;
   color: black;
-  display:inline-block;
   background-color: green;
   border-radius:32px;
   height:51px;

@@ -23,7 +23,7 @@
     "queue": "^4.2.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.3",
-    "search-index": "^0.9.16",
+    "search-index": "0.9.16",
     "sequelize": "^3.30.3",
     "sharp": "^0.17.3",
     "stopword": "^0.1.1",
