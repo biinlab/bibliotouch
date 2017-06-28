@@ -526,7 +526,7 @@ p {
   font-size: 30px;
   color: #FFFFFF;
   line-height: 80px;
-  margin:32px;
+  margin:32px 0px 16px 32px;
 }
 
 .search-term-wrapper{
@@ -535,6 +535,7 @@ p {
   font-weight: 600;
   font-size: 30px;
   letter-spacing: 0;
+  margin:16px 0px 16px 6px;
 }
 
 .search-term-boolean-operator {
@@ -550,22 +551,21 @@ p {
   color: black;
   background-color: green;
   border-radius:32px;
-  height:51px;
-  padding-top: 13px;
+  height:52px;
+  padding-top: 12px;
   padding-left:22px;
 }
 
 .search-term > img {
   width: 12px;
   height: 12px;
-  margin-right: 22px;
+  margin-right: 9px;
   transform: translate(0,-40%);
   filter: invert(100%);
-  /*margin : 26px 22px 26px 22px;*/
 }
 
 .search-term > span {
-  margin: 13px 30px 14px 0px;
+  margin: 12px 30px 14px 0px;
 }
 
 #add-term-button {
@@ -573,7 +573,7 @@ p {
   height: 32px;
   display: inline-block;
   transform: translate(0,20%);
-  margin: 32px;
+  margin: 16px 32px 16px 32px;
 }
 #add-term-button > img{
   width: 32px;
@@ -655,8 +655,9 @@ p {
   color: white;
   border-radius: 50px;
   font-family: Montserrat;
-  padding:22px;
-  margin:32px;
+  font-size: 30px;
+  padding:16px 22px 16px 22px;
+  margin:16px 0px 16px 0px;;
 }
 
 #search-start-button > p{

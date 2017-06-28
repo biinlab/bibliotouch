@@ -183,22 +183,31 @@ var InnerThemeMap = Vue.extend({
                 </div>`,
     data : function () {
         return {
-            books : []
+            books : [],
+            theme : ''
         }
     },
     watch: {
         '$route' (to, from) {
-            //console.log(to);
-            this.populateMap(to.params.theme_id);
+            if(to.path.match(/^\/inner-theme-map/)){
+                this.populateMapFromTheme(to.params.theme_id);
+            } else if(to.path.match(/^\/search-map/)) {
+                this.populateMapFromQuery(to.params.query);
+            }
         }
     },
     mounted : function(component){
         let self = this;
+        this.theme = this.$route.params.theme_id || '';
         eventBus.$on('show-book-detail',(book)=>{self.$emit('show-book-detail', book)})
-        this.populateMap(this.$route.params.theme_id);
+        if(this.$route.path.match(/^\/inner-theme-map/)){
+            this.populateMapFromTheme(this.theme);
+        } else if(this.$route.path.match(/^\/search-map/)) {
+            this.populateMapFromQuery(this.$route.params.query);
+        }
         mouseDragScroll.enableDragScroll();
         this.zoomHandler = new ZoomHandler(document.getElementById('inner-theme-map'));
-        this.zoomHandler.setZoomHandlers(()=>{},()=>{self.$router.push(`/theme-map/${self.$route.params.theme_id}`)});
+        this.zoomHandler.setZoomHandlers(()=>{},()=>{self.$router.push(`/theme-map/${self.theme}`)});
     },
     beforeDestroy : function(){
         mouseDragScroll.disableDragScroll();
@@ -208,7 +217,7 @@ var InnerThemeMap = Vue.extend({
         'book-element' : BookElement
     },
     methods : {
-        populateMap : function(theme){
+        populateMapFromTheme : function(theme){
             let self = this;
             //Remove currently charged books
             this.books.splice(0, this.books.length);
@@ -218,6 +227,35 @@ var InnerThemeMap = Vue.extend({
                     let larg = Math.trunc((Math.sqrt(parsedBooks.length)+1));
                     let haut = Math.trunc(parsedBooks.length/larg)+1;
                     self.$emit('current-theme-changed',theme);
+
+                    gridDispatcher.dispatch(parsedBooks,larg, bookcellWidth, bookcellHeight);
+                    parsedBooks.forEach(function(book){
+                        self.books.push(book);
+                    });
+                });
+        },
+        populateMapFromQuery : function(query){
+            let self = this;
+            //Remove currently charged books
+            this.books.splice(0, this.books.length);
+
+            let queryOptions = {
+                method: 'POST',
+                uri: `${window.location.protocol}//${window.location.hostname}:${window.location.port}/search/`,
+                body: {
+                    query: query
+                },
+                json: true
+            };
+    
+            requestp(queryOptions)
+                .then(function(retrievedBooks){
+                    let parsedBooks = [];
+                    for(let result of retrievedBooks){
+                        parsedBooks.push(result.document);
+                    }
+                    let larg = Math.trunc((Math.sqrt(parsedBooks.length)+1));
+                    let haut = Math.trunc(parsedBooks.length/larg)+1;
 
                     gridDispatcher.dispatch(parsedBooks,larg, bookcellWidth, bookcellHeight);
                     parsedBooks.forEach(function(book){

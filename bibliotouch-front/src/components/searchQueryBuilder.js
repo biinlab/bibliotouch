@@ -21,8 +21,11 @@ var SearchTermItem = {
     template: `<div class="search-term-wrapper">
                     <span class="search-term-boolean-operator" v-if="index!=0"> {{booleanOperator}} </span>
                     <span class="search-term-field-desc">{{fieldDesc}}</span>
-                    <div class="search-term">
-                        <img src="./res/cross.png"/>
+                    <div class="search-term"
+                            v-bind:style="{
+                                backgroundColor : randomColor
+                            }">
+                        <img src="./res/cross.png">
                         <span>{{term.text}}</span>
                     </div>
                 </div>`,
@@ -50,6 +53,14 @@ var SearchTermItem = {
             }
 
             return 'à propos de'
+        },
+        randomColor : function(){
+            //Returns a random integer between min (inclusive) and max (inclusive)
+            function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+            let colors = ['#FF3043','#FF4701','#FF8B01','#FFCE01','#FFCA3B','#E4FA5C','#00E86E','#5CFF83','#9EFFCC','#00D8BE','#1BC6EB','#3E73DC','#422DA8'];
+            return colors[getRandomInt(0,colors.length-1)];
         }
     }
 }
@@ -87,7 +98,7 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                                         <suggestion-line    v-for="suggestion in subjectSuggestions"
                                                             v-bind:key="suggestion[0]"
                                                             v-bind:suggestion="suggestion"
-                                                            v-bind:field="'subject'"
+                                                            v-bind:field="'mainAuthorities'"
                                                             v-on:add-search-term="addSearchTerm">
                                         </suggestion-line>
                                     </table>
@@ -101,7 +112,7 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                                         <suggestion-line    v-for="suggestion in authorSuggestions"
                                                             v-bind:key="suggestion[0]"
                                                             v-bind:suggestion="suggestion"
-                                                            v-bind:field="'author'"
+                                                            v-bind:field="'authors'"
                                                             v-on:add-search-term="addSearchTerm">
                                         </suggestion-line>
                                     </table>
@@ -199,7 +210,7 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
     methods : {
         launchSearch:function(){
             this.$emit('hide-search-query-builder');
-            this.$route.push('/inner-theme-map/');
+            this.$router.push(`/search-map/${encodeURIComponent(JSON.stringify(this.getQuery()))}`);
         },
         addSearchTerm : function(term){
             if(term.field && term.text){
@@ -213,6 +224,40 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
             }
             this.showSearchTermInput = false;
             this.currentlyWritingTerm = '';
+        },
+        getQuery : function(){
+            let queryArray = [];
+            let queryUnit = {AND:{},NOT:{}};
+            let lastUnitIsOR = false;
+            for(let term of this.terms){
+                lastUnitIsOR = false;
+                if(term.operator === BooleanOperator.AND){
+                    if(!queryUnit.AND[term.field]) {
+                        queryUnit.AND[term.field] = [];
+                    }
+                    queryUnit.AND[term.field].push(term.text);
+                }
+                if(term.operator === BooleanOperator.NOT){
+                    if(!queryUnit.NOT[term.field]) {
+                        queryUnit.NOT[term.field] = [];
+                    }
+                    queryUnit.OR[term.field].push(term.text);
+                }
+                if(term.operator === BooleanOperator.OR){
+                    queryArray.push(queryUnit);
+                    queryUnit = {AND:{},NOT:{}};
+
+                    if(!queryUnit.AND[term.field]) {
+                        queryUnit.AND[term.field] = [];
+                    }
+                    queryUnit.AND[term.field].push(term.text);
+
+                    lastUnitIsOR = true;
+                }
+            }
+
+            queryArray.push(queryUnit);
+            return queryArray;
         }
     }
 })

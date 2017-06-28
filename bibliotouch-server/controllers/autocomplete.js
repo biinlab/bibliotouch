@@ -21,7 +21,7 @@ router.get('/:query',jsonParser, function(req, res){
     }
 
     let matchOption = {
-        limit : 5,
+        limit : 3,
         type : 'count',
         beginsWith : beginsWith,
         field: field
@@ -47,7 +47,7 @@ router.post('/', jsonParser, function (req, res) {
     }
 
     let matchOption = {
-        limit : 5,
+        limit : 3,
         type : 'count',
         beginsWith : beginsWith,
         field: field

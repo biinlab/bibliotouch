@@ -83092,8 +83092,11 @@ var SearchTermItem = {
     template: `<div class="search-term-wrapper">
                     <span class="search-term-boolean-operator" v-if="index!=0"> {{booleanOperator}} </span>
                     <span class="search-term-field-desc">{{fieldDesc}}</span>
-                    <div class="search-term">
-                        <img src="./res/cross.png"/>
+                    <div class="search-term"
+                            v-bind:style="{
+                                backgroundColor : randomColor
+                            }">
+                        <img src="./res/cross.png">
                         <span>{{term.text}}</span>
                     </div>
                 </div>`,
@@ -83121,6 +83124,14 @@ var SearchTermItem = {
             }
 
             return 'à propos de'
+        },
+        randomColor : function(){
+            //Returns a random integer between min (inclusive) and max (inclusive)
+            function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+            let colors = ['#FF3043','#FF4701','#FF8B01','#FFCE01','#FFCA3B','#E4FA5C','#00E86E','#5CFF83','#9EFFCC','#00D8BE','#1BC6EB','#3E73DC','#422DA8'];
+            return colors[getRandomInt(0,colors.length-1)];
         }
     }
 }
@@ -83158,7 +83169,7 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                                         <suggestion-line    v-for="suggestion in subjectSuggestions"
                                                             v-bind:key="suggestion[0]"
                                                             v-bind:suggestion="suggestion"
-                                                            v-bind:field="'subject'"
+                                                            v-bind:field="'mainAuthorities'"
                                                             v-on:add-search-term="addSearchTerm">
                                         </suggestion-line>
                                     </table>
@@ -83172,7 +83183,7 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                                         <suggestion-line    v-for="suggestion in authorSuggestions"
                                                             v-bind:key="suggestion[0]"
                                                             v-bind:suggestion="suggestion"
-                                                            v-bind:field="'author'"
+                                                            v-bind:field="'authors'"
                                                             v-on:add-search-term="addSearchTerm">
                                         </suggestion-line>
                                     </table>
@@ -83270,7 +83281,7 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
     methods : {
         launchSearch:function(){
             this.$emit('hide-search-query-builder');
-            this.$route.push('/inner-theme-map/');
+            this.$router.push(`/search-map/${encodeURIComponent(JSON.stringify(this.getQuery()))}`);
         },
         addSearchTerm : function(term){
             if(term.field && term.text){
@@ -83284,6 +83295,40 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
             }
             this.showSearchTermInput = false;
             this.currentlyWritingTerm = '';
+        },
+        getQuery : function(){
+            let queryArray = [];
+            let queryUnit = {AND:{},NOT:{}};
+            let lastUnitIsOR = false;
+            for(let term of this.terms){
+                lastUnitIsOR = false;
+                if(term.operator === BooleanOperator.AND){
+                    if(!queryUnit.AND[term.field]) {
+                        queryUnit.AND[term.field] = [];
+                    }
+                    queryUnit.AND[term.field].push(term.text);
+                }
+                if(term.operator === BooleanOperator.NOT){
+                    if(!queryUnit.NOT[term.field]) {
+                        queryUnit.NOT[term.field] = [];
+                    }
+                    queryUnit.OR[term.field].push(term.text);
+                }
+                if(term.operator === BooleanOperator.OR){
+                    queryArray.push(queryUnit);
+                    queryUnit = {AND:{},NOT:{}};
+
+                    if(!queryUnit.AND[term.field]) {
+                        queryUnit.AND[term.field] = [];
+                    }
+                    queryUnit.AND[term.field].push(term.text);
+
+                    lastUnitIsOR = true;
+                }
+            }
+
+            queryArray.push(queryUnit);
+            return queryArray;
         }
     }
 })
@@ -83769,7 +83814,8 @@ const routes = [
   { path: '/outer-theme-map/:theme_id', component: OuterThemeMap},
   { path: '/theme-map', component: ThemeMap },
   { path: '/theme-map/:theme_id', component: ThemeMap },
-  { path: '/inner-theme-map/:theme_id', component: InnerThemeMap}
+  { path: '/inner-theme-map/:theme_id', component: InnerThemeMap},
+  { path: '/search-map/:query', component: InnerThemeMap}
 ];
 
 // 3. Create the router instance and pass the `routes` option
@@ -84021,22 +84067,31 @@ var InnerThemeMap = Vue.extend({
                 </div>`,
     data : function () {
         return {
-            books : []
+            books : [],
+            theme : ''
         }
     },
     watch: {
         '$route' (to, from) {
-            //console.log(to);
-            this.populateMap(to.params.theme_id);
+            if(to.path.match(/^\/inner-theme-map/)){
+                this.populateMapFromTheme(to.params.theme_id);
+            } else if(to.path.match(/^\/search-map/)) {
+                this.populateMapFromQuery(to.params.query);
+            }
         }
     },
     mounted : function(component){
         let self = this;
+        this.theme = this.$route.params.theme_id || '';
         eventBus.$on('show-book-detail',(book)=>{self.$emit('show-book-detail', book)})
-        this.populateMap(this.$route.params.theme_id);
+        if(this.$route.path.match(/^\/inner-theme-map/)){
+            this.populateMapFromTheme(this.theme);
+        } else if(this.$route.path.match(/^\/search-map/)) {
+            this.populateMapFromQuery(this.$route.params.query);
+        }
         mouseDragScroll.enableDragScroll();
         this.zoomHandler = new ZoomHandler(document.getElementById('inner-theme-map'));
-        this.zoomHandler.setZoomHandlers(()=>{},()=>{self.$router.push(`/theme-map/${self.$route.params.theme_id}`)});
+        this.zoomHandler.setZoomHandlers(()=>{},()=>{self.$router.push(`/theme-map/${self.theme}`)});
     },
     beforeDestroy : function(){
         mouseDragScroll.disableDragScroll();
@@ -84046,7 +84101,7 @@ var InnerThemeMap = Vue.extend({
         'book-element' : BookElement
     },
     methods : {
-        populateMap : function(theme){
+        populateMapFromTheme : function(theme){
             let self = this;
             //Remove currently charged books
             this.books.splice(0, this.books.length);
@@ -84056,6 +84111,35 @@ var InnerThemeMap = Vue.extend({
                     let larg = Math.trunc((Math.sqrt(parsedBooks.length)+1));
                     let haut = Math.trunc(parsedBooks.length/larg)+1;
                     self.$emit('current-theme-changed',theme);
+
+                    gridDispatcher.dispatch(parsedBooks,larg, bookcellWidth, bookcellHeight);
+                    parsedBooks.forEach(function(book){
+                        self.books.push(book);
+                    });
+                });
+        },
+        populateMapFromQuery : function(query){
+            let self = this;
+            //Remove currently charged books
+            this.books.splice(0, this.books.length);
+
+            let queryOptions = {
+                method: 'POST',
+                uri: `${window.location.protocol}//${window.location.hostname}:${window.location.port}/search/`,
+                body: {
+                    query: query
+                },
+                json: true
+            };
+    
+            requestp(queryOptions)
+                .then(function(retrievedBooks){
+                    let parsedBooks = [];
+                    for(let result of retrievedBooks){
+                        parsedBooks.push(result.document);
+                    }
+                    let larg = Math.trunc((Math.sqrt(parsedBooks.length)+1));
+                    let haut = Math.trunc(parsedBooks.length/larg)+1;
 
                     gridDispatcher.dispatch(parsedBooks,larg, bookcellWidth, bookcellHeight);
                     parsedBooks.forEach(function(book){

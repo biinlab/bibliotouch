@@ -24,7 +24,8 @@ const routes = [
   { path: '/outer-theme-map/:theme_id', component: OuterThemeMap},
   { path: '/theme-map', component: ThemeMap },
   { path: '/theme-map/:theme_id', component: ThemeMap },
-  { path: '/inner-theme-map/:theme_id', component: InnerThemeMap}
+  { path: '/inner-theme-map/:theme_id', component: InnerThemeMap},
+  { path: '/search-map/:query', component: InnerThemeMap}
 ];
 
 // 3. Create the router instance and pass the `routes` option
