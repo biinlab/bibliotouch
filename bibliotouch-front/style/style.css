@@ -507,13 +507,15 @@ p {
   height: 100vh;
   width: 100vw;
   background-color : rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #search-elements-wrapper {
-  position: absolute;
-  top:50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
+  align-self: center;
+  width: 1200px;
+  text-align: left;
 }
 
 #search-elements-wrapper > img{
@@ -540,6 +542,19 @@ p {
 
 .search-term-boolean-operator {
   color: white;
+}
+
+.up-down-arrow {
+  position:absolute;
+  cursor: pointer;
+}
+
+.up-arrow {
+  transform: translate(10px,-26px);
+}
+
+.down-arrow {
+  transform: rotate(180deg) translate(-10px,10px);
 }
 
 .search-term-field-desc {
@@ -579,6 +594,10 @@ p {
   width: 32px;
 }
 
+#search-term-input-wrapper {
+  display: inline-block;
+}
+
 #search-term-input{
   display:inline-block;
 }
@@ -606,6 +625,7 @@ p {
   margin-top: 16px;
   margin-left: 26px;
   padding: 25px;
+  position: absolute;
 }
 
 .suggestion-categ {
@@ -625,6 +645,7 @@ p {
   margin-bottom:1px;
   display: inline-block;
   width: 220px;
+  text-align: left;
 }
 
 .suggestion-categ-voirtout {
@@ -639,6 +660,7 @@ p {
   color: #A7A7A7;
   width: 220px;
   display: inline-block;
+  text-align: left;
 }
 
 .suggestion-count {
@@ -648,25 +670,70 @@ p {
   color: #A7A7A7;
 }
 
+#search-start-button-wrapper {
+  text-align: center;
+}
 
 #search-start-button{
-  display: inline-block;
-  background-color: black;
   color: white;
   border-radius: 50px;
   font-family: Montserrat;
   font-size: 30px;
   padding:16px 22px 16px 22px;
-  margin:16px 0px 16px 0px;;
-}
-
-#search-start-button > p{
+  margin:16px 0px 16px 0px;
   display: inline-block;
-  margin:0;
+  align-self:center;
 }
 
-#search-start-button > img{
-  width: 16px;
+#upper-hits-wrapper {
+  text-align: center;
+}
+
+#search-start-button p:first-of-type{
+  font-weight: 600;
+  display: inline-block;
+  font-size: 48px;
+  margin:0;
+  line-height: 38px;
+}
+
+#search-start-button > hr {
+  margin-top: 0px;
+  margin-bottom: 8px;
+  border: 0;
+  height: 6px;
+  background-color: white;
+}
+
+#search-start-button > p:last-of-type{
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: 23px;
+  margin:0;
+  display: block;
+}
+
+#search-start-button img{
+  width: 30px;
   margin-left : 22px;
   display: inline-block;
+}
+
+#close-search-button {
+  width: 62px;
+  height: 62px;
+  border-radius: 35px;
+  align-self: center;
+  background-color: black;
+  cursor: pointer;
+  border: 1px solid #FFFFFF;
+}
+
+#close-search-button img{
+  width: 14px;
+  height: 14px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

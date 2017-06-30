@@ -1,10 +1,11 @@
 var Vue = require('vue');
 var requestp = require('request-promise-native');
+var stopword = require('stopword');
 
 var BooleanOperator = Object.freeze({
-    AND: 1,
-    OR: 2,
-    NOT: 3
+    AND: 0,
+    OR: 1,
+    NOT: 2
 })
 
 var defaultBooleanOperator = BooleanOperator.AND;
@@ -19,13 +20,18 @@ var SuggestionLine = {
 
 var SearchTermItem = {
     template: `<div class="search-term-wrapper">
-                    <span class="search-term-boolean-operator" v-if="index!=0"> {{booleanOperator}} </span>
+                    <span class="search-term-boolean-operator" v-if="index!=0">
+                        <div class="up-down-arrow up-arrow" v-on:click="nextBooleanOp()"><img src="./res/arrow.png"></div>
+                             {{booleanOperator}}
+                        <div class="up-down-arrow down-arrow" v-on:click="precBooleanOp()"><img src="./res/arrow.png"></div>
+                    </span>
                     <span class="search-term-field-desc">{{fieldDesc}}</span>
                     <div class="search-term"
                             v-bind:style="{
                                 backgroundColor : randomColor
                             }">
-                        <img src="./res/cross.png">
+                        <img src="./res/cross.png"
+                                v-on:click="$emit('delete-search-item',index)">
                         <span>{{term.text}}</span>
                     </div>
                 </div>`,
@@ -42,10 +48,10 @@ var SearchTermItem = {
             }
         },
         fieldDesc : function(){
-            if(this.term.field == 'subject') {
+            if(this.term.field == 'mainAuthorities') {
                 return 'sur le sujet';
             }
-            if(this.term.field == 'author') {
+            if(this.term.field == 'authors') {
                 return 'ayant pour auteur';
             }
             if(this.term.field == 'title') {
@@ -62,6 +68,16 @@ var SearchTermItem = {
             let colors = ['#FF3043','#FF4701','#FF8B01','#FFCE01','#FFCA3B','#E4FA5C','#00E86E','#5CFF83','#9EFFCC','#00D8BE','#1BC6EB','#3E73DC','#422DA8'];
             return colors[getRandomInt(0,colors.length-1)];
         }
+    },
+    methods: {
+        nextBooleanOp : function(){
+            this.term.operator = (this.term.operator+1)%3;
+            this.$emit('search-term-changed');
+        },
+        precBooleanOp : function(){
+            this.term.operator = this.term.operator == 0 ? 2 : this.term.operator-1;
+            this.$emit('search-term-changed');
+        }
     }
 }
 
@@ -69,23 +85,20 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
     template: ` <div id="blurred-background">
                     <div id="search-elements-wrapper">
                         <img src="./res/picto_search_white.png"/>
-                        <span>Je cherche un document</span>
+                        <span>Je cherche <span v-if="terms.length > 0">un document</span></span>
                         <search-term-item   v-for="(term, index) in terms"
                                             v-bind:term="term"
                                             v-bind:index="index"
-                                            v-bind:key="index">
+                                            v-bind:key="index"
+                                            v-on:delete-search-item="deleteSearchItem"
+                                            v-on:search-term-changed="getQueryHits()">
                         </search-term-item>
-                        <div    id="add-term-button"
-                                v-if="!showSearchTermInput"
-                                v-on:click="showSearchTermInput = true">
-                            <img src="./res/icon_plus.png" />
-                        </div>
-                        <div    id="search-term-input-wrapper"
-                                v-if="showSearchTermInput">
+                        <div    id="search-term-input-wrapper">
                             <div id="search-term-input">
                                 <input  size="9" 
                                         v-model="currentlyWritingTerm"
-                                        v-on:keyup.enter="addSearchTerm"/>
+                                        v-on:keyup.enter="addSearchTerm"
+                                        v-focus/>
                             </div>
                             <div    id="suggestion-wrapper"
                                     v-if="subjectSuggestions.length > 0 || authorSuggestions.length > 0 || titleSuggestions.length > 0">
@@ -133,11 +146,21 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                                 </div>
                             </div>
                         </div>
-                        <div id="search-start-button"
-                                v-on:click="launchSearch()">
-                            <p>C'est parti</p>
-                            <img src="./res/picto_search_white.png"/>
+                    </div>
+                    <div id="search-start-button"
+                            v-on:click="launchSearch()"
+                            v-if="subjectSuggestions.length == 0 && authorSuggestions.length == 0 && titleSuggestions.length == 0">
+                        <div id="upper-hits-wrapper">
+                            <p>{{totalHits}}</p>
+                            <img src="./res/books.png">
                         </div>
+                        <hr>
+                        <p>Résultats</p>
+                    </div>
+                    <div   id="close-search-button"
+                            v-if="subjectSuggestions.length == 0 && authorSuggestions.length == 0 && titleSuggestions.length == 0"
+                            v-on:click="$emit('hide-search-query-builder')">
+                            <img src="/res/cross.png"/>
                     </div>
                 </div>`,
     data : function(){
@@ -147,7 +170,15 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
             subjectSuggestions: [],
             authorSuggestions: [],
             titleSuggestions: [],
-            showSearchTermInput:true
+            totalHits:0,
+            autofocus:true
+        }
+    },
+    directives : {
+        focus : {
+            inserted: function (el) {
+                el.focus();
+            }
         }
     },
     watch:{
@@ -208,6 +239,25 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
         'search-term-item' : SearchTermItem
     },
     methods : {
+        deleteSearchItem : function(index){
+            this.terms.splice(index,1);
+            this.getQueryHits();
+        },
+        getQueryHits : function(){
+            let self = this;
+            let queryOptions = {
+                method: 'POST',
+                uri: `${window.location.protocol}//${window.location.hostname}:${window.location.port}/total-hits/`,
+                body: {
+                    query : self.getQuery()
+                },
+                json: true
+            };
+            requestp(queryOptions)
+                .then(function(totalHits){
+                    self.totalHits = totalHits.totalHits;
+                });
+        },
         launchSearch:function(){
             this.$emit('hide-search-query-builder');
             this.$router.push(`/search-map/${encodeURIComponent(JSON.stringify(this.getQuery()))}`);
@@ -217,12 +267,12 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                 term.operator = defaultBooleanOperator
                 this.terms.push(term);
             } else {
-                let freeWordsArray = this.currentlyWritingTerm.split(' ');
+                let freeWordsArray = stopword.removeStopwords(this.currentlyWritingTerm.split(' '), stopword.fr);
                 for(let freeWord of freeWordsArray){
                     this.terms.push({field:'*',text:freeWord, operator: defaultBooleanOperator});
                 }
             }
-            this.showSearchTermInput = false;
+            this.getQueryHits();
             this.currentlyWritingTerm = '';
         },
         getQuery : function(){
@@ -241,7 +291,7 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                     if(!queryUnit.NOT[term.field]) {
                         queryUnit.NOT[term.field] = [];
                     }
-                    queryUnit.OR[term.field].push(term.text);
+                    queryUnit.NOT[term.field].push(term.text);
                 }
                 if(term.operator === BooleanOperator.OR){
                     queryArray.push(queryUnit);

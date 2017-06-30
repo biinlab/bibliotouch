@@ -2,6 +2,7 @@ var express = require('express');
 var Logger = require('../helpers/logger');
 var index = require('../helpers/searchIndex');
 var bodyParser = require('body-parser');
+var uniq = require('uniq');
 
 var jsonParser = bodyParser.json();
 
@@ -22,13 +23,21 @@ router.get('/:query',jsonParser, function(req, res){
 
     let matchOption = {
         limit : 3,
-        type : 'count',
+        type : 'ID',
         beginsWith : beginsWith,
-        field: field
+        field: field,
+        threshold: 2
     };
 
     index.match(matchOption)
         .then(function(matches){
+            //We only want to transmit the number of books, not the list
+            if(matches.length > 0) {
+                for(let i = 0 ; i < matches.length ; i++){
+                    uniq(matches[i][1]);
+                    matches[i][1] = matches[i][1].length;
+                }
+            }
             res.json(matches);
         });
 });
@@ -48,13 +57,21 @@ router.post('/', jsonParser, function (req, res) {
 
     let matchOption = {
         limit : 3,
-        type : 'count',
+        type : 'ID',
         beginsWith : beginsWith,
-        field: field
+        field: field,
+        threshold: 2
     };
 
     index.match(matchOption)
         .then(function(matches){
+            //We only want to transmit the number of books, not the list
+            if(matches.length > 0) {
+                for(let i = 0 ; i < matches.length ; i++){
+                    uniq(matches[i][1]);
+                    matches[i][1] = matches[i][1].length;
+                }
+            }
             res.json(matches);
         });
 })

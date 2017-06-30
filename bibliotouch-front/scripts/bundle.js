@@ -1572,7 +1572,7 @@ function resolveIds(schema) {
   }
 }
 
-},{"./equal":5,"./schema_obj":10,"./util":12,"url":350}],9:[function(require,module,exports){
+},{"./equal":5,"./schema_obj":10,"./util":12,"url":369}],9:[function(require,module,exports){
 'use strict';
 
 var ruleModules = require('./_rules')
@@ -5951,7 +5951,7 @@ Entity.prototype.encode = function encode(data, enc, /* internal */ reporter) {
   return this._getEncoder(enc).encode(data, reporter);
 };
 
-},{"../asn1":43,"inherits":191,"vm":362}],45:[function(require,module,exports){
+},{"../asn1":43,"inherits":191,"vm":381}],45:[function(require,module,exports){
 var inherits = require('inherits');
 var Reporter = require('../base').Reporter;
 var Buffer = require('buffer').Buffer;
@@ -8509,7 +8509,7 @@ function _setExports(ndebug) {
 module.exports = _setExports(process.env.NODE_NDEBUG);
 
 }).call(this,{"isBuffer":require("../is-buffer/index.js")},require('_process'))
-},{"../is-buffer/index.js":192,"_process":253,"assert":64,"stream":333,"util":355}],64:[function(require,module,exports){
+},{"../is-buffer/index.js":192,"_process":253,"assert":64,"stream":352,"util":374}],64:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -9003,7 +9003,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"util/":355}],65:[function(require,module,exports){
+},{"util/":374}],65:[function(require,module,exports){
 
 /*!
  *  Copyright 2010 LearnBoost <dev@learnboost.com>
@@ -9217,7 +9217,7 @@ function canonicalizeResource (resource) {
 }
 module.exports.canonicalizeResource = canonicalizeResource
 
-},{"crypto":116,"url":350}],66:[function(require,module,exports){
+},{"crypto":116,"url":369}],66:[function(require,module,exports){
 (function (process,Buffer){
 var aws4 = exports,
     url = require('url'),
@@ -9553,7 +9553,7 @@ aws4.sign = function(request, credentials) {
 }
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"./lru":67,"_process":253,"buffer":103,"crypto":116,"querystring":268,"url":350}],67:[function(require,module,exports){
+},{"./lru":67,"_process":253,"buffer":103,"crypto":116,"querystring":268,"url":369}],67:[function(require,module,exports){
 module.exports = function(size) {
   return new LruCache(size)
 }
@@ -10325,7 +10325,7 @@ module.exports = {
       pbkdf: bcrypt_pbkdf
 };
 
-},{"tweetnacl":349}],70:[function(require,module,exports){
+},{"tweetnacl":368}],70:[function(require,module,exports){
 (function (module, exports) {
   'use strict';
 
@@ -15317,7 +15317,7 @@ module.exports = {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./algorithms.json":93,"./sign":96,"./verify":97,"buffer":103,"create-hash":111,"inherits":191,"stream":333}],96:[function(require,module,exports){
+},{"./algorithms.json":93,"./sign":96,"./verify":97,"buffer":103,"create-hash":111,"inherits":191,"stream":352}],96:[function(require,module,exports){
 (function (Buffer){
 // much of this based on https://github.com/indutny/self-signed/blob/gh-pages/lib/rsa.js
 var createHmac = require('create-hmac')
@@ -16407,7 +16407,7 @@ util.inherits(InflateRaw, Zlib);
 util.inherits(Unzip, Zlib);
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"./binding":98,"_process":253,"_stream_transform":280,"assert":64,"buffer":103,"util":355}],100:[function(require,module,exports){
+},{"./binding":98,"_process":253,"_stream_transform":280,"assert":64,"buffer":103,"util":374}],100:[function(require,module,exports){
 arguments[4][72][0].apply(exports,arguments)
 },{"dup":72}],101:[function(require,module,exports){
 (function (global){
@@ -18472,7 +18472,7 @@ CipherBase.prototype._toString = function (value, enc, fin) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":103,"inherits":191,"stream":333,"string_decoder":338}],107:[function(require,module,exports){
+},{"buffer":103,"inherits":191,"stream":352,"string_decoder":357}],107:[function(require,module,exports){
 
 /**
  * slice() reference.
@@ -18903,7 +18903,7 @@ CombinedStream.prototype._emitError = function(err) {
 };
 
 }).call(this,{"isBuffer":require("../../is-buffer/index.js")})
-},{"../../is-buffer/index.js":192,"delayed-stream":117,"stream":333,"util":355}],109:[function(require,module,exports){
+},{"../../is-buffer/index.js":192,"delayed-stream":117,"stream":352,"util":374}],109:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -19683,7 +19683,7 @@ DelayedStream.prototype._checkIfMaxDataSizeExceeded = function() {
   this.emit('error', new Error(message));
 };
 
-},{"stream":333,"util":355}],118:[function(require,module,exports){
+},{"stream":352,"util":374}],118:[function(require,module,exports){
 'use strict';
 
 exports.utils = require('./des/utils');
@@ -26126,7 +26126,7 @@ function dumpException(ex)
 	return (ret);
 }
 
-},{"assert":64,"util":355}],151:[function(require,module,exports){
+},{"assert":64,"util":374}],151:[function(require,module,exports){
 module.exports = ForeverAgent
 ForeverAgent.SSL = ForeverAgentSSL
 
@@ -26266,7 +26266,7 @@ function createConnectionSSL (port, host, options) {
   return tls.connect(options);
 }
 
-},{"http":334,"https":188,"net":100,"tls":100,"util":355}],152:[function(require,module,exports){
+},{"http":353,"https":188,"net":100,"tls":100,"util":374}],152:[function(require,module,exports){
 /* eslint-env browser */
 module.exports = typeof self == 'object' ? self.FormData : window.FormData;
 
@@ -27129,7 +27129,7 @@ HashBase.prototype._digest = function () {
 module.exports = HashBase
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":103,"inherits":191,"stream":333}],175:[function(require,module,exports){
+},{"buffer":103,"inherits":191,"stream":352}],175:[function(require,module,exports){
 var hash = exports;
 
 hash.utils = require('./hash/utils');
@@ -29365,7 +29365,7 @@ module.exports = {
 
 };
 
-},{"./utils":186,"assert-plus":63,"util":355}],185:[function(require,module,exports){
+},{"./utils":186,"assert-plus":63,"util":374}],185:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2012 Joyent, Inc.  All rights reserved.
 
@@ -29768,7 +29768,7 @@ module.exports = {
 };
 
 }).call(this,{"isBuffer":require("../../is-buffer/index.js")})
-},{"../../is-buffer/index.js":192,"./utils":186,"assert-plus":63,"crypto":116,"http":334,"jsprim":208,"sshpk":325,"util":355}],186:[function(require,module,exports){
+},{"../../is-buffer/index.js":192,"./utils":186,"assert-plus":63,"crypto":116,"http":353,"jsprim":208,"sshpk":325,"util":374}],186:[function(require,module,exports){
 // Copyright 2012 Joyent, Inc.  All rights reserved.
 
 var assert = require('assert-plus');
@@ -29882,7 +29882,7 @@ module.exports = {
   }
 };
 
-},{"assert-plus":63,"sshpk":325,"util":355}],187:[function(require,module,exports){
+},{"assert-plus":63,"sshpk":325,"util":374}],187:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -30007,7 +30007,7 @@ function validateParams (params) {
   return params
 }
 
-},{"http":334,"url":350}],189:[function(require,module,exports){
+},{"http":353,"url":369}],189:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -30231,7 +30231,7 @@ module.exports.isReadable = isReadable
 module.exports.isWritable = isWritable
 module.exports.isDuplex   = isDuplex
 
-},{"stream":333}],196:[function(require,module,exports){
+},{"stream":352}],196:[function(require,module,exports){
 "use strict";
 
 /*
@@ -34701,7 +34701,7 @@ function mergeObjects(provided, overrides, defaults)
 	return (rv);
 }
 
-},{"assert-plus":209,"extsprintf":150,"json-schema":203,"util":355,"verror":361}],209:[function(require,module,exports){
+},{"assert-plus":209,"extsprintf":150,"json-schema":203,"util":374,"verror":380}],209:[function(require,module,exports){
 (function (Buffer,process){
 // Copyright (c) 2012, Mark Cavage. All rights reserved.
 // Copyright 2015 Joyent, Inc.
@@ -34916,7 +34916,7 @@ function _setExports(ndebug) {
 module.exports = _setExports(process.env.NODE_NDEBUG);
 
 }).call(this,{"isBuffer":require("../../../is-buffer/index.js")},require('_process'))
-},{"../../../is-buffer/index.js":192,"_process":253,"assert":64,"stream":333,"util":355}],210:[function(require,module,exports){
+},{"../../../is-buffer/index.js":192,"_process":253,"assert":64,"stream":352,"util":374}],210:[function(require,module,exports){
 var root = require('./_root');
 
 /** Built-in value references. */
@@ -51876,7 +51876,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":271,"./internal/streams/BufferList":276,"./internal/streams/stream":277,"_process":253,"buffer":103,"buffer-shims":101,"core-util-is":109,"events":147,"inherits":191,"isarray":194,"process-nextick-args":252,"string_decoder/":338,"util":72}],274:[function(require,module,exports){
+},{"./_stream_duplex":271,"./internal/streams/BufferList":276,"./internal/streams/stream":277,"_process":253,"buffer":103,"buffer-shims":101,"core-util-is":109,"events":147,"inherits":191,"isarray":194,"process-nextick-args":252,"string_decoder/":357,"util":72}],274:[function(require,module,exports){
 // a transform stream is a readable/writable stream where you do
 // something with the data.  Sometimes it's called a "filter",
 // but that's not a great name for it, since that implies a thing where
@@ -52606,7 +52606,7 @@ function CorkedRequest(state) {
   };
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":271,"./internal/streams/stream":277,"_process":253,"buffer":103,"buffer-shims":101,"core-util-is":109,"inherits":191,"process-nextick-args":252,"util-deprecate":352}],276:[function(require,module,exports){
+},{"./_stream_duplex":271,"./internal/streams/stream":277,"_process":253,"buffer":103,"buffer-shims":101,"core-util-is":109,"inherits":191,"process-nextick-args":252,"util-deprecate":371}],276:[function(require,module,exports){
 'use strict';
 
 var Buffer = require('buffer').Buffer;
@@ -53029,7 +53029,7 @@ configure({
 
 module.exports = request;
 
-},{"request":286,"request-promise-core/configure/request2":282,"stealthy-require":332,"tough-cookie":341}],286:[function(require,module,exports){
+},{"request":286,"request-promise-core/configure/request2":282,"stealthy-require":332,"tough-cookie":360}],286:[function(require,module,exports){
 // Copyright 2010-2012 Mikeal Rogers
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
@@ -53357,7 +53357,7 @@ Auth.prototype.onResponse = function (response) {
 
 exports.Auth = Auth
 
-},{"./helpers":291,"caseless":105,"uuid":356}],288:[function(require,module,exports){
+},{"./helpers":291,"caseless":105,"uuid":375}],288:[function(require,module,exports){
 'use strict'
 
 var tough = require('tough-cookie')
@@ -53398,7 +53398,7 @@ exports.jar = function(store) {
   return new RequestJar(store)
 }
 
-},{"tough-cookie":341}],289:[function(require,module,exports){
+},{"tough-cookie":360}],289:[function(require,module,exports){
 (function (process){
 'use strict'
 
@@ -53883,7 +53883,7 @@ Multipart.prototype.onRequest = function (options) {
 
 exports.Multipart = Multipart
 
-},{"combined-stream":108,"isstream":195,"safe-buffer":299,"uuid":356}],293:[function(require,module,exports){
+},{"combined-stream":108,"isstream":195,"safe-buffer":299,"uuid":375}],293:[function(require,module,exports){
 'use strict'
 
 var url = require('url')
@@ -54033,7 +54033,7 @@ OAuth.prototype.onRequest = function (_oauth) {
 
 exports.OAuth = OAuth
 
-},{"caseless":105,"crypto":116,"oauth-sign":228,"qs":262,"safe-buffer":299,"url":350,"uuid":356}],294:[function(require,module,exports){
+},{"caseless":105,"crypto":116,"oauth-sign":228,"qs":262,"safe-buffer":299,"url":369,"uuid":375}],294:[function(require,module,exports){
 'use strict'
 
 var qs = require('qs')
@@ -54245,7 +54245,7 @@ Redirect.prototype.onResponse = function (response) {
 
 exports.Redirect = Redirect
 
-},{"url":350}],296:[function(require,module,exports){
+},{"url":369}],296:[function(require,module,exports){
 'use strict'
 
 var url = require('url')
@@ -54423,7 +54423,7 @@ Tunnel.defaultProxyHeaderWhiteList = defaultProxyHeaderWhiteList
 Tunnel.defaultProxyHeaderExclusiveList = defaultProxyHeaderExclusiveList
 exports.Tunnel = Tunnel
 
-},{"tunnel-agent":348,"url":350}],297:[function(require,module,exports){
+},{"tunnel-agent":367,"url":369}],297:[function(require,module,exports){
 (function (process){
 'use strict'
 
@@ -55992,7 +55992,7 @@ Request.prototype.toJSON = requestToJSON
 module.exports = Request
 
 }).call(this,require('_process'))
-},{"./lib/auth":287,"./lib/cookies":288,"./lib/getProxyFromURI":289,"./lib/har":290,"./lib/helpers":291,"./lib/multipart":292,"./lib/oauth":293,"./lib/querystring":294,"./lib/redirect":295,"./lib/tunnel":296,"_process":253,"aws-sign2":65,"aws4":66,"caseless":105,"extend":149,"forever-agent":151,"form-data":152,"hawk":181,"http":334,"http-signature":183,"https":188,"is-typedarray":193,"isstream":195,"mime-types":225,"performance-now":251,"safe-buffer":299,"stream":333,"stringstream":339,"url":350,"util":355,"zlib":99}],298:[function(require,module,exports){
+},{"./lib/auth":287,"./lib/cookies":288,"./lib/getProxyFromURI":289,"./lib/har":290,"./lib/helpers":291,"./lib/multipart":292,"./lib/oauth":293,"./lib/querystring":294,"./lib/redirect":295,"./lib/tunnel":296,"_process":253,"aws-sign2":65,"aws4":66,"caseless":105,"extend":149,"forever-agent":151,"form-data":152,"hawk":181,"http":353,"http-signature":183,"https":188,"is-typedarray":193,"isstream":195,"mime-types":225,"performance-now":251,"safe-buffer":299,"stream":352,"stringstream":358,"url":369,"util":374,"zlib":99}],298:[function(require,module,exports){
 (function (Buffer){
 'use strict'
 var inherits = require('inherits')
@@ -57649,7 +57649,7 @@ Certificate._oldVersionDetect = function (obj) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./algs":308,"./errors":312,"./fingerprint":313,"./formats/openssh-cert":315,"./formats/x509":323,"./formats/x509-pem":322,"./identity":324,"./key":326,"./private-key":327,"./signature":328,"./utils":330,"assert-plus":331,"buffer":103,"crypto":116,"util":355}],310:[function(require,module,exports){
+},{"./algs":308,"./errors":312,"./fingerprint":313,"./formats/openssh-cert":315,"./formats/x509":323,"./formats/x509-pem":322,"./identity":324,"./key":326,"./private-key":327,"./signature":328,"./utils":330,"assert-plus":331,"buffer":103,"crypto":116,"util":374}],310:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2017 Joyent, Inc.
 
@@ -58063,7 +58063,7 @@ function generateECDSA(curve) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./algs":308,"./key":326,"./private-key":327,"./utils":330,"assert-plus":331,"buffer":103,"crypto":116,"ecc-jsbn":128,"ecc-jsbn/lib/ec":129,"jodid25519":196,"jsbn":202,"tweetnacl":349}],311:[function(require,module,exports){
+},{"./algs":308,"./key":326,"./private-key":327,"./utils":330,"assert-plus":331,"buffer":103,"crypto":116,"ecc-jsbn":128,"ecc-jsbn/lib/ec":129,"jodid25519":196,"jsbn":202,"tweetnacl":368}],311:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -58163,7 +58163,7 @@ Signer.prototype.sign = function () {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./signature":328,"assert-plus":331,"buffer":103,"stream":333,"tweetnacl":349,"util":355}],312:[function(require,module,exports){
+},{"./signature":328,"assert-plus":331,"buffer":103,"stream":352,"tweetnacl":368,"util":374}],312:[function(require,module,exports){
 // Copyright 2015 Joyent, Inc.
 
 var assert = require('assert-plus');
@@ -58249,7 +58249,7 @@ module.exports = {
 	CertificateParseError: CertificateParseError
 };
 
-},{"assert-plus":331,"util":355}],313:[function(require,module,exports){
+},{"assert-plus":331,"util":374}],313:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -61465,7 +61465,7 @@ Identity._oldVersionDetect = function (obj) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./algs":308,"./errors":312,"./fingerprint":313,"./signature":328,"./utils":330,"asn1":62,"assert-plus":331,"buffer":103,"crypto":116,"util":355}],325:[function(require,module,exports){
+},{"./algs":308,"./errors":312,"./fingerprint":313,"./signature":328,"./utils":330,"asn1":62,"assert-plus":331,"buffer":103,"crypto":116,"util":374}],325:[function(require,module,exports){
 // Copyright 2015 Joyent, Inc.
 
 var Key = require('./key');
@@ -62043,7 +62043,7 @@ PrivateKey._oldVersionDetect = function (obj) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./algs":308,"./dhe":310,"./ed-compat":311,"./errors":312,"./fingerprint":313,"./formats/auto":314,"./formats/pem":316,"./formats/pkcs1":317,"./formats/pkcs8":318,"./formats/rfc4253":319,"./formats/ssh-private":320,"./key":326,"./signature":328,"./utils":330,"assert-plus":331,"buffer":103,"crypto":116,"jodid25519":196,"util":355}],328:[function(require,module,exports){
+},{"./algs":308,"./dhe":310,"./ed-compat":311,"./errors":312,"./fingerprint":313,"./formats/auto":314,"./formats/pem":316,"./formats/pkcs1":317,"./formats/pkcs8":318,"./formats/rfc4253":319,"./formats/ssh-private":320,"./key":326,"./signature":328,"./utils":330,"assert-plus":331,"buffer":103,"crypto":116,"jodid25519":196,"util":374}],328:[function(require,module,exports){
 (function (Buffer){
 // Copyright 2015 Joyent, Inc.
 
@@ -62806,7 +62806,7 @@ function opensshCipherInfo(cipher) {
 }).call(this,require("buffer").Buffer)
 },{"./private-key":327,"assert-plus":331,"buffer":103,"crypto":116,"jsbn":202}],331:[function(require,module,exports){
 arguments[4][209][0].apply(exports,arguments)
-},{"../../../is-buffer/index.js":192,"_process":253,"assert":64,"dup":209,"stream":333,"util":355}],332:[function(require,module,exports){
+},{"../../../is-buffer/index.js":192,"_process":253,"assert":64,"dup":209,"stream":352,"util":374}],332:[function(require,module,exports){
 'use strict';
 
 var isNative = /\.node$/;
@@ -62890,6 +62890,1039 @@ module.exports = function (requireCache, callback, callbackForModulesToKeep, mod
 };
 
 },{}],333:[function(require,module,exports){
+const defaultStopwords = require('./stopwords_en.js').words
+
+exports.removeStopwords = function(tokens, stopwords) {
+  stopwords = stopwords || defaultStopwords
+  if (typeof tokens !== 'object' || typeof stopwords != 'object'){
+    throw new Error ('expected Arrays try: removeStopwords(Array[, Array])')
+  }
+  return tokens.filter(function (value) {
+    return stopwords.indexOf(value.toLowerCase()) === -1
+  })
+}
+
+exports.ar = require('./stopwords_ar.js').words
+exports.bn = require('./stopwords_bn.js').words
+exports.da = require('./stopwords_da.js').words
+exports.de = require('./stopwords_de.js').words
+exports.en = require('./stopwords_en.js').words
+exports.es = require('./stopwords_es.js').words
+exports.fa = require('./stopwords_fa.js').words
+exports.fr = require('./stopwords_fr.js').words
+exports.hi = require('./stopwords_hi.js').words
+exports.it = require('./stopwords_it.js').words
+exports.ja = require('./stopwords_ja.js').words
+exports.nl = require('./stopwords_nl.js').words
+exports.no = require('./stopwords_no.js').words
+exports.pl = require('./stopwords_pl.js').words
+exports.pt = require('./stopwords_pt.js').words
+exports.ru = require('./stopwords_ru.js').words
+exports.sv = require('./stopwords_sv.js').words
+exports.zh = require('./stopwords_zh.js').words
+
+},{"./stopwords_ar.js":334,"./stopwords_bn.js":335,"./stopwords_da.js":336,"./stopwords_de.js":337,"./stopwords_en.js":338,"./stopwords_es.js":339,"./stopwords_fa.js":340,"./stopwords_fr.js":341,"./stopwords_hi.js":342,"./stopwords_it.js":343,"./stopwords_ja.js":344,"./stopwords_nl.js":345,"./stopwords_no.js":346,"./stopwords_pl.js":347,"./stopwords_pt.js":348,"./stopwords_ru.js":349,"./stopwords_sv.js":350,"./stopwords_zh.js":351}],334:[function(require,module,exports){
+/*
+The MIT License (MIT)
+
+Copyright (c) 2016 Gene Diaz
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = ["،","آض","آمينَ","آه","آهاً","آي","أ","أب","أجل","أجمع","أخ","أخذ","أصبح","أضحى","أقبل","أقل","أكثر","ألا","أم","أما","أمامك","أمامكَ","أمسى","أمّا","أن","أنا","أنت","أنتم","أنتما","أنتن","أنتِ","أنشأ","أنّى","أو","أوشك","أولئك","أولئكم","أولاء","أولالك","أوّهْ","أي","أيا","أين","أينما","أيّ","أَنَّ","أََيُّ","أُفٍّ","إذ","إذا","إذاً","إذما","إذن","إلى","إليكم","إليكما","إليكنّ","إليكَ","إلَيْكَ","إلّا","إمّا","إن","إنّما","إي","إياك","إياكم","إياكما","إياكن","إيانا","إياه","إياها","إياهم","إياهما","إياهن","إياي","إيهٍ","إِنَّ","ا","ابتدأ","اثر","اجل","احد","اخرى","اخلولق","اذا","اربعة","ارتدّ","استحال","اطار","اعادة","اعلنت","اف","اكثر","اكد","الألاء","الألى","الا","الاخيرة","الان","الاول","الاولى","التى","التي","الثاني","الثانية","الذاتي","الذى","الذي","الذين","السابق","الف","اللائي","اللاتي","اللتان","اللتيا","اللتين","اللذان","اللذين","اللواتي","الماضي","المقبل","الوقت","الى","اليوم","اما","امام","امس","ان","انبرى","انقلب","انه","انها","او","اول","اي","ايار","ايام","ايضا","ب","بات","باسم","بان","بخٍ","برس","بسبب","بسّ","بشكل","بضع","بطآن","بعد","بعض","بك","بكم","بكما","بكن","بل","بلى","بما","بماذا","بمن","بن","بنا","به","بها","بي","بيد","بين","بَسْ","بَلْهَ","بِئْسَ","تانِ","تانِك","تبدّل","تجاه","تحوّل","تلقاء","تلك","تلكم","تلكما","تم","تينك","تَيْنِ","تِه","تِي","ثلاثة","ثم","ثمّ","ثمّة","ثُمَّ","جعل","جلل","جميع","جير","حار","حاشا","حاليا","حاي","حتى","حرى","حسب","حم","حوالى","حول","حيث","حيثما","حين","حيَّ","حَبَّذَا","حَتَّى","حَذارِ","خلا","خلال","دون","دونك","ذا","ذات","ذاك","ذانك","ذانِ","ذلك","ذلكم","ذلكما","ذلكن","ذو","ذوا","ذواتا","ذواتي","ذيت","ذينك","ذَيْنِ","ذِه","ذِي","راح","رجع","رويدك","ريث","رُبَّ","زيارة","سبحان","سرعان","سنة","سنوات","سوف","سوى","سَاءَ","سَاءَمَا","شبه","شخصا","شرع","شَتَّانَ","صار","صباح","صفر","صهٍ","صهْ","ضد","ضمن","طاق","طالما","طفق","طَق","ظلّ","عاد","عام","عاما","عامة","عدا","عدة","عدد","عدم","عسى","عشر","عشرة","علق","على","عليك","عليه","عليها","علًّ","عن","عند","عندما","عوض","عين","عَدَسْ","عَمَّا","غدا","غير","ـ","ف","فان","فلان","فو","فى","في","فيم","فيما","فيه","فيها","قال","قام","قبل","قد","قطّ","قلما","قوة","كأنّما","كأين","كأيّ","كأيّن","كاد","كان","كانت","كذا","كذلك","كرب","كل","كلا","كلاهما","كلتا","كلم","كليكما","كليهما","كلّما","كلَّا","كم","كما","كي","كيت","كيف","كيفما","كَأَنَّ","كِخ","لئن","لا","لات","لاسيما","لدن","لدى","لعمر","لقاء","لك","لكم","لكما","لكن","لكنَّما","لكي","لكيلا","للامم","لم","لما","لمّا","لن","لنا","له","لها","لو","لوكالة","لولا","لوما","لي","لَسْتَ","لَسْتُ","لَسْتُم","لَسْتُمَا","لَسْتُنَّ","لَسْتِ","لَسْنَ","لَعَلَّ","لَكِنَّ","لَيْتَ","لَيْسَ","لَيْسَا","لَيْسَتَا","لَيْسَتْ","لَيْسُوا","لَِسْنَا","ما","ماانفك","مابرح","مادام","ماذا","مازال","مافتئ","مايو","متى","مثل","مذ","مساء","مع","معاذ","مقابل","مكانكم","مكانكما","مكانكنّ","مكانَك","مليار","مليون","مما","ممن","من","منذ","منها","مه","مهما","مَنْ","مِن","نحن","نحو","نعم","نفس","نفسه","نهاية","نَخْ","نِعِمّا","نِعْمَ","ها","هاؤم","هاكَ","هاهنا","هبّ","هذا","هذه","هكذا","هل","هلمَّ","هلّا","هم","هما","هن","هنا","هناك","هنالك","هو","هي","هيا","هيت","هيّا","هَؤلاء","هَاتانِ","هَاتَيْنِ","هَاتِه","هَاتِي","هَجْ","هَذا","هَذانِ","هَذَيْنِ","هَذِه","هَذِي","هَيْهَاتَ","و","و6","وا","واحد","واضاف","واضافت","واكد","وان","واهاً","واوضح","وراءَك","وفي","وقال","وقالت","وقد","وقف","وكان","وكانت","ولا","ولم","ومن","وهو","وهي","ويكأنّ","وَيْ","وُشْكَانََ","يكون","يمكن","يوم","ّأيّان"]
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],335:[function(require,module,exports){
+/*
+The MIT License (MIT)
+
+Copyright (c) 2016 Gene Diaz
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = ["অতএব","অথচ","অথবা","অনুযায়ী","অনেক","অনেকে","অনেকেই","অন্তত","অন্য","অবধি","অবশ্য","অর্থাত","আই","আগামী","আগে","আগেই","আছে","আজ","আদ্যভাগে","আপনার","আপনি","আবার","আমরা","আমাকে","আমাদের","আমার","আমি","আর","আরও","ই","ইত্যাদি","ইহা","উচিত","উত্তর","উনি","উপর","উপরে","এ","এঁদের","এঁরা","এই","একই","একটি","একবার","একে","এক্","এখন","এখনও","এখানে","এখানেই","এটা","এটাই","এটি","এত","এতটাই","এতে","এদের","এব","এবং","এবার","এমন","এমনকী","এমনি","এর","এরা","এল","এস","এসে","ঐ","ও","ওঁদের","ওঁর","ওঁরা","ওই","ওকে","ওখানে","ওদের","ওর","ওরা","কখনও","কত","কবে","কমনে","কয়েক","কয়েকটি","করছে","করছেন","করতে","করবে","করবেন","করলে","করলেন","করা","করাই","করায়","করার","করি","করিতে","করিয়া","করিয়ে","করে","করেই","করেছিলেন","করেছে","করেছেন","করেন","কাউকে","কাছ","কাছে","কাজ","কাজে","কারও","কারণ","কি","কিংবা","কিছু","কিছুই","কিন্তু","কী","কে","কেউ","কেউই","কেখা","কেন","কোটি","কোন","কোনও","কোনো","ক্ষেত্রে","কয়েক","খুব","গিয়ে","গিয়েছে","গিয়ে","গুলি","গেছে","গেল","গেলে","গোটা","চলে","চান","চায়","চার","চালু","চেয়ে","চেষ্টা","ছাড়া","ছাড়াও","ছিল","ছিলেন","জন","জনকে","জনের","জন্য","জন্যওজে","জানতে","জানা","জানানো","জানায়","জানিয়ে","জানিয়েছে","জে","জ্নজন","টি","ঠিক","তখন","তত","তথা","তবু","তবে","তা","তাঁকে","তাঁদের","তাঁর","তাঁরা","তাঁাহারা","তাই","তাও","তাকে","তাতে","তাদের","তার","তারপর","তারা","তারৈ","তাহলে","তাহা","তাহাতে","তাহার","তিনঐ","তিনি","তিনিও","তুমি","তুলে","তেমন","তো","তোমার","থাকবে","থাকবেন","থাকা","থাকায়","থাকে","থাকেন","থেকে","থেকেই","থেকেও","দিকে","দিতে","দিন","দিয়ে","দিয়েছে","দিয়েছেন","দিলেন","দু","দুই","দুটি","দুটো","দেওয়া","দেওয়ার","দেওয়া","দেখতে","দেখা","দেখে","দেন","দেয়","দ্বারা","ধরা","ধরে","ধামার","নতুন","নয়","না","নাই","নাকি","নাগাদ","নানা","নিজে","নিজেই","নিজেদের","নিজের","নিতে","নিয়ে","নিয়ে","নেই","নেওয়া","নেওয়ার","নেওয়া","নয়","পক্ষে","পর","পরে","পরেই","পরেও","পর্যন্ত","পাওয়া","পাচ","পারি","পারে","পারেন","পি","পেয়ে","পেয়্র্","প্রতি","প্রথম","প্রভৃতি","প্রযন্ত","প্রাথমিক","প্রায়","প্রায়","ফলে","ফিরে","ফের","বক্তব্য","বদলে","বন","বরং","বলতে","বলল","বললেন","বলা","বলে","বলেছেন","বলেন","বসে","বহু","বা","বাদে","বার","বি","বিনা","বিভিন্ন","বিশেষ","বিষয়টি","বেশ","বেশি","ব্যবহার","ব্যাপারে","ভাবে","ভাবেই","মতো","মতোই","মধ্যভাগে","মধ্যে","মধ্যেই","মধ্যেও","মনে","মাত্র","মাধ্যমে","মোট","মোটেই","যখন","যত","যতটা","যথেষ্ট","যদি","যদিও","যা","যাঁর","যাঁরা","যাওয়া","যাওয়ার","যাওয়া","যাকে","যাচ্ছে","যাতে","যাদের","যান","যাবে","যায়","যার","যারা","যিনি","যে","যেখানে","যেতে","যেন","যেমন","র","রকম","রয়েছে","রাখা","রেখে","লক্ষ","শুধু","শুরু","সঙ্গে","সঙ্গেও","সব","সবার","সমস্ত","সম্প্রতি","সহ","সহিত","সাধারণ","সামনে","সি","সুতরাং","সে","সেই","সেখান","সেখানে","সেটা","সেটাই","সেটাও","সেটি","স্পষ্ট","স্বয়ং","হইতে","হইবে","হইয়া","হওয়া","হওয়ায়","হওয়ার","হচ্ছে","হত","হতে","হতেই","হন","হবে","হবেন","হয়","হয়তো","হয়নি","হয়ে","হয়েই","হয়েছিল","হয়েছে","হয়েছেন","হল","হলে","হলেই","হলেও","হলো","হাজার","হিসাবে","হৈলে","হোক","হয়"]
+// tell the world about the noise words.
+exports.words = words
+
+},{}],336:[function(require,module,exports){
+/*
+Creative Commons – Attribution / ShareAlike 3.0 license
+http://creativecommons.org/licenses/by-sa/3.0/
+
+List based on frequently used words in subtitles in 2012.
+
+Thanks to
+opensubtitles.org
+https://invokeit.wordpress.com/frequency-word-lists/#comment-9707
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = [
+  'er', 'jeg', 'det', 'du', 'ikke', 'i', 'at', 'en', 'og', 'har',
+  'vi', 'til', 'på', 'hvad', 'med', 'mig', 'så', 'for', 'de', 'dig',
+  'der', 'den', 'han', 'kan', 'af', 'vil', 'var', 'her', 'et', 'skal',
+  'ved', 'nu', 'men', 'om', 'ja', 'som', 'nej', 'min', 'noget', 'ham',
+  'hun', 'bare', 'kom', 'være', 'din', 'hvor', 'dem', 'ud', 'os', 'hvis',
+  'må', 'se', 'godt', 'have', 'fra', 'ville', 'okay', 'lige', 'op', 'alle',
+  'lad', 'hvorfor', 'sig', 'hvordan', 'få', 'kunne', 'eller', 'hvem', 'man', 'bliver',
+  'havde', 'da', 'ingen', 'efter', 'når', 'alt', 'jo', 'to', 'mit', 'ind',
+  'hej', 'aldrig', 'lidt', 'nogen', 'over', 'også', 'mand', 'far', 'skulle', 'selv',
+  'får', 'hans', 'ser', 'vores', 'jer', 'sådan', 'dit', 'kun', 'deres', 'ned',
+  'mine', 'komme', 'tage', 'denne', 'sige', 'dette', 'blive', 'helt', 'fordi',
+  'end', 'tag', 'før', 'fik', 'dine',
+  '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_']
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],337:[function(require,module,exports){
+/*
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = [
+  'a', 'ab', 'aber', 'ach', 'acht', 'achte', 'achten', 'achter', 'achtes', 'ag', 'alle', 'allein', 'allem', 'allen', 'aller', 'allerdings', 'alles', 'allgemeinen', 'als', 'also', 'am', 'an', 'ander', 'andere', 'anderem', 'anderen', 'anderer', 'anderes', 'anderm', 'andern', 'anderr', 'anders', 'au', 'auch', 'auf', 'aus', 'ausser', 'ausserdem', 'außer', 'außerdem', 'b', 'bald', 'bei', 'beide', 'beiden', 'beim', 'beispiel', 'bekannt', 'bereits', 'besonders', 'besser', 'besten', 'bin', 'bis', 'bisher', 'bist', 'c', 'd', 'd.h', 'da', 'dabei', 'dadurch', 'dafür', 'dagegen', 'daher', 'dahin', 'dahinter', 'damals', 'damit', 'danach', 'daneben', 'dank', 'dann', 'daran', 'darauf', 'daraus', 'darf', 'darfst', 'darin', 'darum', 'darunter', 'darüber', 'das', 'dasein', 'daselbst', 'dass', 'dasselbe', 'davon', 'davor', 'dazu', 'dazwischen', 'daß', 'dein', 'deine', 'deinem', 'deinen', 'deiner', 'deines', 'dem', 'dementsprechend', 'demgegenüber', 'demgemäss', 'demgemäß', 'demselben', 'demzufolge', 'den', 'denen', 'denn', 'denselben', 'der', 'deren', 'derer', 'derjenige', 'derjenigen', 'dermassen', 'dermaßen', 'derselbe', 'derselben', 'des', 'deshalb', 'desselben', 'dessen', 'deswegen', 'dich', 'die', 'diejenige', 'diejenigen', 'dies', 'diese', 'dieselbe', 'dieselben', 'diesem', 'diesen', 'dieser', 'dieses', 'dir', 'doch', 'dort', 'drei', 'drin', 'dritte', 'dritten', 'dritter', 'drittes', 'du', 'durch', 'durchaus', 'durfte', 'durften', 'dürfen', 'dürft', 'e', 'eben', 'ebenso', 'ehrlich', 'ei', 'ei, ', 'eigen', 'eigene', 'eigenen', 'eigener', 'eigenes', 'ein', 'einander', 'eine', 'einem', 'einen', 'einer', 'eines', 'einig', 'einige', 'einigem', 'einigen', 'einiger', 'einiges', 'einmal', 'eins', 'elf', 'en', 'ende', 'endlich', 'entweder', 'er', 'ernst', 'erst', 'erste', 'ersten', 'erster', 'erstes', 'es', 'etwa', 'etwas', 'euch', 'euer', 'eure', 'eurem', 'euren', 'eurer', 'eures', 'f', 'folgende', 'früher', 'fünf', 'fünfte', 'fünften', 'fünfter', 'fünftes', 'für', 'g', 'gab', 'ganz', 'ganze', 'ganzen', 'ganzer', 'ganzes', 'gar', 'gedurft', 'gegen', 'gegenüber', 'gehabt', 'gehen', 'geht', 'gekannt', 'gekonnt', 'gemacht', 'gemocht', 'gemusst', 'genug', 'gerade', 'gern', 'gesagt', 'geschweige', 'gewesen', 'gewollt', 'geworden', 'gibt', 'ging', 'gleich', 'gott', 'gross', 'grosse', 'grossen', 'grosser', 'grosses', 'groß', 'große', 'großen', 'großer', 'großes', 'gut', 'gute', 'guter', 'gutes', 'h', 'hab', 'habe', 'haben', 'habt', 'hast', 'hat', 'hatte', 'hatten', 'hattest', 'hattet', 'heisst', 'her', 'heute', 'hier', 'hin', 'hinter', 'hoch', 'hätte', 'hätten', 'i', 'ich', 'ihm', 'ihn', 'ihnen', 'ihr', 'ihre', 'ihrem', 'ihren', 'ihrer', 'ihres', 'im', 'immer', 'in', 'indem', 'infolgedessen', 'ins', 'irgend', 'ist', 'j', 'ja', 'jahr', 'jahre', 'jahren', 'je', 'jede', 'jedem', 'jeden', 'jeder', 'jedermann', 'jedermanns', 'jedes', 'jedoch', 'jemand', 'jemandem', 'jemanden', 'jene', 'jenem', 'jenen', 'jener', 'jenes', 'jetzt', 'k', 'kam', 'kann', 'kannst', 'kaum', 'kein', 'keine', 'keinem', 'keinen', 'keiner', 'keines', 'kleine', 'kleinen', 'kleiner', 'kleines', 'kommen', 'kommt', 'konnte', 'konnten', 'kurz', 'können', 'könnt', 'könnte', 'l', 'lang', 'lange', 'leicht', 'leide', 'lieber', 'los', 'm', 'machen', 'macht', 'machte', 'mag', 'magst', 'mahn', 'mal', 'man', 'manche', 'manchem', 'manchen', 'mancher', 'manches', 'mann', 'mehr', 'mein', 'meine', 'meinem', 'meinen', 'meiner', 'meines', 'mensch', 'menschen', 'mich', 'mir', 'mit', 'mittel', 'mochte', 'mochten', 'morgen', 'muss', 'musst', 'musste', 'mussten', 'muß', 'mußt', 'möchte', 'mögen', 'möglich', 'mögt', 'müssen', 'müsst', 'müßt', 'n', 'na', 'nach', 'nachdem', 'nahm', 'natürlich', 'neben', 'nein', 'neue', 'neuen', 'neun', 'neunte', 'neunten', 'neunter', 'neuntes', 'nicht', 'nichts', 'nie', 'niemand', 'niemandem', 'niemanden', 'noch', 'nun', 'nur', 'o', 'ob', 'oben', 'oder', 'offen', 'oft', 'ohne', 'ordnung', 'p', 'q', 'r', 'recht', 'rechte', 'rechten', 'rechter', 'rechtes', 'richtig', 'rund', 's', 'sa', 'sache', 'sagt', 'sagte', 'sah', 'satt', 'schlecht', 'schluss', 'schon', 'sechs', 'sechste', 'sechsten', 'sechster', 'sechstes', 'sehr', 'sei', 'seid', 'seien', 'sein', 'seine', 'seinem', 'seinen', 'seiner', 'seines', 'seit', 'seitdem', 'selbst', 'sich', 'sie', 'sieben', 'siebente', 'siebenten', 'siebenter', 'siebentes', 'sind', 'so', 'solang', 'solche', 'solchem', 'solchen', 'solcher', 'solches', 'soll', 'sollen', 'sollst', 'sollt', 'sollte', 'sollten', 'sondern', 'sonst', 'soweit', 'sowie', 'später', 'startseite', 'statt', 'steht', 'suche', 't', 'tag', 'tage', 'tagen', 'tat', 'teil', 'tel', 'tritt', 'trotzdem', 'tun', 'u', 'uhr', 'um', 'und', 'und?', 'uns', 'unse', 'unsem', 'unsen', 'unser', 'unsere', 'unserer', 'unses', 'unter', 'v', 'vergangenen', 'viel', 'viele', 'vielem', 'vielen', 'vielleicht', 'vier', 'vierte', 'vierten', 'vierter', 'viertes', 'vom', 'von', 'vor', 'w', 'wahr?', 'wann', 'war', 'waren', 'warst', 'wart', 'warum', 'was', 'weg', 'wegen', 'weil', 'weit', 'weiter', 'weitere', 'weiteren', 'weiteres', 'welche', 'welchem', 'welchen', 'welcher', 'welches', 'wem', 'wen', 'wenig', 'wenige', 'weniger', 'weniges', 'wenigstens', 'wenn', 'wer', 'werde', 'werden', 'werdet', 'weshalb', 'wessen', 'wie', 'wieder', 'wieso', 'will', 'willst', 'wir', 'wird', 'wirklich', 'wirst', 'wissen', 'wo', 'woher', 'wohin', 'wohl', 'wollen', 'wollt', 'wollte', 'wollten', 'worden', 'wurde', 'wurden', 'während', 'währenddem', 'währenddessen', 'wäre', 'würde', 'würden', 'x', 'y', 'z', 'z.b', 'zehn', 'zehnte', 'zehnten', 'zehnter', 'zehntes', 'zeit', 'zu', 'zuerst', 'zugleich', 'zum', 'zunächst', 'zur', 'zurück', 'zusammen', 'zwanzig', 'zwar', 'zwei', 'zweite', 'zweiten', 'zweiter', 'zweites', 'zwischen', 'zwölf', 'über', 'überhaupt', 'übrigens'
+]
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],338:[function(require,module,exports){
+/*
+Copyright (c) 2011, Chris Umbel
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = [
+  'about', 'after', 'all', 'also', 'am', 'an', 'and', 'another', 'any', 'are', 'as', 'at', 'be',
+  'because', 'been', 'before', 'being', 'between', 'both', 'but', 'by', 'came', 'can',
+  'come', 'could', 'did', 'do', 'each', 'for', 'from', 'get', 'got', 'has', 'had',
+  'he', 'have', 'her', 'here', 'him', 'himself', 'his', 'how', 'if', 'in', 'into',
+  'is', 'it', 'like', 'make', 'many', 'me', 'might', 'more', 'most', 'much', 'must',
+  'my', 'never', 'now', 'of', 'on', 'only', 'or', 'other', 'our', 'out', 'over',
+  'said', 'same', 'see', 'should', 'since', 'some', 'still', 'such', 'take', 'than',
+  'that', 'the', 'their', 'them', 'then', 'there', 'these', 'they', 'this', 'those',
+  'through', 'to', 'too', 'under', 'up', 'very', 'was', 'way', 'we', 'well', 'were',
+  'what', 'where', 'which', 'while', 'who', 'with', 'would', 'you', 'your', 'a', 'i']
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],339:[function(require,module,exports){
+/*
+Copyright (c) 2011, David Przybilla, Chris Umbel
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = [
+  'a', 'un', 'el', 'ella', 'y', 'sobre', 'de', 'la', 'que', 'en',
+  'los', 'del', 'se', 'las', 'por', 'un', 'para', 'con', 'no',
+  'una', 'su', 'al', 'lo', 'como', 'más', 'pero', 'sus', 'le',
+  'ya', 'o', 'porque', 'cuando', 'muy', 'sin', 'sobre', 'también',
+  'me', 'hasta', 'donde', 'quien', 'desde', 'nos', 'durante', 'uno',
+  'ni', 'contra', 'ese', 'eso', 'mí', 'qué', 'otro', 'él', 'cual',
+  'poco', 'mi', 'tú', 'te', 'ti', 'sí',
+  '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_']
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],340:[function(require,module,exports){
+/*
+Copyright (c) 2011, Chris Umbel
+Farsi Stop Words by Fardin Koochaki <me@fardinak.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = [
+  // Words
+  'از', 'با', 'یه', 'برای', 'و', 'باید', 'شاید',
+
+  // Symbols
+  '؟', '!', '٪', '.', '،', '؛', ':', ';', ',',
+
+  // Numbers
+  '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۰'
+]
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],341:[function(require,module,exports){
+/*
+ Copyright (c) 2014, Ismaël Héry
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ */
+
+// A list of commonly used french words that have little meaning and can be excluded
+// from analysis.
+
+var words = ['être', 'avoir', 'faire',
+  'a',
+  'au',
+  'aux',
+  'avec',
+  'ce',
+  'ces',
+  'dans',
+  'de',
+  'des',
+  'du',
+  'elle',
+  'en',
+  'et',
+  'eux',
+  'il',
+  'je',
+  'la',
+  'le',
+  'leur',
+  'lui',
+  'ma',
+  'mais',
+  'me',
+  'même',
+  'mes',
+  'moi',
+  'mon',
+  'ne',
+  'nos',
+  'notre',
+  'nous',
+  'on',
+  'ou',
+  'où',
+  'par',
+  'pas',
+  'pour',
+  'qu',
+  'que',
+  'qui',
+  'sa',
+  'se',
+  'ses',
+  'son',
+  'sur',
+  'ta',
+  'te',
+  'tes',
+  'toi',
+  'ton',
+  'tu',
+  'un',
+  'une',
+  'vos',
+  'votre',
+  'vous',
+  'c',
+  'd',
+  'j',
+  'l',
+  'à',
+  'm',
+  'n',
+  's',
+  't',
+  'y',
+  'été',
+  'étée',
+  'étées',
+  'étés',
+  'étant',
+  'suis',
+  'es',
+  'est',
+  'sommes',
+  'êtes',
+  'sont',
+  'serai',
+  'seras',
+  'sera',
+  'serons',
+  'serez',
+  'seront',
+  'serais',
+  'serait',
+  'serions',
+  'seriez',
+  'seraient',
+  'étais',
+  'était',
+  'étions',
+  'étiez',
+  'étaient',
+  'fus',
+  'fut',
+  'fûmes',
+  'fûtes',
+  'furent',
+  'sois',
+  'soit',
+  'soyons',
+  'soyez',
+  'soient',
+  'fusse',
+  'fusses',
+  'fût',
+  'fussions',
+  'fussiez',
+  'fussent',
+  'ayant',
+  'eu',
+  'eue',
+  'eues',
+  'eus',
+  'ai',
+  'as',
+  'avons',
+  'avez',
+  'ont',
+  'aurai',
+  'auras',
+  'aura',
+  'aurons',
+  'aurez',
+  'auront',
+  'aurais',
+  'aurait',
+  'aurions',
+  'auriez',
+  'auraient',
+  'avais',
+  'avait',
+  'avions',
+  'aviez',
+  'avaient',
+  'eut',
+  'eûmes',
+  'eûtes',
+  'eurent',
+  'aie',
+  'aies',
+  'ait',
+  'ayons',
+  'ayez',
+  'aient',
+  'eusse',
+  'eusses',
+  'eût',
+  'eussions',
+  'eussiez',
+  'eussent',
+  'ceci',
+  'cela',
+  'cet',
+  'cette',
+  'ici',
+  'ils',
+  'les',
+  'leurs',
+  'quel',
+  'quels',
+  'quelle',
+  'quelles',
+  'sans',
+  'soi'
+]
+
+exports.words = words
+
+},{}],342:[function(require,module,exports){
+/*
+The MIT License (MIT)
+
+Copyright (c) 2016 Gene Diaz
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Originates from: https://github.com/stopwords-iso/stopwords-hi/
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = [
+  'अंदर','अत','अदि','अप','अपना','अपनि','अपनी','अपने','अभि','अभी','आदि','आप','इंहिं',
+  'इंहें','इंहों','इतयादि','इत्यादि','इन','इनका','इन्हीं','इन्हें','इन्हों','इस','इसका','इसकि',
+  'इसकी','इसके','इसमें','इसि','इसी','इसे','उंहिं','उंहें','उंहों','उन','उनका','उनकि','उनकी',
+  'उनके','उनको','उन्हीं','उन्हें','उन्हों','उस','उसके','उसि','उसी','उसे','एक','एवं','एस',
+  'एसे','ऐसे','ओर','और','कइ','कई','कर','करता','करते','करना','करने','करें','कहते',
+  'कहा','का','काफि','काफ़ी','कि','किंहें','किंहों','कितना','किन्हें','किन्हों','किया','किर','किस',
+  'किसि','किसी','किसे','की','कुछ','कुल','के','को','कोइ','कोई','कोन','कोनसा','कौन',
+  'कौनसा','गया','घर','जब','जहाँ','जहां','जा','जिंहें','जिंहों','जितना','जिधर','जिन','जिन्हें',
+  'जिन्हों','जिस','जिसे','जीधर','जेसा','जेसे','जैसा','जैसे','जो','तक','तब','तरह','तिंहें',
+  'तिंहों','तिन','तिन्हें','तिन्हों','तिस','तिसे','तो','था','थि','थी','थे','दबारा','दवारा','दिया',
+  'दुसरा','दुसरे','दूसरे','दो','द्वारा','न','नहिं','नहीं','ना','निचे','निहायत','नीचे','ने','पर',
+  'पहले','पुरा','पूरा','पे','फिर','बनि','बनी','बहि','बही','बहुत','बाद','बाला','बिलकुल',
+  'भि','भितर','भी','भीतर','मगर','मानो','मे','में','यदि','यह','यहाँ','यहां','यहि','यही',
+  'या','यिह','ये','रखें','रवासा','रहा','रहे','ऱ्वासा','लिए','लिये','लेकिन','व','वगेरह','वरग',
+  'वर्ग','वह','वहाँ','वहां','वहिं','वहीं','वाले','वुह','वे','वग़ैरह','संग','सकता','सकते','सबसे',
+  'सभि','सभी','साथ','साबुत','साभ','सारा','से','सो','हि','ही','हुअ','हुआ','हुइ','हुई',
+  'हुए','हे','हें','है','हैं','हो','होता','होति','होती','होते','होना','होने']
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],343:[function(require,module,exports){
+/*
+Copyright (c) 2011, David Przybilla, Chris Umbel
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = [
+  'ad', 'al', 'allo', 'ai', 'agli', 'all', 'agl', 'alla', 'alle', 'con', 'col', 'coi', 'da', 'dal', 'dallo',
+  'dai', 'dagli', 'dall', 'dagl', 'dalla', 'dalle', 'di', 'del', 'dello', 'dei', 'degli', 'dell', 'degl',
+  'della', 'delle', 'in', 'nel', 'nello', 'nei', 'negli', 'nell', 'negl', 'nella', 'nelle', 'su', 'sul',
+  'sullo', 'sui', 'sugli', 'sull', 'sugl', 'sulla', 'sulle', 'per', 'tra', 'contro', 'io', 'tu', 'lui',
+  'lei', 'noi', 'voi', 'loro', 'mio', 'mia', 'miei', 'mie', 'tuo', 'tua', 'tuoi', 'tue', 'suo', 'sua', 'suoi',
+  'sue', 'nostro', 'nostra', 'nostri', 'nostre', 'vostro', 'vostra', 'vostri', 'vostre', 'mi', 'ti', 'ci',
+  'vi', 'lo', 'la', 'li', 'le', 'gli', 'ne', 'il', 'un', 'uno', 'una', 'ma', 'ed', 'se', 'perché', 'anche', 'come',
+  'dov', 'dove', 'che', 'chi', 'cui', 'non', 'più', 'quale', 'quanto', 'quanti', 'quanta', 'quante', 'quello',
+  'quelli', 'quella', 'quelle', 'questo', 'questi', 'questa', 'queste', 'si', 'tutto', 'tutti', 'a', 'c', 'e',
+  'i', 'l', 'o', 'ho', 'hai', 'ha', 'abbiamo', 'avete', 'hanno', 'abbia', 'abbiate', 'abbiano', 'avrò', 'avrai',
+  'avrà', 'avremo', 'avrete', 'avranno', 'avrei', 'avresti', 'avrebbe', 'avremmo', 'avreste', 'avrebbero',
+  'avevo', 'avevi', 'aveva', 'avevamo', 'avevate', 'avevano', 'ebbi', 'avesti', 'ebbe', 'avemmo', 'aveste',
+  'ebbero', 'avessi', 'avesse', 'avessimo', 'avessero', 'avendo', 'avuto', 'avuta', 'avuti', 'avute', 'sono',
+  'sei', 'è', 'siamo', 'siete', 'sia', 'siate', 'siano', 'sarò', 'sarai', 'sarà', 'saremo', 'sarete', 'saranno',
+  'sarei', 'saresti', 'sarebbe', 'saremmo', 'sareste', 'sarebbero', 'ero', 'eri', 'era', 'eravamo', 'eravate',
+  'erano', 'fui', 'fosti', 'fu', 'fummo', 'foste', 'furono', 'fossi', 'fosse', 'fossimo', 'fossero', 'essendo',
+  'faccio', 'fai', 'facciamo', 'fanno', 'faccia', 'facciate', 'facciano', 'farò', 'farai', 'farà', 'faremo',
+  'farete', 'faranno', 'farei', 'faresti', 'farebbe', 'faremmo', 'fareste', 'farebbero', 'facevo', 'facevi',
+  'faceva', 'facevamo', 'facevate', 'facevano', 'feci', 'facesti', 'fece', 'facemmo', 'faceste', 'fecero',
+  'facessi', 'facesse', 'facessimo', 'facessero', 'facendo', 'sto', 'stai', 'sta', 'stiamo', 'stanno', 'stia',
+  'stiate', 'stiano', 'starò', 'starai', 'starà', 'staremo', 'starete', 'staranno', 'starei', 'staresti',
+  'starebbe', 'staremmo', 'stareste', 'starebbero', 'stavo', 'stavi', 'stava', 'stavamo', 'stavate', 'stavano',
+  'stetti', 'stesti', 'stette', 'stemmo', 'steste', 'stettero', 'stessi', 'stesse', 'stessimo', 'stessero', 'stando',
+  '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_']
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],344:[function(require,module,exports){
+// Original copyright:
+/*
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+*/
+
+// This version:
+/*
+Copyright (c) 2012, Guillaume Marty
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+// Original location:
+// http://svn.apache.org/repos/asf/lucene/dev/trunk/lucene/analysis/kuromoji/src/resources/org/apache/lucene/analysis/ja/stopwords.txt
+var words = ['の', 'に', 'は', 'を', 'た', 'が', 'で', 'て', 'と', 'し', 'れ', 'さ',
+  'ある', 'いる', 'も', 'する', 'から', 'な', 'こと', 'として', 'い', 'や', 'れる',
+  'など', 'なっ', 'ない', 'この', 'ため', 'その', 'あっ', 'よう', 'また', 'もの',
+  'という', 'あり', 'まで', 'られ', 'なる', 'へ', 'か', 'だ', 'これ', 'によって',
+  'により', 'おり', 'より', 'による', 'ず', 'なり', 'られる', 'において', 'ば', 'なかっ',
+  'なく', 'しかし', 'について', 'せ', 'だっ', 'その後', 'できる', 'それ', 'う', 'ので',
+  'なお', 'のみ', 'でき', 'き', 'つ', 'における', 'および', 'いう', 'さらに', 'でも',
+  'ら', 'たり', 'その他', 'に関する', 'たち', 'ます', 'ん', 'なら', 'に対して', '特に',
+  'せる', '及び', 'これら', 'とき', 'では', 'にて', 'ほか', 'ながら', 'うち', 'そして',
+  'とともに', 'ただし', 'かつて', 'それぞれ', 'または', 'お', 'ほど', 'ものの', 'に対する',
+  'ほとんど', 'と共に', 'といった', 'です', 'とも', 'ところ', 'ここ']
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],345:[function(require,module,exports){
+/*
+Copyright (c) 2011, Chris Umbel, Martijn de Boer, Damien van Holten
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+// This dutch wordlist has been parsed from a list created by Damien van Holten
+// source: http://www.damienvanholten.com/blog/dutch-stop-words/
+var words = [
+  'aan', 'af', 'al', 'alles', 'als', 'altijd', 'andere', 'ben', 'bij', 'daar',
+  'dan', 'dat', 'de', 'der', 'deze', 'die', 'dit', 'doch', 'doen', 'door', 'dus',
+  'een', 'eens', 'en', 'er', 'ge', 'geen', 'geweest', 'haar', 'had', 'heb',
+  'hebben', 'heeft', 'hem', 'het', 'hier', 'hij', 'hoe', 'hun', 'iemand', 'iets',
+  'ik', 'in', 'is', 'ja', 'je ', 'kan', 'kon', 'kunnen', 'maar', 'me', 'meer',
+  'men', 'met', 'mij', 'mijn', 'moet', 'na', 'naar', 'niet', 'niets', 'nog', 'nu',
+  'of', 'om', 'omdat', 'ons', 'ook', 'op', 'over', 'reeds', 'te', 'tegen', 'toch',
+  'toen', 'tot', 'u', 'uit', 'uw', 'van', 'veel', 'voor', 'want', 'waren', 'was',
+  'wat', 'we', 'wel', 'werd', 'wezen', 'wie', 'wij', 'wil', 'worden', 'zal', 'ze',
+  'zei', 'zelf', 'zich', 'zij', 'zijn', 'zo', 'zonder', 'zou',
+  'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+  'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '$', '1',
+  '2', '3', '4', '5', '6', '7', '8', '9', '0', '_', '-']
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],346:[function(require,module,exports){
+/*
+Copyright (c) 2014, Kristoffer Brabrand
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = [
+  'og', 'i', 'jeg', 'det', 'at', 'en', 'et', 'den', 'til', 'er', 'som',
+  'på', 'de', 'med', 'han', 'av', 'ikke', 'der', 'så', 'var', 'meg',
+  'seg', 'men', 'ett', 'har', 'om', 'vi', 'min', 'mitt', 'ha', 'hadde',
+  'hun', 'nå', 'over', 'da', 'ved', 'fra', 'du', 'ut', 'sin', 'dem',
+  'oss', 'opp', 'man', 'kan', 'hans', 'hvor', 'eller', 'hva', 'skal',
+  'selv', 'sjøl', 'her', 'alle', 'vil', 'bli', 'ble', 'blitt', 'kunne',
+  'inn', 'når', 'kom', 'noen', 'noe', 'ville', 'dere', 'som',
+  'deres', 'kun', 'ja', 'etter', 'ned', 'skulle', 'denne', 'for', 'deg',
+  'si', 'sine', 'sitt', 'mot', 'å', 'meget', 'hvorfor', 'dette', 'disse',
+  'uten', 'hvordan', 'ingen', 'din', 'ditt', 'blir', 'samme', 'hvilken',
+  'hvilke', 'sånn', 'inni', 'mellom', 'vår', 'hver', 'hvem', 'vors',
+  'hvis', 'både', 'bare', 'enn', 'fordi', 'før', 'mange', 'også', 'slik',
+  'vært', 'være', 'begge', 'siden', 'henne', 'hennar', 'hennes',
+  '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_']
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],347:[function(require,module,exports){
+/*
+Copyright (c) 2013, Paweł Łaskarzewski
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+// list based on: http://pl.wikipedia.org/wiki/Wikipedia:Stopwords
+var words = [
+  'a', 'aby', 'ach', 'acz', 'aczkolwiek', 'aj', 'albo', 'ale', 'ależ', 'ani',
+  'aż', 'bardziej', 'bardzo', 'bo', 'bowiem', 'by', 'byli', 'bynajmniej',
+  'być', 'był', 'była', 'było', 'były', 'będzie', 'będą', 'cali', 'cała',
+  'cały', 'ci', 'cię', 'ciebie', 'co', 'cokolwiek', 'coś', 'czasami',
+  'czasem', 'czemu', 'czy', 'czyli', 'daleko', 'dla', 'dlaczego', 'dlatego',
+  'do', 'dobrze', 'dokąd', 'dość', 'dużo', 'dwa', 'dwaj', 'dwie', 'dwoje',
+  'dziś', 'dzisiaj', 'gdy', 'gdyby', 'gdyż', 'gdzie', 'gdziekolwiek',
+  'gdzieś', 'i', 'ich', 'ile', 'im', 'inna', 'inne', 'inny', 'innych', 'iż',
+  'ja', 'ją', 'jak', 'jakaś', 'jakby', 'jaki', 'jakichś', 'jakie', 'jakiś',
+  'jakiż', 'jakkolwiek', 'jako', 'jakoś', 'je', 'jeden', 'jedna', 'jedno',
+  'jednak', 'jednakże', 'jego', 'jej', 'jemu', 'jest', 'jestem', 'jeszcze',
+  'jeśli', 'jeżeli', 'już', 'ją', 'każdy', 'kiedy', 'kilka', 'kimś', 'kto',
+  'ktokolwiek', 'ktoś', 'która', 'które', 'którego', 'której', 'który',
+  'których', 'którym', 'którzy', 'ku', 'lat', 'lecz', 'lub', 'ma', 'mają',
+  'mało', 'mam', 'mi', 'mimo', 'między', 'mną', 'mnie', 'mogą', 'moi', 'moim',
+  'moja', 'moje', 'może', 'możliwe', 'można', 'mój', 'mu', 'musi', 'my', 'na',
+  'nad', 'nam', 'nami', 'nas', 'nasi', 'nasz', 'nasza', 'nasze', 'naszego',
+  'naszych', 'natomiast', 'natychmiast', 'nawet', 'nią', 'nic', 'nich', 'nie',
+  'niech', 'niego', 'niej', 'niemu', 'nigdy', 'nim', 'nimi', 'niż', 'no', 'o',
+  'obok', 'od', 'około', 'on', 'ona', 'one', 'oni', 'ono', 'oraz', 'oto',
+  'owszem', 'pan', 'pana', 'pani', 'po', 'pod', 'podczas', 'pomimo', 'ponad',
+  'ponieważ', 'powinien', 'powinna', 'powinni', 'powinno', 'poza', 'prawie',
+  'przecież', 'przed', 'przede', 'przedtem', 'przez', 'przy', 'roku',
+  'również', 'sam', 'sama', 'są', 'się', 'skąd', 'sobie', 'sobą', 'sposób',
+  'swoje', 'ta', 'tak', 'taka', 'taki', 'takie', 'także', 'tam', 'te', 'tego',
+  'tej', 'temu', 'ten', 'teraz', 'też', 'to', 'tobą', 'tobie', 'toteż',
+  'trzeba', 'tu', 'tutaj', 'twoi', 'twoim', 'twoja', 'twoje', 'twym', 'twój',
+  'ty', 'tych', 'tylko', 'tym', 'u', 'w', 'wam', 'wami', 'was', 'wasz', 'zaś',
+  'wasza', 'wasze', 'we', 'według', 'wiele', 'wielu', 'więc', 'więcej', 'tę',
+  'wszyscy', 'wszystkich', 'wszystkie', 'wszystkim', 'wszystko', 'wtedy',
+  'wy', 'właśnie', 'z', 'za', 'zapewne', 'zawsze', 'ze', 'zł', 'znowu',
+  'znów', 'został', 'żaden', 'żadna', 'żadne', 'żadnych', 'że', 'żeby',
+  '$', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_']
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],348:[function(require,module,exports){
+/*
+Copyright (c) 2011, Luís Rodrigues
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = [
+  'a',
+  'à',
+  'ao',
+  'aos',
+  'aquela',
+  'aquelas',
+  'aquele',
+  'aqueles',
+  'aquilo',
+  'as',
+  'às',
+  'até',
+  'com',
+  'como',
+  'da',
+  'das',
+  'de',
+  'dela',
+  'delas',
+  'dele',
+  'deles',
+  'depois',
+  'do',
+  'dos',
+  'e',
+  'ela',
+  'elas',
+  'ele',
+  'eles',
+  'em',
+  'entre',
+  'essa',
+  'essas',
+  'esse',
+  'esses',
+  'esta',
+  'estas',
+  'este',
+  'estes',
+  'eu',
+  'isso',
+  'isto',
+  'já',
+  'lhe',
+  'lhes',
+  'mais',
+  'mas',
+  'me',
+  'mesmo',
+  'meu',
+  'meus',
+  'minha',
+  'minhas',
+  'muito',
+  'muitos',
+  'na',
+  'não',
+  'nas',
+  'nem',
+  'no',
+  'nos',
+  'nós',
+  'nossa',
+  'nossas',
+  'nosso',
+  'nossos',
+  'num',
+  'nuns',
+  'numa',
+  'numas',
+  'o',
+  'os',
+  'ou',
+  'para',
+  'pela',
+  'pelas',
+  'pelo',
+  'pelos',
+  'por',
+  'quais',
+  'qual',
+  'quando',
+  'que',
+  'quem',
+  'se',
+  'sem',
+  'seu',
+  'seus',
+  'só',
+  'sua',
+  'suas',
+  'também',
+  'te',
+  'teu',
+  'teus',
+  'tu',
+  'tua',
+  'tuas',
+  'um',
+  'uma',
+  'umas',
+  'você',
+  'vocês',
+  'vos',
+  'vosso',
+  'vossos',
+  '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_'
+]
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],349:[function(require,module,exports){
+/*
+Copyright (c) 2011, Polyakov Vladimir, Chris Umbel
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = [
+  'о', 'после', 'все', 'также', 'и', 'другие', 'все', 'как', 'во', 'быть',
+  'потому', 'был', 'до', 'являюсь', 'между', 'все', 'но', 'от', 'иди', 'могу',
+  'подойди', 'мог', 'делал', 'делаю', 'каждый', 'для', 'откуда', 'иметь', 'имел',
+  'он', 'имеет', 'её', 'здесь', 'его', 'как', 'если', 'в', 'оно', 'за',
+  'делать', 'много', 'я', 'может быть', 'более', 'самый', 'должен',
+  'мой', 'никогда', 'сейчас', 'из', 'на', 'только', 'или', 'другой', 'другая',
+  'другое', 'наше', 'вне', 'конец', 'сказал', 'сказала', 'также', 'видел', 'c',
+  'немного', 'все еще', 'так', 'затем', 'тот', 'их', 'там', 'этот', 'они', 'те',
+  'через', 'тоже', 'под', 'над', 'очень', 'был', 'путь', 'мы', 'хорошо',
+  'что', 'где', 'который', 'пока', 'кто', 'с кем', 'хотел бы', 'ты', 'твои',
+  'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н',
+  'o', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь',
+  'э', 'ю', 'я', '$', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_']
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],350:[function(require,module,exports){
+/*
+Creative Commons – Attribution / ShareAlike 3.0 license
+http://creativecommons.org/licenses/by-sa/3.0/
+
+List based on frequently used words in subtitles in 2012.
+
+Thanks to
+opensubtitles.org
+https://invokeit.wordpress.com/frequency-word-lists/#comment-9707
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = [
+  'jag', 'det', 'är', 'du', 'inte', 'att', 'en', 'och', 'har', 'vi',
+  'på', 'i', 'för', 'han', 'vad', 'med', 'mig', 'som', 'här', 'om',
+  'dig', 'var', 'den', 'så', 'till', 'kan', 'de', 'ni', 'ska', 'ett',
+  'men', 'av', 'vill', 'nu', 'ja', 'nej', 'bara', 'hon', 'hur', 'min',
+  'där', 'honom', 'kom', 'din', 'då', 'när', 'ha', 'er', 'ta', 'ut',
+  'får', 'man', 'vara', 'oss', 'dem', 'eller', 'varför', 'alla', 'från', 'upp',
+  'igen', 'sa', 'hade', 'allt', 'in', 'sig', 'ingen', 'henne', 'vem', 'mitt',
+  'nåt', 'blir', 'än', 'bli', 'ju', 'två', 'tar', 'hans', 'ditt', 'mina',
+  'åt', 'väl', 'också', 'nån', 'låt', 'detta', 'va', 'dina', 'dom', 'blev',
+  'inga', 'sin', 'just', 'många', 'vart', 'vilken', 'ur', 'ens', 'sitt', 'e',
+  'jo', 'era', 'deras', 'fem', 'sex', 'denna', 'vilket', 'fyra', 'vårt', 'emot',
+  'tio', 'ert', 'sju', 'åtta', 'nånting', 'ned', 'ers', 'nio', 'mej',
+  '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '_']
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],351:[function(require,module,exports){
+/*
+Copyright (c) 2011, David Przybilla, Chris Umbel
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+// a list of commonly used words that have little meaning and can be excluded
+// from analysis.
+var words = [
+  '的', '地', '得', '和', '跟',
+  '与', '及', '向', '并', '等',
+  '更', '已', '含', '做', '我',
+  '你', '他', '她', '们', '某',
+  '该', '各', '每', '这', '那',
+  '哪', '什', '么', '谁', '年',
+  '月', '日', '时', '分', '秒',
+  '几', '多', '来', '在', '就',
+  '又', '很', '呢', '吧', '吗',
+  '了', '嘛', '哇', '儿', '哼',
+  '啊', '嗯', '是', '着', '都',
+  '不', '说', '也', '看', '把',
+  '还', '个', '有', '小', '到',
+  '一', '为', '中', '于', '对',
+  '会', '之', '第', '此', '或',
+  '共', '按', '请'
+]
+
+// tell the world about the noise words.
+exports.words = words
+
+},{}],352:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -63018,7 +64051,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":147,"inherits":191,"readable-stream/duplex.js":270,"readable-stream/passthrough.js":278,"readable-stream/readable.js":279,"readable-stream/transform.js":280,"readable-stream/writable.js":281}],334:[function(require,module,exports){
+},{"events":147,"inherits":191,"readable-stream/duplex.js":270,"readable-stream/passthrough.js":278,"readable-stream/readable.js":279,"readable-stream/transform.js":280,"readable-stream/writable.js":281}],353:[function(require,module,exports){
 (function (global){
 var ClientRequest = require('./lib/request')
 var extend = require('xtend')
@@ -63100,7 +64133,7 @@ http.METHODS = [
 	'UNSUBSCRIBE'
 ]
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./lib/request":336,"builtin-status-codes":104,"url":350,"xtend":366}],335:[function(require,module,exports){
+},{"./lib/request":355,"builtin-status-codes":104,"url":369,"xtend":385}],354:[function(require,module,exports){
 (function (global){
 exports.fetch = isFunction(global.fetch) && isFunction(global.ReadableStream)
 
@@ -63173,7 +64206,7 @@ function isFunction (value) {
 xhr = null // Help gc
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],336:[function(require,module,exports){
+},{}],355:[function(require,module,exports){
 (function (process,global,Buffer){
 var capability = require('./capability')
 var inherits = require('inherits')
@@ -63483,7 +64516,7 @@ var unsafeHeaders = [
 ]
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"./capability":335,"./response":337,"_process":253,"buffer":103,"inherits":191,"readable-stream":279,"to-arraybuffer":340}],337:[function(require,module,exports){
+},{"./capability":354,"./response":356,"_process":253,"buffer":103,"inherits":191,"readable-stream":279,"to-arraybuffer":359}],356:[function(require,module,exports){
 (function (process,global,Buffer){
 var capability = require('./capability')
 var inherits = require('inherits')
@@ -63669,7 +64702,7 @@ IncomingMessage.prototype._onXHRProgress = function () {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"./capability":335,"_process":253,"buffer":103,"inherits":191,"readable-stream":279}],338:[function(require,module,exports){
+},{"./capability":354,"_process":253,"buffer":103,"inherits":191,"readable-stream":279}],357:[function(require,module,exports){
 'use strict';
 
 var Buffer = require('safe-buffer').Buffer;
@@ -63942,7 +64975,7 @@ function simpleWrite(buf) {
 function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
-},{"safe-buffer":299}],339:[function(require,module,exports){
+},{"safe-buffer":299}],358:[function(require,module,exports){
 (function (Buffer){
 var util = require('util')
 var Stream = require('stream')
@@ -64048,7 +65081,7 @@ function alignedWrite(buffer) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":103,"stream":333,"string_decoder":338,"util":355}],340:[function(require,module,exports){
+},{"buffer":103,"stream":352,"string_decoder":357,"util":374}],359:[function(require,module,exports){
 var Buffer = require('buffer').Buffer
 
 module.exports = function (buf) {
@@ -64077,7 +65110,7 @@ module.exports = function (buf) {
 	}
 }
 
-},{"buffer":103}],341:[function(require,module,exports){
+},{"buffer":103}],360:[function(require,module,exports){
 /*!
  * Copyright (c) 2015, Salesforce.com, Inc.
  * All rights reserved.
@@ -65415,7 +66448,7 @@ module.exports = {
   canonicalDomain: canonicalDomain
 };
 
-},{"../package.json":347,"./memstore":342,"./pathMatch":343,"./permuteDomain":344,"./pubsuffix":345,"./store":346,"net":100,"punycode":260,"url":350}],342:[function(require,module,exports){
+},{"../package.json":366,"./memstore":361,"./pathMatch":362,"./permuteDomain":363,"./pubsuffix":364,"./store":365,"net":100,"punycode":260,"url":369}],361:[function(require,module,exports){
 /*!
  * Copyright (c) 2015, Salesforce.com, Inc.
  * All rights reserved.
@@ -65587,7 +66620,7 @@ MemoryCookieStore.prototype.getAllCookies = function(cb) {
   cb(null, cookies);
 };
 
-},{"./pathMatch":343,"./permuteDomain":344,"./store":346,"util":355}],343:[function(require,module,exports){
+},{"./pathMatch":362,"./permuteDomain":363,"./store":365,"util":374}],362:[function(require,module,exports){
 /*!
  * Copyright (c) 2015, Salesforce.com, Inc.
  * All rights reserved.
@@ -65650,7 +66683,7 @@ function pathMatch (reqPath, cookiePath) {
 
 exports.pathMatch = pathMatch;
 
-},{}],344:[function(require,module,exports){
+},{}],363:[function(require,module,exports){
 /*!
  * Copyright (c) 2015, Salesforce.com, Inc.
  * All rights reserved.
@@ -65708,7 +66741,7 @@ function permuteDomain (domain) {
 
 exports.permuteDomain = permuteDomain;
 
-},{"./pubsuffix":345}],345:[function(require,module,exports){
+},{"./pubsuffix":364}],364:[function(require,module,exports){
 /****************************************************
  * AUTOMATICALLY GENERATED by generate-pubsuffix.js *
  *                  DO NOT EDIT!                    *
@@ -65808,7 +66841,7 @@ var index = module.exports.index = Object.freeze(
 
 // END of automatically generated file
 
-},{"punycode":260}],346:[function(require,module,exports){
+},{"punycode":260}],365:[function(require,module,exports){
 /*!
  * Copyright (c) 2015, Salesforce.com, Inc.
  * All rights reserved.
@@ -65881,7 +66914,7 @@ Store.prototype.getAllCookies = function(cb) {
   throw new Error('getAllCookies is not implemented (therefore jar cannot be serialized)');
 };
 
-},{}],347:[function(require,module,exports){
+},{}],366:[function(require,module,exports){
 module.exports={
   "_args": [
     [
@@ -66018,7 +67051,7 @@ module.exports={
   "version": "2.3.2"
 }
 
-},{}],348:[function(require,module,exports){
+},{}],367:[function(require,module,exports){
 (function (process){
 'use strict'
 
@@ -66266,7 +67299,7 @@ if (process.env.NODE_DEBUG && /\btunnel\b/.test(process.env.NODE_DEBUG)) {
 exports.debug = debug // for test
 
 }).call(this,require('_process'))
-},{"_process":253,"assert":64,"events":147,"http":334,"https":188,"net":100,"safe-buffer":299,"tls":100,"util":355}],349:[function(require,module,exports){
+},{"_process":253,"assert":64,"events":147,"http":353,"https":188,"net":100,"safe-buffer":299,"tls":100,"util":374}],368:[function(require,module,exports){
 (function(nacl) {
 'use strict';
 
@@ -68656,7 +69689,7 @@ nacl.setPRNG = function(fn) {
 
 })(typeof module !== 'undefined' && module.exports ? module.exports : (self.nacl = self.nacl || {}));
 
-},{"crypto":72}],350:[function(require,module,exports){
+},{"crypto":72}],369:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -69390,7 +70423,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":351,"punycode":260,"querystring":268}],351:[function(require,module,exports){
+},{"./util":370,"punycode":260,"querystring":268}],370:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -69408,7 +70441,7 @@ module.exports = {
   }
 };
 
-},{}],352:[function(require,module,exports){
+},{}],371:[function(require,module,exports){
 (function (global){
 
 /**
@@ -69479,16 +70512,16 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],353:[function(require,module,exports){
+},{}],372:[function(require,module,exports){
 arguments[4][191][0].apply(exports,arguments)
-},{"dup":191}],354:[function(require,module,exports){
+},{"dup":191}],373:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],355:[function(require,module,exports){
+},{}],374:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -70078,7 +71111,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":354,"_process":253,"inherits":353}],356:[function(require,module,exports){
+},{"./support/isBuffer":373,"_process":253,"inherits":372}],375:[function(require,module,exports){
 var v1 = require('./v1');
 var v4 = require('./v4');
 
@@ -70088,7 +71121,7 @@ uuid.v4 = v4;
 
 module.exports = uuid;
 
-},{"./v1":359,"./v4":360}],357:[function(require,module,exports){
+},{"./v1":378,"./v4":379}],376:[function(require,module,exports){
 /**
  * Convert array of 16 byte values to UUID string format of the form:
  * XXXXXXXX-XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
@@ -70113,7 +71146,7 @@ function bytesToUuid(buf, offset) {
 
 module.exports = bytesToUuid;
 
-},{}],358:[function(require,module,exports){
+},{}],377:[function(require,module,exports){
 (function (global){
 // Unique ID creation requires a high quality random # generator.  In the
 // browser this is a little complicated due to unknown quality of Math.random()
@@ -70150,7 +71183,7 @@ if (!rng) {
 module.exports = rng;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],359:[function(require,module,exports){
+},{}],378:[function(require,module,exports){
 // Unique ID creation requires a high quality random # generator.  We feature
 // detect to determine the best RNG source, normalizing to a function that
 // returns 128-bits of randomness, since that's what's usually required
@@ -70255,7 +71288,7 @@ function v1(options, buf, offset) {
 
 module.exports = v1;
 
-},{"./lib/bytesToUuid":357,"./lib/rng":358}],360:[function(require,module,exports){
+},{"./lib/bytesToUuid":376,"./lib/rng":377}],379:[function(require,module,exports){
 var rng = require('./lib/rng');
 var bytesToUuid = require('./lib/bytesToUuid');
 
@@ -70286,7 +71319,7 @@ function v4(options, buf, offset) {
 
 module.exports = v4;
 
-},{"./lib/bytesToUuid":357,"./lib/rng":358}],361:[function(require,module,exports){
+},{"./lib/bytesToUuid":376,"./lib/rng":377}],380:[function(require,module,exports){
 /*
  * verror.js: richer JavaScript errors
  */
@@ -70445,7 +71478,7 @@ WError.prototype.cause = function we_cause(c)
 	return (this.we_cause);
 };
 
-},{"assert":64,"extsprintf":150,"util":355}],362:[function(require,module,exports){
+},{"assert":64,"extsprintf":150,"util":374}],381:[function(require,module,exports){
 var indexOf = require('indexof');
 
 var Object_keys = function (obj) {
@@ -70585,7 +71618,7 @@ exports.createContext = Script.createContext = function (context) {
     return copy;
 };
 
-},{"indexof":190}],363:[function(require,module,exports){
+},{"indexof":190}],382:[function(require,module,exports){
 /*!
  * Vue-Lazyload.js v1.0.4
  * (c) 2017 Awe <hilongjw@gmail.com>
@@ -70593,7 +71626,7 @@ exports.createContext = Script.createContext = function (context) {
  */
 !function(t,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):t.VueLazyload=e()}(this,function(){"use strict";function t(t,e){if(t.length){var n=t.indexOf(e);return n>-1?t.splice(n,1):void 0}}function e(t,e){if(!t||!e)return t||{};if(t instanceof Object)for(var n in e)t[n]=e[n];return t}function n(t,e){for(var n=!1,r=0,i=t.length;r<i;r++)if(e(t[r])){n=!0;break}return n}function r(t,e){if("IMG"===t.tagName&&t.getAttribute("data-srcset")){var n=t.getAttribute("data-srcset"),r=[],i=t.parentNode,o=i.offsetWidth*e,s=void 0,a=void 0,u=void 0;n=n.trim().split(","),n.map(function(t){t=t.trim(),s=t.lastIndexOf(" "),-1===s?(a=t,u=999998):(a=t.substr(0,s),u=parseInt(t.substr(s+1,t.length-s-2),10)),r.push([u,a])}),r.sort(function(t,e){if(t[0]<e[0])return-1;if(t[0]>e[0])return 1;if(t[0]===e[0]){if(-1!==e[1].indexOf(".webp",e[1].length-5))return 1;if(-1!==t[1].indexOf(".webp",t[1].length-5))return-1}return 0});for(var d="",l=void 0,c=r.length,h=0;h<c;h++)if(l=r[h],l[0]>=o){d=l[1];break}return d}}function i(t,e){for(var n=void 0,r=0,i=t.length;r<i;r++)if(e(t[r])){n=t[r];break}return n}function o(){if(!h)return!1;var t=!0,e=document;try{var n=e.createElement("object");n.type="image/webp",n.style.visibility="hidden",n.innerHTML="!",e.body.appendChild(n),t=!n.offsetWidth,e.body.removeChild(n)}catch(e){t=!1}return t}function s(t,e){var n=null,r=0;return function(){if(!n){var i=Date.now()-r,o=this,s=arguments,a=function(){r=Date.now(),n=!1,t.apply(o,s)};i>=e?a():n=setTimeout(a,e)}}}function a(t){return null!==t&&"object"===(void 0===t?"undefined":d(t))}function u(t){if(!(t instanceof Object))return[];if(Object.keys)return Object.keys(t);var e=[];for(var n in t)t.hasOwnProperty(n)&&e.push(n);return e}var d="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},l=(function(){function t(t){this.value=t}function e(e){function n(t,e){return new Promise(function(n,i){var a={key:t,arg:e,resolve:n,reject:i,next:null};s?s=s.next=a:(o=s=a,r(t,e))})}function r(n,o){try{var s=e[n](o),a=s.value;a instanceof t?Promise.resolve(a.value).then(function(t){r("next",t)},function(t){r("throw",t)}):i(s.done?"return":"normal",s.value)}catch(t){i("throw",t)}}function i(t,e){switch(t){case"return":o.resolve({value:e,done:!0});break;case"throw":o.reject(e);break;default:o.resolve({value:e,done:!1})}o=o.next,o?r(o.key,o.arg):s=null}var o,s;this._invoke=n,"function"!=typeof e.return&&(this.return=void 0)}"function"==typeof Symbol&&Symbol.asyncIterator&&(e.prototype[Symbol.asyncIterator]=function(){return this}),e.prototype.next=function(t){return this._invoke("next",t)},e.prototype.throw=function(t){return this._invoke("throw",t)},e.prototype.return=function(t){return this._invoke("return",t)}}(),function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}),c=function(){function t(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}return function(e,n,r){return n&&t(e.prototype,n),r&&t(e,r),e}}(),h="undefined"!=typeof window,f=function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:1;return h&&window.devicePixelRatio||t},p=function(){if(h){var t=!1;try{var e=Object.defineProperty({},"passive",{get:function(){t=!0}});window.addEventListener("test",null,e)}catch(t){}return t}}(),v={on:function(t,e,n){p?t.addEventListener(e,n,{passive:!0}):t.addEventListener(e,n,!1)},off:function(t,e,n){t.removeEventListener(e,n)}},y=function(t,e,n){var r=new Image;r.src=t.src,r.onload=function(){e({naturalHeight:r.naturalHeight,naturalWidth:r.naturalWidth,src:r.src})},r.onerror=function(t){n(t)}},g=function(t,e){return"undefined"!=typeof getComputedStyle?getComputedStyle(t,null).getPropertyValue(e):t.style[e]},m=function(t){return g(t,"overflow")+g(t,"overflow-y")+g(t,"overflow-x")},w=function(t){if(h){if(!(t instanceof HTMLElement))return window;for(var e=t;e&&e!==document.body&&e!==document.documentElement&&e.parentNode;){if(/(scroll|auto)/.test(m(e)))return e;e=e.parentNode}return window}},b={},L=function(){function t(e){var n=e.el,r=e.src,i=e.error,o=e.loading,s=e.bindType,a=e.$parent,u=e.options,d=e.elRenderer;l(this,t),this.el=n,this.src=r,this.error=i,this.loading=o,this.bindType=s,this.attempt=0,this.naturalHeight=0,this.naturalWidth=0,this.options=u,this.filter(),this.initState(),this.performanceData={init:Date.now(),loadStart:null,loadEnd:null},this.rect=n.getBoundingClientRect(),this.$parent=a,this.elRenderer=d,this.render("loading",!1)}return c(t,[{key:"initState",value:function(){this.state={error:!1,loaded:!1,rendered:!1,rested:!1}}},{key:"record",value:function(t){this.performanceData[t]=Date.now()}},{key:"update",value:function(t){var e=t.src,n=t.loading,r=t.error,i=this.src;this.src=e,this.loading=n,this.error=r,this.filter(),i!==this.src&&(this.attempt=0,this.initState())}},{key:"getRect",value:function(){this.rect=this.el.getBoundingClientRect()}},{key:"checkIsNear",value:function(){return this.getRect(),this.rect.top<window.innerHeight*this.options.preLoad*1.5&&this.rect.bottom>this.options.preLoadTop&&this.rect.left<window.innerWidth*this.options.preLoad*1.5&&this.rect.right>0}},{key:"checkInView",value:function(){return this.getRect(),this.rect.top<window.innerHeight*this.options.preLoad&&this.rect.bottom>this.options.preLoadTop&&this.rect.left<window.innerWidth*this.options.preLoad&&this.rect.right>0}},{key:"filter",value:function(){var t=this;u(this.options.filter).map(function(e){t.options.filter[e](t,t.options)})}},{key:"renderLoading",value:function(t){var e=this;y({src:this.loading},function(n){e.render("loading",!1),t()})}},{key:"load",value:function(){var t=this;return this.attempt>this.options.attempt-1&&this.state.error?void(this.options.silent||console.log("error end")):this.state.loaded||b[this.src]?this.render("loaded",!0):void this.renderLoading(function(){t.attempt++,t.record("loadStart"),y({src:t.src},function(e){t.naturalHeight=e.naturalHeight,t.naturalWidth=e.naturalWidth,t.state.loaded=!0,t.state.error=!1,t.record("loadEnd"),t.render("loaded",!1),b[t.src]=1},function(e){t.state.error=!0,t.state.loaded=!1,t.render("error",!1)})})}},{key:"rest",value:function(){this.state.rested=!0}},{key:"unrest",value:function(){this.state.rested=!1}},{key:"render",value:function(t,e){this.elRenderer(this,t,e)}},{key:"performance",value:function(){var t="loading",e=0;return this.state.loaded&&(t="loaded",e=(this.performanceData.loadEnd-this.performanceData.loadStart)/1e3),this.state.error&&(t="error"),{src:this.src,state:t,time:e}}},{key:"destroy",value:function(){this.el=null,this.src=null,this.error=null,this.loading=null,this.bindType=null,this.attempt=0}}]),t}(),k="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",T=["scroll","wheel","mousewheel","resize","animationend","transitionend","touchmove"],A=function(u){return function(){function d(t){var e=this,n=t.preLoad,r=t.error,i=t.preLoadTop,a=t.loading,u=t.attempt,c=t.silent,h=t.scale,p=t.listenEvents,v=(t.hasbind,t.filter),y=t.adapter;l(this,d),this.ListenerQueue=[],this.TargetIndex=0,this.TargetQueue=[],this.options={silent:c||!0,preLoad:n||1.3,preLoadTop:i||0,error:r||k,loading:a||k,attempt:u||3,scale:h||f(h),ListenEvents:p||T,hasbind:!1,supportWebp:o(),filter:v||{},adapter:y||{}},this._initEvent(),this.lazyLoadHandler=s(function(){var t=!1;e.ListenerQueue.forEach(function(e){e.state.loaded?e.state.rested?(t=e.checkInView())&&e.unrest():!(t=e.checkIsNear())&&e.rest():(t=e.checkInView())&&e.load()})},100)}return c(d,[{key:"config",value:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};e(this.options,t)}},{key:"performance",value:function(){var t=[];return this.ListenerQueue.map(function(e){t.push(e.performance())}),t}},{key:"addLazyBox",value:function(t){this.ListenerQueue.push(t),h&&(this._addListenerTarget(window),t.$el&&t.$el.parentNode&&this._addListenerTarget(t.$el.parentNode))}},{key:"add",value:function(t,e,i){var o=this;if(n(this.ListenerQueue,function(e){return e.el===t}))return this.update(t,e),u.nextTick(this.lazyLoadHandler);var s=this._valueFormatter(e.value),a=s.src,d=s.loading,l=s.error;u.nextTick(function(){a=r(t,o.options.scale)||a;var n=Object.keys(e.modifiers)[0],s=void 0;n&&(s=i.context.$refs[n],s=s?s.$el||s:document.getElementById(n)),s||(s=w(t));var c=new L({bindType:e.arg,$parent:s,el:t,loading:d,error:l,src:a,elRenderer:o._elRenderer.bind(o),options:o.options});o.ListenerQueue.push(c),h&&(o._addListenerTarget(window),o._addListenerTarget(s)),o.lazyLoadHandler(),u.nextTick(function(){return o.lazyLoadHandler()})})}},{key:"update",value:function(t,e){var n=this,r=this._valueFormatter(e.value),o=r.src,s=r.loading,a=r.error,d=i(this.ListenerQueue,function(e){return e.el===t});d&&d.update({src:o,loading:s,error:a}),this.lazyLoadHandler(),u.nextTick(function(){return n.lazyLoadHandler()})}},{key:"remove",value:function(e){if(e){var n=i(this.ListenerQueue,function(t){return t.el===e});n&&(this._removeListenerTarget(n.$parent),this._removeListenerTarget(window),t(this.ListenerQueue,n)&&n.destroy())}}},{key:"removeComponent",value:function(e){e&&(t(this.ListenerQueue,e),e.$parent&&e.$el.parentNode&&this._removeListenerTarget(e.$el.parentNode),this._removeListenerTarget(window))}},{key:"_addListenerTarget",value:function(t){if(t){var e=i(this.TargetQueue,function(e){return e.el===t});return e?e.childrenCount++:(e={el:t,id:++this.TargetIndex,childrenCount:1,listened:!0},this._initListen(e.el,!0),this.TargetQueue.push(e)),this.TargetIndex}}},{key:"_removeListenerTarget",value:function(t){var e=this;this.TargetQueue.forEach(function(n,r){n.el===t&&(--n.childrenCount||(e._initListen(n.el,!1),e.TargetQueue.splice(r,1),n=null))})}},{key:"_initListen",value:function(t,e){var n=this;this.options.ListenEvents.forEach(function(r){return v[e?"on":"off"](t,r,n.lazyLoadHandler)})}},{key:"_initEvent",value:function(){var e=this;this.Event={listeners:{loading:[],loaded:[],error:[]}},this.$on=function(t,n){e.Event.listeners[t].push(n)},this.$once=function(t,n){function r(){i.$off(t,r),n.apply(i,arguments)}var i=e;e.$on(t,r)},this.$off=function(n,r){if(!r)return void(e.Event.listeners[n]=[]);t(e.Event.listeners[n],r)},this.$emit=function(t,n,r){e.Event.listeners[t].forEach(function(t){return t(n,r)})}}},{key:"_elRenderer",value:function(t,e,n){if(t.el){var r=t.el,i=t.bindType,o=void 0;switch(e){case"loading":o=t.loading;break;case"error":o=t.error;break;default:o=t.src}i?r.style[i]="url("+o+")":r.getAttribute("src")!==o&&r.setAttribute("src",o),r.setAttribute("lazy",e),this.$emit(e,t,n),this.options.adapter[e]&&this.options.adapter[e](t,this.options)}}},{key:"_valueFormatter",value:function(t){var e=t,n=this.options.loading,r=this.options.error;return a(t)&&(t.src||this.options.silent||console.error("Vue Lazyload warning: miss src with "+t),e=t.src,n=t.loading||this.options.loading,r=t.error||this.options.error),{src:e,loading:n,error:r}}}]),d}()},E=function(t){return{props:{tag:{type:String,default:"div"}},render:function(t){return!1===this.show?t(this.tag):t(this.tag,null,this.$slots.default)},data:function(){return{state:{loaded:!1,rested:!1},rect:{},show:!1}},mounted:function(){t.addLazyBox(this),t.lazyLoadHandler()},beforeDestroy:function(){t.removeComponent(this)},methods:{getRect:function(){this.rect=this.$el.getBoundingClientRect()},checkInView:function(){return this.getRect(),h&&this.rect.top<window.innerHeight*t.options.preLoad&&this.rect.bottom>0&&this.rect.left<window.innerWidth*t.options.preLoad&&this.rect.right>0},checkIsNear:function(){return this.getRect(),h&&this.rect.top<window.innerHeight*t.options.preLoad*1.5&&this.rect.bottom>0&&this.rect.left<window.innerWidth*t.options.preLoad*1.5&&this.rect.right>0},load:function(){this.show=!0,this.state.loaded=!0,this.$emit("show",this)},rest:function(){this.state.rested=!0,this.$emit("rest",this)},unrest:function(){this.state.rested=!1,this.$emit("unrest",this)}}}};return{install:function(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},r=A(t),i=new r(n),o="2"===t.version.split(".")[0];t.prototype.$Lazyload=i,n.lazyComponent&&t.component("lazy-component",E(i)),o?t.directive("lazy",{bind:i.add.bind(i),update:i.update.bind(i),componentUpdated:i.lazyLoadHandler.bind(i),unbind:i.remove.bind(i)}):t.directive("lazy",{bind:i.lazyLoadHandler.bind(i),update:function(t,n){e(this.vm.$refs,this.vm.$els),i.add(this.el,{modifiers:this.modifiers||{},arg:this.arg,value:t,oldValue:n},{context:this.vm})},unbind:function(){i.remove(this.el)}})}}});
 
-},{}],364:[function(require,module,exports){
+},{}],383:[function(require,module,exports){
 (function (process){
 /**
   * vue-router v2.5.3
@@ -73063,7 +74096,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":253}],365:[function(require,module,exports){
+},{"_process":253}],384:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v2.3.3
@@ -82757,7 +83790,7 @@ Vue$3.compile = compileToFunctions;
 module.exports = Vue$3;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":253}],366:[function(require,module,exports){
+},{"_process":253}],385:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -82778,7 +83811,7 @@ function extend() {
     return target
 }
 
-},{}],367:[function(require,module,exports){
+},{}],386:[function(require,module,exports){
 var Vue = require('vue');
 
 Vue.component('active-theme-box', {
@@ -82812,7 +83845,7 @@ Vue.component('active-theme-box', {
         }
     }
 })
-},{"vue":365}],368:[function(require,module,exports){
+},{"vue":384}],387:[function(require,module,exports){
 var Vue = require('vue');
 var requestp = require('request-promise-native');
 
@@ -82877,7 +83910,7 @@ var BookDetail = Vue.component('book-detail', {
         }
     }
 })
-},{"request-promise-native":285,"vue":365}],369:[function(require,module,exports){
+},{"request-promise-native":285,"vue":384}],388:[function(require,module,exports){
 var Vue = require('vue');
 
 Vue.component('border-indicators', {
@@ -83044,7 +84077,7 @@ Vue.component('border-indicators', {
         };
     }
 })
-},{"vue":365}],370:[function(require,module,exports){
+},{"vue":384}],389:[function(require,module,exports){
 var Vue = require('vue');
 
 Vue.component('search-box', {
@@ -83068,14 +84101,15 @@ Vue.component('search-box', {
         }
     }
 })
-},{"vue":365}],371:[function(require,module,exports){
+},{"vue":384}],390:[function(require,module,exports){
 var Vue = require('vue');
 var requestp = require('request-promise-native');
+var stopword = require('stopword');
 
 var BooleanOperator = Object.freeze({
-    AND: 1,
-    OR: 2,
-    NOT: 3
+    AND: 0,
+    OR: 1,
+    NOT: 2
 })
 
 var defaultBooleanOperator = BooleanOperator.AND;
@@ -83090,13 +84124,18 @@ var SuggestionLine = {
 
 var SearchTermItem = {
     template: `<div class="search-term-wrapper">
-                    <span class="search-term-boolean-operator" v-if="index!=0"> {{booleanOperator}} </span>
+                    <span class="search-term-boolean-operator" v-if="index!=0">
+                        <div class="up-down-arrow up-arrow" v-on:click="nextBooleanOp()"><img src="./res/arrow.png"></div>
+                             {{booleanOperator}}
+                        <div class="up-down-arrow down-arrow" v-on:click="precBooleanOp()"><img src="./res/arrow.png"></div>
+                    </span>
                     <span class="search-term-field-desc">{{fieldDesc}}</span>
                     <div class="search-term"
                             v-bind:style="{
                                 backgroundColor : randomColor
                             }">
-                        <img src="./res/cross.png">
+                        <img src="./res/cross.png"
+                                v-on:click="$emit('delete-search-item',index)">
                         <span>{{term.text}}</span>
                     </div>
                 </div>`,
@@ -83113,10 +84152,10 @@ var SearchTermItem = {
             }
         },
         fieldDesc : function(){
-            if(this.term.field == 'subject') {
+            if(this.term.field == 'mainAuthorities') {
                 return 'sur le sujet';
             }
-            if(this.term.field == 'author') {
+            if(this.term.field == 'authors') {
                 return 'ayant pour auteur';
             }
             if(this.term.field == 'title') {
@@ -83133,6 +84172,16 @@ var SearchTermItem = {
             let colors = ['#FF3043','#FF4701','#FF8B01','#FFCE01','#FFCA3B','#E4FA5C','#00E86E','#5CFF83','#9EFFCC','#00D8BE','#1BC6EB','#3E73DC','#422DA8'];
             return colors[getRandomInt(0,colors.length-1)];
         }
+    },
+    methods: {
+        nextBooleanOp : function(){
+            this.term.operator = (this.term.operator+1)%3;
+            this.$emit('search-term-changed');
+        },
+        precBooleanOp : function(){
+            this.term.operator = this.term.operator == 0 ? 2 : this.term.operator-1;
+            this.$emit('search-term-changed');
+        }
     }
 }
 
@@ -83140,23 +84189,20 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
     template: ` <div id="blurred-background">
                     <div id="search-elements-wrapper">
                         <img src="./res/picto_search_white.png"/>
-                        <span>Je cherche un document</span>
+                        <span>Je cherche <span v-if="terms.length > 0">un document</span></span>
                         <search-term-item   v-for="(term, index) in terms"
                                             v-bind:term="term"
                                             v-bind:index="index"
-                                            v-bind:key="index">
+                                            v-bind:key="index"
+                                            v-on:delete-search-item="deleteSearchItem"
+                                            v-on:search-term-changed="getQueryHits()">
                         </search-term-item>
-                        <div    id="add-term-button"
-                                v-if="!showSearchTermInput"
-                                v-on:click="showSearchTermInput = true">
-                            <img src="./res/icon_plus.png" />
-                        </div>
-                        <div    id="search-term-input-wrapper"
-                                v-if="showSearchTermInput">
+                        <div    id="search-term-input-wrapper">
                             <div id="search-term-input">
                                 <input  size="9" 
                                         v-model="currentlyWritingTerm"
-                                        v-on:keyup.enter="addSearchTerm"/>
+                                        v-on:keyup.enter="addSearchTerm"
+                                        v-focus/>
                             </div>
                             <div    id="suggestion-wrapper"
                                     v-if="subjectSuggestions.length > 0 || authorSuggestions.length > 0 || titleSuggestions.length > 0">
@@ -83204,11 +84250,21 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                                 </div>
                             </div>
                         </div>
-                        <div id="search-start-button"
-                                v-on:click="launchSearch()">
-                            <p>C'est parti</p>
-                            <img src="./res/picto_search_white.png"/>
+                    </div>
+                    <div id="search-start-button"
+                            v-on:click="launchSearch()"
+                            v-if="subjectSuggestions.length == 0 && authorSuggestions.length == 0 && titleSuggestions.length == 0">
+                        <div id="upper-hits-wrapper">
+                            <p>{{totalHits}}</p>
+                            <img src="./res/books.png">
                         </div>
+                        <hr>
+                        <p>Résultats</p>
+                    </div>
+                    <div   id="close-search-button"
+                            v-if="subjectSuggestions.length == 0 && authorSuggestions.length == 0 && titleSuggestions.length == 0"
+                            v-on:click="$emit('hide-search-query-builder')">
+                            <img src="/res/cross.png"/>
                     </div>
                 </div>`,
     data : function(){
@@ -83218,7 +84274,15 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
             subjectSuggestions: [],
             authorSuggestions: [],
             titleSuggestions: [],
-            showSearchTermInput:true
+            totalHits:0,
+            autofocus:true
+        }
+    },
+    directives : {
+        focus : {
+            inserted: function (el) {
+                el.focus();
+            }
         }
     },
     watch:{
@@ -83279,6 +84343,25 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
         'search-term-item' : SearchTermItem
     },
     methods : {
+        deleteSearchItem : function(index){
+            this.terms.splice(index,1);
+            this.getQueryHits();
+        },
+        getQueryHits : function(){
+            let self = this;
+            let queryOptions = {
+                method: 'POST',
+                uri: `${window.location.protocol}//${window.location.hostname}:${window.location.port}/total-hits/`,
+                body: {
+                    query : self.getQuery()
+                },
+                json: true
+            };
+            requestp(queryOptions)
+                .then(function(totalHits){
+                    self.totalHits = totalHits.totalHits;
+                });
+        },
         launchSearch:function(){
             this.$emit('hide-search-query-builder');
             this.$router.push(`/search-map/${encodeURIComponent(JSON.stringify(this.getQuery()))}`);
@@ -83288,12 +84371,12 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                 term.operator = defaultBooleanOperator
                 this.terms.push(term);
             } else {
-                let freeWordsArray = this.currentlyWritingTerm.split(' ');
+                let freeWordsArray = stopword.removeStopwords(this.currentlyWritingTerm.split(' '), stopword.fr);
                 for(let freeWord of freeWordsArray){
                     this.terms.push({field:'*',text:freeWord, operator: defaultBooleanOperator});
                 }
             }
-            this.showSearchTermInput = false;
+            this.getQueryHits();
             this.currentlyWritingTerm = '';
         },
         getQuery : function(){
@@ -83312,7 +84395,7 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                     if(!queryUnit.NOT[term.field]) {
                         queryUnit.NOT[term.field] = [];
                     }
-                    queryUnit.OR[term.field].push(term.text);
+                    queryUnit.NOT[term.field].push(term.text);
                 }
                 if(term.operator === BooleanOperator.OR){
                     queryArray.push(queryUnit);
@@ -83332,7 +84415,7 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
         }
     }
 })
-},{"request-promise-native":285,"vue":365}],372:[function(require,module,exports){
+},{"request-promise-native":285,"stopword":333,"vue":384}],391:[function(require,module,exports){
 var Vue = require('vue');
 
 Vue.component('zoom-nav-box', {
@@ -83388,7 +84471,7 @@ Vue.component('zoom-nav-box', {
         }
     }
 });
-},{"vue":365}],373:[function(require,module,exports){
+},{"vue":384}],392:[function(require,module,exports){
 //require('dragscroll');
 
 var FixedGridDispatcher = function () {
@@ -83408,7 +84491,7 @@ FixedGridDispatcher.prototype.dispatch = function(elements, columns, cellWidth, 
 
 
 module.exports = new FixedGridDispatcher();
-},{}],374:[function(require,module,exports){
+},{}],393:[function(require,module,exports){
 var curYPos, curXPos, curDown;
 
 var mousemove = function(e){ 
@@ -83443,7 +84526,7 @@ MouseDragScroll.prototype.disableDragScroll = function(){
 }
 
 module.exports = new MouseDragScroll();
-},{}],375:[function(require,module,exports){
+},{}],394:[function(require,module,exports){
 /******************************************************************************
 
 Copyright (c) 2011 Jake Gordon and contributors
@@ -83611,7 +84694,7 @@ GrowingPacker.prototype = {
 }
 
 module.exports = GrowingPacker;
-},{}],376:[function(require,module,exports){
+},{}],395:[function(require,module,exports){
 
 var ZoomHandler = function (el) {
     this.el = el;
@@ -83668,7 +84751,7 @@ ZoomHandler.prototype.removeZoomHandlers = function(){
 }
 
 module.exports = ZoomHandler;
-},{}],377:[function(require,module,exports){
+},{}],396:[function(require,module,exports){
 var PackerGrowing = require('./packerGrowing');
 
 var QuadBinPacker = function (bookcellHeight, bookcellWidth, ratio) {
@@ -83787,7 +84870,7 @@ QuadBinPacker.prototype.pack = function(sortedThemes){
 }
 
 module.exports = QuadBinPacker;
-},{"./packerGrowing":375}],378:[function(require,module,exports){
+},{"./packerGrowing":394}],397:[function(require,module,exports){
 var Vue = require('vue');
 var VueRouter = require('vue-router');
 
@@ -83881,7 +84964,7 @@ window.addEventListener("touchmove", function (event){
         event.preventDefault();
     }
 });
-},{"./components/activeThemeBox":367,"./components/bookDetail":368,"./components/searchBox":370,"./components/searchQueryBuilder":371,"./components/zoomNavBox":372,"./innerThemeMap":379,"./outerThemeMap":381,"./themeMap":382,"vue":365,"vue-router":364}],379:[function(require,module,exports){
+},{"./components/activeThemeBox":386,"./components/bookDetail":387,"./components/searchBox":389,"./components/searchQueryBuilder":390,"./components/zoomNavBox":391,"./innerThemeMap":398,"./outerThemeMap":400,"./themeMap":401,"vue":384,"vue-router":383}],398:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
@@ -84151,7 +85234,7 @@ var InnerThemeMap = Vue.extend({
 });
 
 module.exports = InnerThemeMap;
-},{"./components/searchBox":370,"./helpers/fixedGridDispatcher":373,"./helpers/mouseDragScroll":374,"./helpers/pinchToZoomHandler":376,"request-promise-native":285,"vue":365,"vue-lazyload":363}],380:[function(require,module,exports){
+},{"./components/searchBox":389,"./helpers/fixedGridDispatcher":392,"./helpers/mouseDragScroll":393,"./helpers/pinchToZoomHandler":395,"request-promise-native":285,"vue":384,"vue-lazyload":382}],399:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -84298,7 +85381,7 @@ var packedThemeMapMixin = {
 }
 
 module.exports = packedThemeMapMixin;
-},{"../helpers/mouseDragScroll":374,"../helpers/quadBinPacker":377,"request-promise-native":285,"vue":365,"vue-lazyload":363}],381:[function(require,module,exports){
+},{"../helpers/mouseDragScroll":393,"../helpers/quadBinPacker":396,"request-promise-native":285,"vue":384,"vue-lazyload":382}],400:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -84486,7 +85569,7 @@ var ThemeMap = Vue.extend({
 });
 
 module.exports = ThemeMap;
-},{"./components/borderIndicators":369,"./components/searchBox":370,"./helpers/pinchToZoomHandler":376,"./mixins/packedThemeMap":380,"request-promise-native":285,"vue":365,"vue-lazyload":363}],382:[function(require,module,exports){
+},{"./components/borderIndicators":388,"./components/searchBox":389,"./helpers/pinchToZoomHandler":395,"./mixins/packedThemeMap":399,"request-promise-native":285,"vue":384,"vue-lazyload":382}],401:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -84766,4 +85849,4 @@ var ThemeMap = Vue.extend({
 });
 
 module.exports = ThemeMap;
-},{"./components/borderIndicators":369,"./components/searchBox":370,"./helpers/fixedGridDispatcher":373,"./helpers/pinchToZoomHandler":376,"./mixins/packedThemeMap":380,"request-promise-native":285,"vue":365,"vue-lazyload":363}]},{},[378]);
+},{"./components/borderIndicators":388,"./components/searchBox":389,"./helpers/fixedGridDispatcher":392,"./helpers/pinchToZoomHandler":395,"./mixins/packedThemeMap":399,"request-promise-native":285,"vue":384,"vue-lazyload":382}]},{},[397]);
