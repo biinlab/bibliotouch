@@ -141,7 +141,7 @@ var BookElement = {
                 requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/covers/isbn/${isbn}-100.jpg`)
                     .then(function(body){
                         self.imgAvailable = true;
-                        self.imgSrc = './covers/isbn/'+isbn+'.jpg';
+                        self.imgSrc = './covers/isbn/'+isbn+'-100.jpg';
                     })
                     .catch(function(err){});
             }

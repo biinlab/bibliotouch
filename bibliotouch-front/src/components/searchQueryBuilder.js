@@ -1,14 +1,10 @@
 var Vue = require('vue');
 var requestp = require('request-promise-native');
 var stopword = require('stopword');
+var queryBuilder = require('../helpers/queryBuilder');
 
-var BooleanOperator = Object.freeze({
-    AND: 0,
-    OR: 1,
-    NOT: 2
-})
 
-var defaultBooleanOperator = BooleanOperator.AND;
+var defaultBooleanOperator = queryBuilder.BooleanOperator.AND;
 
 var SuggestionLine = {
     template: ` <tr v-on:click="$emit('add-search-term', {field:field,text:suggestion[0]})">
@@ -39,11 +35,11 @@ var SearchTermItem = {
     computed : {
         booleanOperator : function(){
             switch(this.term.operator){
-                case BooleanOperator.AND:
+                case queryBuilder.BooleanOperator.AND:
                     return 'et';
-                case BooleanOperator.OR:
+                case queryBuilder.BooleanOperator.OR:
                     return 'ou';
-                case BooleanOperator.NOT:
+                case queryBuilder.BooleanOperator.NOT:
                     return 'sauf';
             }
         },
@@ -55,10 +51,10 @@ var SearchTermItem = {
                 return 'ayant pour auteur';
             }
             if(this.term.field == 'title') {
-                return this.term.booleanOperator == BooleanOperator.NOT ? 'si il a dans le titre' : 'avec dans le titre';
+                return this.term.booleanOperator == queryBuilder.BooleanOperator.NOT ? 'si il a dans le titre' : 'avec dans le titre';
             }
 
-            return 'à propos de'
+            return 'à propos de';
         },
         randomColor : function(){
             //Returns a random integer between min (inclusive) and max (inclusive)
@@ -150,12 +146,12 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                     <div id="search-start-button"
                             v-on:click="launchSearch()"
                             v-if="subjectSuggestions.length == 0 && authorSuggestions.length == 0 && titleSuggestions.length == 0">
+                        <p>{{totalHits}}</p>
                         <div id="upper-hits-wrapper">
-                            <p>{{totalHits}}</p>
                             <img src="./res/books.png">
+                            <p>Résultats</p>
+                            <hr>
                         </div>
-                        <hr>
-                        <p>Résultats</p>
                     </div>
                     <div   id="close-search-button"
                             v-if="subjectSuggestions.length == 0 && authorSuggestions.length == 0 && titleSuggestions.length == 0"
@@ -267,7 +263,7 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                 term.operator = defaultBooleanOperator
                 this.terms.push(term);
             } else {
-                let freeWordsArray = stopword.removeStopwords(this.currentlyWritingTerm.split(' '), stopword.fr);
+                let freeWordsArray = stopword.removeStopwords(this.currentlyWritingTerm.split(/[ -']/), stopword.fr);
                 for(let freeWord of freeWordsArray){
                     this.terms.push({field:'*',text:freeWord, operator: defaultBooleanOperator});
                 }
@@ -276,38 +272,7 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
             this.currentlyWritingTerm = '';
         },
         getQuery : function(){
-            let queryArray = [];
-            let queryUnit = {AND:{},NOT:{}};
-            let lastUnitIsOR = false;
-            for(let term of this.terms){
-                lastUnitIsOR = false;
-                if(term.operator === BooleanOperator.AND){
-                    if(!queryUnit.AND[term.field]) {
-                        queryUnit.AND[term.field] = [];
-                    }
-                    queryUnit.AND[term.field].push(term.text);
-                }
-                if(term.operator === BooleanOperator.NOT){
-                    if(!queryUnit.NOT[term.field]) {
-                        queryUnit.NOT[term.field] = [];
-                    }
-                    queryUnit.NOT[term.field].push(term.text);
-                }
-                if(term.operator === BooleanOperator.OR){
-                    queryArray.push(queryUnit);
-                    queryUnit = {AND:{},NOT:{}};
-
-                    if(!queryUnit.AND[term.field]) {
-                        queryUnit.AND[term.field] = [];
-                    }
-                    queryUnit.AND[term.field].push(term.text);
-
-                    lastUnitIsOR = true;
-                }
-            }
-
-            queryArray.push(queryUnit);
-            return queryArray;
+            return queryBuilder.buildQuery(this.terms);
         }
     }
 })

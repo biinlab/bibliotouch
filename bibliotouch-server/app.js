@@ -1,4 +1,5 @@
 var express = require('express');
+var cors = require('cors')
 var compression = require('compression');
 var controllers = require('./controllers');
 var KohaImporter = require('./importers/kohaImporter/kohaImporter');
@@ -17,6 +18,7 @@ var app = express();
 var serverPort = argv.port ? argv.port : 8080;
 
 app.use(compression());
+app.use(cors())
 app.use(controllers);
 app.use('/', express.static('../bibliotouch-front'));
 app.use('/covers', express.static('./covers'));

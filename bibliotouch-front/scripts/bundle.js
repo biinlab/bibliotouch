@@ -83848,69 +83848,143 @@ Vue.component('active-theme-box', {
 },{"vue":384}],387:[function(require,module,exports){
 var Vue = require('vue');
 var requestp = require('request-promise-native');
+var queryBuilder = require('../helpers/queryBuilder');
+var stopword = require('stopword');
+
+var Availability = Object.freeze({
+    UNAVAILABLE : 'indisponible',
+    UNKNOWN : 'disponibilité inconnue',
+    AVAILABLE : 'disponible'
+});
 
 var BookDetail = Vue.component('book-detail', {
     template : `<div    id="blurrer"
                         class="modal"
-                        v-on:click="$emit('close-book-modal')">
-                    <div id="book-modal-wrapper">
-                        <div id="cover-title-wrapper">
-                        <img v-bind:src="imgSrc" id="cover-image"/>
-                        <div id="title-wrapper">
-                            <p>{{book.title}}</p>
-                        </div>
-                        </div>
-                        <div id="disponibility-wrapper">
-                            <p id="disponibility-text">disponible</p>
-                            <p id="disponibility-cote">côte <span>15457521</span></p>
-                        </div>
-                        <div id="authors-wrapper">
-                            <span v-for="author in book.authors">{{author}}</span>
-                        </div>
-                        <div id="publication-wrapper">
-                            <p id="editor-name">{{book.editor}}</p>
-                            <p id="collection-name">{{book.collection}}</p>
-                            <p id="publication-date">{{book.datePub}}</p>
-                        </div>
-                        <div id="vedettes-wrapper">
-                            <div v-for="authority in book.mainAuthorities">{{authority}}</div>
-                        </div>
-                        <div id="book-description">
-                            {{book.description}}
+                        v-on:click.self="$emit('close-book-modal')">
+                    <div id="scroll-hide-wrapper">
+                        <div id="book-modal-wrapper">
+                            <div id="scroll-hide">
+                                <div id="cover-title-wrapper">
+                                    <img v-bind:src="imgSrc" id="cover-image"/>
+                                    <div id="title-wrapper">
+                                        <p>{{book.title}}</p>
+                                    </div>
+                                </div>
+                                <div id="disponibility-wrapper">
+                                    <p id="disponibility-text"
+                                        v-bind:style="{
+                                            color: availabilityColor()    
+                                        }">
+                                        {{available}}
+                                    </p>
+                                    <p id="disponibility-cote">côte <span>{{callNumber}}</span></p>
+                                </div>
+                                <div id="authors-wrapper">
+                                    <span v-for="author in book.authors" v-on:click="searchField(author, 'authors')">{{author}}</span>
+                                </div>
+                                <div id="publication-wrapper">
+                                    <p id="editor-name" v-on:click="searchField(book.editor, 'editor')">{{book.editor}}</p>
+                                    <p id="collection-name" v-on:click="searchField(book.collection, 'collection')">{{book.collection}}</p>
+                                    <p id="publication-date" v-on:click="searchField(parseDate(book.datePub), 'datePub')">{{book.datePub}}</p>
+                                </div>
+                                <div id="vedettes-wrapper">
+                                    <div v-for="authority in book.mainAuthorities" v-on:click="searchField(authority, 'mainAuthorities')">{{authority}}</div>
+                                </div>
+                                <div id="book-description">
+                                    {{book.description}}
+                                </div>
+                            </div>
                         </div>
                         <span   id="close-button"
-                                v-on:click="close-book-modal">
+                                v-on:click="$emit('close-book-modal')">
                                 <img src="/res/cross.png"/>
                         </span>
                     </div>
-                    </div>
+                </div>
                     `,
     props: ['book'],
     data : function(){
         return {
-            imgSrc: ''
+            imgSrc: '',
+            available: Availability.UNKNOWN,
+            callNumber: 'inconnue'
         }
     },
     created : function(){
             let rnd = Math.trunc((Math.random()*7)+1);
             this.imgSrc =  `/res/covers/cover_${rnd}.png`;
             this.getTrueCover();
+            this.getAvailability();
     },
     methods : {
         getTrueCover : function () {
             let self = this;
             let isbn = this.book.isbn;
             if(isbn){
-                requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/covers/isbn/${isbn}-100.jpg`)
+                requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/covers/isbn/${isbn}.jpg`)
                     .then(function(body){
                         self.imgSrc = './covers/isbn/'+isbn+'.jpg';
                     })
                     .catch(function(err){});
             }
+        },
+        getAvailability : function(){
+            let self = this;
+            let reqOptions = {
+                url:`${window.location.protocol}//${window.location.hostname}:${window.location.port}/cors-bypass/availability/${this.book.id}`
+            };
+
+            requestp(reqOptions)
+                .then(function(body){
+                    let response = JSON.parse(body);
+                    if(response.exemplaires && response.exemplaires.length > 0){
+                        self.callNumber = response.exemplaires[0].itemcallnumber;
+                        for(let exemplaire of response.exemplaires){
+                            if(exemplaire.notforloan == '0' && !exemplaire.onloan) {
+                                self.available = Availability.AVAILABLE;
+                            }
+                        }
+                    }
+                    if(self.available != Availability.AVAILABLE){
+                        self.available = Availability.UNAVAILABLE;
+                    }
+                })
+                .catch(function(err){console.error(err)});
+        },
+        availabilityColor : function(){
+            if(this.available === Availability.AVAILABLE){
+                return '#009A1A';
+            }
+            if(this.available === Availability.UNAVAILABLE){
+                return 'red';
+            }
+            if(this.available === Availability.UNKNOWN){
+                return 'grey';
+            }
+        },
+        searchField : function(authority, field) {
+            let splitAuthority = authority.split(/[ -']/);
+            splitAuthority = stopword.removeStopwords(splitAuthority, stopword.fr);
+            let termsArray = [];
+            for(let auth of splitAuthority){
+                termsArray.push({
+                    field : field,
+                    text : auth,
+                    operator : queryBuilder.BooleanOperator.AND
+                });
+            }
+            let queryArray = queryBuilder.buildQuery(termsArray);
+            this.$router.push(`/search-map/${encodeURIComponent(JSON.stringify(queryArray))}`);
+            this.$emit('close-book-modal');
+        },
+        parseDate : function(stinkyDate) {
+            let defaultDate = '1993';//The world was sad, empty and meaningless before that year
+            let matches =  stinkyDate.match(/\d{4}/);
+            return matches.length > 0 ? matches[0] : defaultDate;
         }
     }
 })
-},{"request-promise-native":285,"vue":384}],388:[function(require,module,exports){
+},{"../helpers/queryBuilder":397,"request-promise-native":285,"stopword":333,"vue":384}],388:[function(require,module,exports){
 var Vue = require('vue');
 
 Vue.component('border-indicators', {
@@ -84105,14 +84179,10 @@ Vue.component('search-box', {
 var Vue = require('vue');
 var requestp = require('request-promise-native');
 var stopword = require('stopword');
+var queryBuilder = require('../helpers/queryBuilder');
 
-var BooleanOperator = Object.freeze({
-    AND: 0,
-    OR: 1,
-    NOT: 2
-})
 
-var defaultBooleanOperator = BooleanOperator.AND;
+var defaultBooleanOperator = queryBuilder.BooleanOperator.AND;
 
 var SuggestionLine = {
     template: ` <tr v-on:click="$emit('add-search-term', {field:field,text:suggestion[0]})">
@@ -84143,11 +84213,11 @@ var SearchTermItem = {
     computed : {
         booleanOperator : function(){
             switch(this.term.operator){
-                case BooleanOperator.AND:
+                case queryBuilder.BooleanOperator.AND:
                     return 'et';
-                case BooleanOperator.OR:
+                case queryBuilder.BooleanOperator.OR:
                     return 'ou';
-                case BooleanOperator.NOT:
+                case queryBuilder.BooleanOperator.NOT:
                     return 'sauf';
             }
         },
@@ -84159,10 +84229,10 @@ var SearchTermItem = {
                 return 'ayant pour auteur';
             }
             if(this.term.field == 'title') {
-                return this.term.booleanOperator == BooleanOperator.NOT ? 'si il a dans le titre' : 'avec dans le titre';
+                return this.term.booleanOperator == queryBuilder.BooleanOperator.NOT ? 'si il a dans le titre' : 'avec dans le titre';
             }
 
-            return 'à propos de'
+            return 'à propos de';
         },
         randomColor : function(){
             //Returns a random integer between min (inclusive) and max (inclusive)
@@ -84254,12 +84324,12 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                     <div id="search-start-button"
                             v-on:click="launchSearch()"
                             v-if="subjectSuggestions.length == 0 && authorSuggestions.length == 0 && titleSuggestions.length == 0">
+                        <p>{{totalHits}}</p>
                         <div id="upper-hits-wrapper">
-                            <p>{{totalHits}}</p>
                             <img src="./res/books.png">
+                            <p>Résultats</p>
+                            <hr>
                         </div>
-                        <hr>
-                        <p>Résultats</p>
                     </div>
                     <div   id="close-search-button"
                             v-if="subjectSuggestions.length == 0 && authorSuggestions.length == 0 && titleSuggestions.length == 0"
@@ -84371,7 +84441,7 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                 term.operator = defaultBooleanOperator
                 this.terms.push(term);
             } else {
-                let freeWordsArray = stopword.removeStopwords(this.currentlyWritingTerm.split(' '), stopword.fr);
+                let freeWordsArray = stopword.removeStopwords(this.currentlyWritingTerm.split(/[ -']/), stopword.fr);
                 for(let freeWord of freeWordsArray){
                     this.terms.push({field:'*',text:freeWord, operator: defaultBooleanOperator});
                 }
@@ -84380,42 +84450,11 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
             this.currentlyWritingTerm = '';
         },
         getQuery : function(){
-            let queryArray = [];
-            let queryUnit = {AND:{},NOT:{}};
-            let lastUnitIsOR = false;
-            for(let term of this.terms){
-                lastUnitIsOR = false;
-                if(term.operator === BooleanOperator.AND){
-                    if(!queryUnit.AND[term.field]) {
-                        queryUnit.AND[term.field] = [];
-                    }
-                    queryUnit.AND[term.field].push(term.text);
-                }
-                if(term.operator === BooleanOperator.NOT){
-                    if(!queryUnit.NOT[term.field]) {
-                        queryUnit.NOT[term.field] = [];
-                    }
-                    queryUnit.NOT[term.field].push(term.text);
-                }
-                if(term.operator === BooleanOperator.OR){
-                    queryArray.push(queryUnit);
-                    queryUnit = {AND:{},NOT:{}};
-
-                    if(!queryUnit.AND[term.field]) {
-                        queryUnit.AND[term.field] = [];
-                    }
-                    queryUnit.AND[term.field].push(term.text);
-
-                    lastUnitIsOR = true;
-                }
-            }
-
-            queryArray.push(queryUnit);
-            return queryArray;
+            return queryBuilder.buildQuery(this.terms);
         }
     }
 })
-},{"request-promise-native":285,"stopword":333,"vue":384}],391:[function(require,module,exports){
+},{"../helpers/queryBuilder":397,"request-promise-native":285,"stopword":333,"vue":384}],391:[function(require,module,exports){
 var Vue = require('vue');
 
 Vue.component('zoom-nav-box', {
@@ -84871,6 +84910,65 @@ QuadBinPacker.prototype.pack = function(sortedThemes){
 
 module.exports = QuadBinPacker;
 },{"./packerGrowing":394}],397:[function(require,module,exports){
+/**
+ * Tiny module to build queryArrays to be used by search-index module
+ * @constructor
+ */
+var QueryBuilder = function () {}
+
+/**
+ * Enum for Boolean operator values
+ * @readonly
+ * @enum {number}
+ */
+QueryBuilder.prototype.BooleanOperator = Object.freeze({
+    AND: 0,
+    OR: 1,
+    NOT: 2
+});
+
+/**
+ * Returns a queryArray from an array of terms
+ * @param {Array} terms - An array of term object (with fields 'field', 'text' and 'operator')
+ * @return {Array} Array of query objects
+ */
+QueryBuilder.prototype.buildQuery = function(terms){
+    let queryArray = [];
+    let queryUnit = {AND:{},NOT:{}};
+    let lastUnitIsOR = false;
+    for(let term of terms){
+        lastUnitIsOR = false;
+        if(term.operator === this.BooleanOperator.AND){
+            if(!queryUnit.AND[term.field]) {
+                queryUnit.AND[term.field] = [];
+            }
+            queryUnit.AND[term.field].push(term.text.toLowerCase());
+        }
+        if(term.operator === this.BooleanOperator.NOT){
+            if(!queryUnit.NOT[term.field]) {
+                queryUnit.NOT[term.field] = [];
+            }
+            queryUnit.NOT[term.field].push(term.text.toLowerCase());
+        }
+        if(term.operator === this.BooleanOperator.OR){
+            queryArray.push(queryUnit);
+            queryUnit = {AND:{},NOT:{}};
+
+            if(!queryUnit.AND[term.field]) {
+                queryUnit.AND[term.field] = [];
+            }
+            queryUnit.AND[term.field].push(term.text.toLowerCase());
+
+            lastUnitIsOR = true;
+        }
+    }
+
+    queryArray.push(queryUnit);
+    return queryArray;
+}
+
+module.exports = new QueryBuilder();
+},{}],398:[function(require,module,exports){
 var Vue = require('vue');
 var VueRouter = require('vue-router');
 
@@ -84964,7 +85062,7 @@ window.addEventListener("touchmove", function (event){
         event.preventDefault();
     }
 });
-},{"./components/activeThemeBox":386,"./components/bookDetail":387,"./components/searchBox":389,"./components/searchQueryBuilder":390,"./components/zoomNavBox":391,"./innerThemeMap":398,"./outerThemeMap":400,"./themeMap":401,"vue":384,"vue-router":383}],398:[function(require,module,exports){
+},{"./components/activeThemeBox":386,"./components/bookDetail":387,"./components/searchBox":389,"./components/searchQueryBuilder":390,"./components/zoomNavBox":391,"./innerThemeMap":399,"./outerThemeMap":401,"./themeMap":402,"vue":384,"vue-router":383}],399:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
@@ -85108,7 +85206,7 @@ var BookElement = {
                 requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/covers/isbn/${isbn}-100.jpg`)
                     .then(function(body){
                         self.imgAvailable = true;
-                        self.imgSrc = './covers/isbn/'+isbn+'.jpg';
+                        self.imgSrc = './covers/isbn/'+isbn+'-100.jpg';
                     })
                     .catch(function(err){});
             }
@@ -85234,7 +85332,7 @@ var InnerThemeMap = Vue.extend({
 });
 
 module.exports = InnerThemeMap;
-},{"./components/searchBox":389,"./helpers/fixedGridDispatcher":392,"./helpers/mouseDragScroll":393,"./helpers/pinchToZoomHandler":395,"request-promise-native":285,"vue":384,"vue-lazyload":382}],399:[function(require,module,exports){
+},{"./components/searchBox":389,"./helpers/fixedGridDispatcher":392,"./helpers/mouseDragScroll":393,"./helpers/pinchToZoomHandler":395,"request-promise-native":285,"vue":384,"vue-lazyload":382}],400:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -85381,7 +85479,7 @@ var packedThemeMapMixin = {
 }
 
 module.exports = packedThemeMapMixin;
-},{"../helpers/mouseDragScroll":393,"../helpers/quadBinPacker":396,"request-promise-native":285,"vue":384,"vue-lazyload":382}],400:[function(require,module,exports){
+},{"../helpers/mouseDragScroll":393,"../helpers/quadBinPacker":396,"request-promise-native":285,"vue":384,"vue-lazyload":382}],401:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -85569,7 +85667,7 @@ var ThemeMap = Vue.extend({
 });
 
 module.exports = ThemeMap;
-},{"./components/borderIndicators":388,"./components/searchBox":389,"./helpers/pinchToZoomHandler":395,"./mixins/packedThemeMap":399,"request-promise-native":285,"vue":384,"vue-lazyload":382}],401:[function(require,module,exports){
+},{"./components/borderIndicators":388,"./components/searchBox":389,"./helpers/pinchToZoomHandler":395,"./mixins/packedThemeMap":400,"request-promise-native":285,"vue":384,"vue-lazyload":382}],402:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -85849,4 +85947,4 @@ var ThemeMap = Vue.extend({
 });
 
 module.exports = ThemeMap;
-},{"./components/borderIndicators":388,"./components/searchBox":389,"./helpers/fixedGridDispatcher":392,"./helpers/pinchToZoomHandler":395,"./mixins/packedThemeMap":399,"request-promise-native":285,"vue":384,"vue-lazyload":382}]},{},[397]);
+},{"./components/borderIndicators":388,"./components/searchBox":389,"./helpers/fixedGridDispatcher":392,"./helpers/pinchToZoomHandler":395,"./mixins/packedThemeMap":400,"request-promise-native":285,"vue":384,"vue-lazyload":382}]},{},[398]);

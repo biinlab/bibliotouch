@@ -19,6 +19,7 @@
                 "url" : "http://cataloguebib.enssib.fr/cgi-bin/koha/oai.pl",
                 "update":false
             },
+            "restApiEndpoint" : "http://cataloguebib.enssib.fr/cgi-bin/koha/webservice/rest.pl/",
             "kohaTags" :{
                 "isbn" : {
                     "tag" : ["010"],
