@@ -37,7 +37,7 @@ Vue.component('zoom-nav-box', {
     },
     methods : {
         setCurrentZoom(route){
-            if(route.fullPath.match(/^\/outer-theme-map/)){
+            if(route.fullPath.match(/^\/outer-theme-map/) || route.fullPath.match(/^\/$/)){
                 this.isMiddleZoom = false;
                 this.isCloseZoom = false;
                 this.isFarZoom = true;
@@ -45,7 +45,7 @@ Vue.component('zoom-nav-box', {
                 this.isMiddleZoom = true;
                 this.isCloseZoom = false;
                 this.isFarZoom = false;
-            } else if(route.fullPath.match(/^\/inner-theme-map/)){
+            } else if(route.fullPath.match(/^\/inner-theme-map/) || route.fullPath.match(/^\/search-map/)){
                 this.isMiddleZoom = false;
                 this.isCloseZoom = true;
                 this.isFarZoom = false;

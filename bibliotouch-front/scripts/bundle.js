@@ -83817,9 +83817,11 @@ var Vue = require('vue');
 Vue.component('active-theme-box', {
     template: `<div id="active-theme-box"
                     v-if="showActiveTheme">
+                    <span v-on:click="$router.push('/theme-map/'+currentTheme)"></span>
                     <p id="active-theme-label">
                         {{currentTheme}}
                     </p>
+                    <span></span>
                 </div>`,
     data : function() {
         return {
@@ -84171,7 +84173,7 @@ Vue.component('search-box', {
             this.$emit('show-search-query-builder');
         },
         showGiveMeAnIdea: function(){
-            alert('GIMME GIMME GIMME !')
+            //alert('GIMME GIMME GIMME !')
         }
     }
 })
@@ -84192,13 +84194,43 @@ var SuggestionLine = {
     props:['suggestion', 'field']
 }
 
+var BooleanOperator = {
+    template : `<span class="search-term-boolean-operator" v-if="index!=0">
+                    <div class="up-down-arrow up-arrow" v-on:click="nextBooleanOp()"><img src="./res/arrow.png"></div>
+                            {{treatedBooleanOperator}}
+                    <div class="up-down-arrow down-arrow" v-on:click="precBooleanOp()"><img src="./res/arrow.png"></div>
+                </span>`,
+    props: ['booleanOperator', 'index'],
+    computed : {
+        treatedBooleanOperator : function(){
+            switch(this.booleanOperator){
+                case queryBuilder.BooleanOperator.AND:
+                    return 'et';
+                case queryBuilder.BooleanOperator.OR:
+                    return 'ou';
+                case queryBuilder.BooleanOperator.NOT:
+                    return 'sauf';
+            }
+        }
+    },
+    methods: {
+        nextBooleanOp : function(){
+            let operator = (this.booleanOperator+1)%3;
+            this.$emit('operator-changed', operator);
+        },
+        precBooleanOp : function(){
+            let operator = this.booleanOperator == 0 ? 2 : this.booleanOperator-1;
+            this.$emit('operator-changed', operator);
+        }
+    }
+}
+
 var SearchTermItem = {
     template: `<div class="search-term-wrapper">
-                    <span class="search-term-boolean-operator" v-if="index!=0">
-                        <div class="up-down-arrow up-arrow" v-on:click="nextBooleanOp()"><img src="./res/arrow.png"></div>
-                             {{booleanOperator}}
-                        <div class="up-down-arrow down-arrow" v-on:click="precBooleanOp()"><img src="./res/arrow.png"></div>
-                    </span>
+                    <boolean-operator v-bind:booleanOperator="term.operator"
+                                        v-bind:index="index"
+                                        v-on:operator-changed="newOp => { term.operator = newOp; $emit('search-term-changed'); }">
+                    </boolean-operator>
                     <span class="search-term-field-desc">{{fieldDesc}}</span>
                     <div class="search-term"
                             v-bind:style="{
@@ -84210,17 +84242,10 @@ var SearchTermItem = {
                     </div>
                 </div>`,
     props:['term','index'],
+    components:{
+        'boolean-operator' : BooleanOperator
+    },
     computed : {
-        booleanOperator : function(){
-            switch(this.term.operator){
-                case queryBuilder.BooleanOperator.AND:
-                    return 'et';
-                case queryBuilder.BooleanOperator.OR:
-                    return 'ou';
-                case queryBuilder.BooleanOperator.NOT:
-                    return 'sauf';
-            }
-        },
         fieldDesc : function(){
             if(this.term.field == 'mainAuthorities') {
                 return 'sur le sujet';
@@ -84242,16 +84267,6 @@ var SearchTermItem = {
             let colors = ['#FF3043','#FF4701','#FF8B01','#FFCE01','#FFCA3B','#E4FA5C','#00E86E','#5CFF83','#9EFFCC','#00D8BE','#1BC6EB','#3E73DC','#422DA8'];
             return colors[getRandomInt(0,colors.length-1)];
         }
-    },
-    methods: {
-        nextBooleanOp : function(){
-            this.term.operator = (this.term.operator+1)%3;
-            this.$emit('search-term-changed');
-        },
-        precBooleanOp : function(){
-            this.term.operator = this.term.operator == 0 ? 2 : this.term.operator-1;
-            this.$emit('search-term-changed');
-        }
     }
 }
 
@@ -84267,6 +84282,12 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                                             v-on:delete-search-item="deleteSearchItem"
                                             v-on:search-term-changed="getQueryHits()">
                         </search-term-item>
+                        <div class="search-term-wrapper">
+                            <boolean-operator v-bind:index="terms.length"
+                                                v-bind:booleanOperator="defaultBooleanOperator"
+                                                v-on:operator-changed="newOp => { defaultBooleanOperator = newOp }">
+                            </boolean-operator>
+                        </div>
                         <div    id="search-term-input-wrapper">
                             <div id="search-term-input">
                                 <input  size="9" 
@@ -84345,7 +84366,8 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
             authorSuggestions: [],
             titleSuggestions: [],
             totalHits:0,
-            autofocus:true
+            autofocus:true,
+            defaultBooleanOperator: queryBuilder.BooleanOperator.AND
         }
     },
     directives : {
@@ -84410,7 +84432,8 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
     },
     components : {
         'suggestion-line' : SuggestionLine,
-        'search-term-item' : SearchTermItem
+        'search-term-item' : SearchTermItem,
+        'boolean-operator' : BooleanOperator
     },
     methods : {
         deleteSearchItem : function(index){
@@ -84438,12 +84461,12 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
         },
         addSearchTerm : function(term){
             if(term.field && term.text){
-                term.operator = defaultBooleanOperator
+                term.operator = this.defaultBooleanOperator
                 this.terms.push(term);
             } else {
                 let freeWordsArray = stopword.removeStopwords(this.currentlyWritingTerm.split(/[ -']/), stopword.fr);
                 for(let freeWord of freeWordsArray){
-                    this.terms.push({field:'*',text:freeWord, operator: defaultBooleanOperator});
+                    this.terms.push({field:'*',text:freeWord, operator: this.defaultBooleanOperator});
                 }
             }
             this.getQueryHits();
@@ -84494,7 +84517,7 @@ Vue.component('zoom-nav-box', {
     },
     methods : {
         setCurrentZoom(route){
-            if(route.fullPath.match(/^\/outer-theme-map/)){
+            if(route.fullPath.match(/^\/outer-theme-map/) || route.fullPath.match(/^\/$/)){
                 this.isMiddleZoom = false;
                 this.isCloseZoom = false;
                 this.isFarZoom = true;
@@ -84502,7 +84525,7 @@ Vue.component('zoom-nav-box', {
                 this.isMiddleZoom = true;
                 this.isCloseZoom = false;
                 this.isFarZoom = false;
-            } else if(route.fullPath.match(/^\/inner-theme-map/)){
+            } else if(route.fullPath.match(/^\/inner-theme-map/) || route.fullPath.match(/^\/search-map/)){
                 this.isMiddleZoom = false;
                 this.isCloseZoom = true;
                 this.isFarZoom = false;
@@ -85097,7 +85120,8 @@ var bookCoverStyleObject = {
     userSelect : 'none',
     overflow : 'hidden',
     objectFit : 'cover',
-    backgroundColor : 'lightgrey'
+    backgroundColor : 'lightgrey',
+    cursor : 'pointer'
 }
 
 var generatedBookCoverTitleStyleObject = {
@@ -85110,7 +85134,8 @@ var generatedBookCoverTitleStyleObject = {
     overflow : 'hidden',
     fontFamily: 'Montserrat, sans-serif',
     fontSize: '10px',
-    color: '#000000'
+    color: '#000000',
+    cursor : 'pointer'
 }
 
 var BookElement = {
@@ -85120,15 +85145,18 @@ var BookElement = {
                         left : book.dispatch.x + 'px',
                         top : book.dispatch.y + 'px',
                         width : '${bookcellWidth}px',
-                        height : '${bookcellHeight}px'}"
-                        v-on:mousedown="initiateShowBookDetail"
-                        v-on:mousemove="invalidateShowBookDetail"
-                        v-on:mouseup="showBookDetail">
+                        height : '${bookcellHeight}px'}">
                         <img    v-if="!imgAvailable"
                                 v-bind:style="bookCoverStyleObject"
-                                v-bind:src="generatedCoverSrc">
+                                v-bind:src="generatedCoverSrc"
+                                v-on:mousedown="initiateShowBookDetail"
+                                v-on:mousemove="invalidateShowBookDetail"
+                                v-on:mouseup="showBookDetail">
                                 <p  v-if="!imgAvailable"
-                                    v-bind:style="generatedBookCoverTitleStyleObject">
+                                    v-bind:style="generatedBookCoverTitleStyleObject"
+                                    v-on:mousedown="initiateShowBookDetail"
+                                    v-on:mousemove="invalidateShowBookDetail"
+                                    v-on:mouseup="showBookDetail">
                                     {{book.title}}
                                 </p>
                         </img>
@@ -85138,11 +85166,17 @@ var BookElement = {
                             <transition name="fade">
                                 <img    v-if="imgAvailable"
                                         v-bind:style="bookCoverStyleObject"
-                                        v-bind:src="imgSrc">
+                                        v-bind:src="imgSrc"
+                                        v-on:mousedown="initiateShowBookDetail"
+                                        v-on:mousemove="invalidateShowBookDetail"
+                                        v-on:mouseup="showBookDetail">
                                 </img>
                             </transition>
                         </lazy-component>
-                        <div    class="cartouche-box">
+                        <div    class="cartouche-box"
+                                v-on:mousedown="initiateShowBookDetail"
+                                v-on:mousemove="invalidateShowBookDetail"
+                                v-on:mouseup="showBookDetail">
                             <p  class="cartouche-title"
                                 v-bind:id="titleId">
                                 {{book.title}}
@@ -85704,7 +85738,8 @@ var bookCoverStyleObject = {
     userDrag : 'none',
     userSelect : 'none',
     backgroundColor : 'lightgrey',
-    objectFit : 'cover'
+    objectFit : 'cover',
+    cursor : 'pointer'
 }
 
 var generatedBookCoverTitleStyleObject = {
@@ -85715,7 +85750,8 @@ var generatedBookCoverTitleStyleObject = {
     top : `${imgLeftMargin}px`,
     fontSize : '8px',
     margin : '5px',
-    overflow : 'hidden'
+    overflow : 'hidden',
+    cursor : 'pointer'
 }
 
 var BookElement = {
@@ -85724,17 +85760,20 @@ var BookElement = {
                         left : book.dispatch.x + 'px',
                         top : book.dispatch.y + 'px',
                         width : '${bookcellWidth}px',
-                        height : '${bookcellHeight}px',}"
-                        @show="setOnScreen"
-                        v-on:mousedown="initiateShowBookDetail"
-                        v-on:mousemove="invalidateShowBookDetail"
-                        v-on:mouseup="showBookDetail">
+                        height : '${bookcellHeight}px'}"
+                        @show="setOnScreen">
                     <!--<transition name="fade">-->
                         <img    v-if="!imgAvailable"
                                 v-bind:style="bookCoverStyleObject"
-                                v-bind:src="generatedCoverSrc">
+                                v-bind:src="generatedCoverSrc"
+                                v-on:mousedown="initiateShowBookDetail"
+                                v-on:mousemove="invalidateShowBookDetail"
+                                v-on:mouseup="showBookDetail">
                                 <p  v-if="!imgAvailable"
-                                    v-bind:style="generatedBookCoverTitleStyleObject">
+                                    v-bind:style="generatedBookCoverTitleStyleObject"
+                                    v-on:mousedown="initiateShowBookDetail"
+                                    v-on:mousemove="invalidateShowBookDetail"
+                                    v-on:mouseup="showBookDetail">
                                     {{book.title}}
                                 </p>
                         </img>
@@ -85744,7 +85783,10 @@ var BookElement = {
                         <transition name="fade">
                             <img    v-if="imgAvailable"
                                     v-bind:style="bookCoverStyleObject"
-                                    v-bind:src="imgSrc">
+                                    v-bind:src="imgSrc"
+                                    v-on:mousedown="initiateShowBookDetail"
+                                    v-on:mousemove="invalidateShowBookDetail"
+                                    v-on:mouseup="showBookDetail">
                             </img>
                         </transition>
                     </lazy-component>

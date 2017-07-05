@@ -3,9 +3,11 @@ var Vue = require('vue');
 Vue.component('active-theme-box', {
     template: `<div id="active-theme-box"
                     v-if="showActiveTheme">
+                    <span v-on:click="$router.push('/theme-map/'+currentTheme)"></span>
                     <p id="active-theme-label">
                         {{currentTheme}}
                     </p>
+                    <span></span>
                 </div>`,
     data : function() {
         return {

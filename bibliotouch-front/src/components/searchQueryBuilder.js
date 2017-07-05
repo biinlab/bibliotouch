@@ -14,13 +14,43 @@ var SuggestionLine = {
     props:['suggestion', 'field']
 }
 
+var BooleanOperator = {
+    template : `<span class="search-term-boolean-operator" v-if="index!=0">
+                    <div class="up-down-arrow up-arrow" v-on:click="nextBooleanOp()"><img src="./res/arrow.png"></div>
+                            {{treatedBooleanOperator}}
+                    <div class="up-down-arrow down-arrow" v-on:click="precBooleanOp()"><img src="./res/arrow.png"></div>
+                </span>`,
+    props: ['booleanOperator', 'index'],
+    computed : {
+        treatedBooleanOperator : function(){
+            switch(this.booleanOperator){
+                case queryBuilder.BooleanOperator.AND:
+                    return 'et';
+                case queryBuilder.BooleanOperator.OR:
+                    return 'ou';
+                case queryBuilder.BooleanOperator.NOT:
+                    return 'sauf';
+            }
+        }
+    },
+    methods: {
+        nextBooleanOp : function(){
+            let operator = (this.booleanOperator+1)%3;
+            this.$emit('operator-changed', operator);
+        },
+        precBooleanOp : function(){
+            let operator = this.booleanOperator == 0 ? 2 : this.booleanOperator-1;
+            this.$emit('operator-changed', operator);
+        }
+    }
+}
+
 var SearchTermItem = {
     template: `<div class="search-term-wrapper">
-                    <span class="search-term-boolean-operator" v-if="index!=0">
-                        <div class="up-down-arrow up-arrow" v-on:click="nextBooleanOp()"><img src="./res/arrow.png"></div>
-                             {{booleanOperator}}
-                        <div class="up-down-arrow down-arrow" v-on:click="precBooleanOp()"><img src="./res/arrow.png"></div>
-                    </span>
+                    <boolean-operator v-bind:booleanOperator="term.operator"
+                                        v-bind:index="index"
+                                        v-on:operator-changed="newOp => { term.operator = newOp; $emit('search-term-changed'); }">
+                    </boolean-operator>
                     <span class="search-term-field-desc">{{fieldDesc}}</span>
                     <div class="search-term"
                             v-bind:style="{
@@ -32,17 +62,10 @@ var SearchTermItem = {
                     </div>
                 </div>`,
     props:['term','index'],
+    components:{
+        'boolean-operator' : BooleanOperator
+    },
     computed : {
-        booleanOperator : function(){
-            switch(this.term.operator){
-                case queryBuilder.BooleanOperator.AND:
-                    return 'et';
-                case queryBuilder.BooleanOperator.OR:
-                    return 'ou';
-                case queryBuilder.BooleanOperator.NOT:
-                    return 'sauf';
-            }
-        },
         fieldDesc : function(){
             if(this.term.field == 'mainAuthorities') {
                 return 'sur le sujet';
@@ -64,16 +87,6 @@ var SearchTermItem = {
             let colors = ['#FF3043','#FF4701','#FF8B01','#FFCE01','#FFCA3B','#E4FA5C','#00E86E','#5CFF83','#9EFFCC','#00D8BE','#1BC6EB','#3E73DC','#422DA8'];
             return colors[getRandomInt(0,colors.length-1)];
         }
-    },
-    methods: {
-        nextBooleanOp : function(){
-            this.term.operator = (this.term.operator+1)%3;
-            this.$emit('search-term-changed');
-        },
-        precBooleanOp : function(){
-            this.term.operator = this.term.operator == 0 ? 2 : this.term.operator-1;
-            this.$emit('search-term-changed');
-        }
     }
 }
 
@@ -89,6 +102,12 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                                             v-on:delete-search-item="deleteSearchItem"
                                             v-on:search-term-changed="getQueryHits()">
                         </search-term-item>
+                        <div class="search-term-wrapper">
+                            <boolean-operator v-bind:index="terms.length"
+                                                v-bind:booleanOperator="defaultBooleanOperator"
+                                                v-on:operator-changed="newOp => { defaultBooleanOperator = newOp }">
+                            </boolean-operator>
+                        </div>
                         <div    id="search-term-input-wrapper">
                             <div id="search-term-input">
                                 <input  size="9" 
@@ -167,7 +186,8 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
             authorSuggestions: [],
             titleSuggestions: [],
             totalHits:0,
-            autofocus:true
+            autofocus:true,
+            defaultBooleanOperator: queryBuilder.BooleanOperator.AND
         }
     },
     directives : {
@@ -232,7 +252,8 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
     },
     components : {
         'suggestion-line' : SuggestionLine,
-        'search-term-item' : SearchTermItem
+        'search-term-item' : SearchTermItem,
+        'boolean-operator' : BooleanOperator
     },
     methods : {
         deleteSearchItem : function(index){
@@ -260,12 +281,12 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
         },
         addSearchTerm : function(term){
             if(term.field && term.text){
-                term.operator = defaultBooleanOperator
+                term.operator = this.defaultBooleanOperator
                 this.terms.push(term);
             } else {
                 let freeWordsArray = stopword.removeStopwords(this.currentlyWritingTerm.split(/[ -']/), stopword.fr);
                 for(let freeWord of freeWordsArray){
-                    this.terms.push({field:'*',text:freeWord, operator: defaultBooleanOperator});
+                    this.terms.push({field:'*',text:freeWord, operator: this.defaultBooleanOperator});
                 }
             }
             this.getQueryHits();

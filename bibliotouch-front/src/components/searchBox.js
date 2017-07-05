@@ -17,7 +17,7 @@ Vue.component('search-box', {
             this.$emit('show-search-query-builder');
         },
         showGiveMeAnIdea: function(){
-            alert('GIMME GIMME GIMME !')
+            //alert('GIMME GIMME GIMME !')
         }
     }
 })

@@ -57,6 +57,7 @@ p {
   height : 64px;
   margin-bottom : 70px;
   z-index : 4;
+  cursor : pointer;
 }
 
 #search-icon {
@@ -193,6 +194,7 @@ p {
   background-color : black;
   width : 128px;
   height : 84px;
+  cursor : pointer;
   user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -266,7 +268,7 @@ p {
   margin-left:64px;
 }
 
-#active-theme-label::before {
+#active-theme-box span:first-child {
   width: 16px;
   height: 16px;
   background-image: url("/res/pictoClose.png");
@@ -274,9 +276,10 @@ p {
   top:24px;
   left:24px;
   position: absolute;
+  cursor: pointer;
 }
 
-#active-theme-label::after {
+#active-theme-box span:last-child {
   width: 17px;
   height: 18px;
   background-image: url("/res/pictoFilter.png");
@@ -284,6 +287,7 @@ p {
   top:23px;
   left:299px;
   position: absolute;
+  cursor: pointer;
 }
 
 @media (max-width: 1800px) {
@@ -377,6 +381,7 @@ p {
 
 #authors-wrapper span{
   text-decoration: underline solid grey;
+  cursor : pointer;
 }
 
 #authors-wrapper span::after {
@@ -395,6 +400,10 @@ p {
   color: #000000;
   margin: 44px 48px 0px 285px;
   text-decoration: underline;
+}
+
+#publication-wrapper p {
+  cursor : pointer;
 }
 
 #vedettes-wrapper {
@@ -503,7 +512,7 @@ p {
   top:58%;
   left:50%;
   transform: translate(-50%,0);
-  z-index:4;
+  z-index:3;
   text-align: 'center';
   cursor: pointer;
 }
@@ -527,13 +536,14 @@ p {
   background-color : rgba(0,0,0,0.8);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 #search-elements-wrapper {
   align-self: center;
   width: 1200px;
   text-align: left;
+  margin-top: 128px;
 }
 
 #search-elements-wrapper > img{
@@ -595,6 +605,7 @@ p {
   margin-right: 9px;
   transform: translate(0,-40%);
   filter: invert(100%);
+  cursor: pointer;
 }
 
 .search-term > span {
@@ -614,6 +625,7 @@ p {
 
 #search-term-input-wrapper {
   display: inline-block;
+  margin-left: 16px;
 }
 
 #search-term-input{
@@ -679,6 +691,7 @@ p {
   width: 220px;
   display: inline-block;
   text-align: left;
+  cursor : pointer;
 }
 
 .suggestion-count {

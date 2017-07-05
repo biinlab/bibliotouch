@@ -32,7 +32,8 @@ var bookCoverStyleObject = {
     userSelect : 'none',
     overflow : 'hidden',
     objectFit : 'cover',
-    backgroundColor : 'lightgrey'
+    backgroundColor : 'lightgrey',
+    cursor : 'pointer'
 }
 
 var generatedBookCoverTitleStyleObject = {
@@ -45,7 +46,8 @@ var generatedBookCoverTitleStyleObject = {
     overflow : 'hidden',
     fontFamily: 'Montserrat, sans-serif',
     fontSize: '10px',
-    color: '#000000'
+    color: '#000000',
+    cursor : 'pointer'
 }
 
 var BookElement = {
@@ -55,15 +57,18 @@ var BookElement = {
                         left : book.dispatch.x + 'px',
                         top : book.dispatch.y + 'px',
                         width : '${bookcellWidth}px',
-                        height : '${bookcellHeight}px'}"
-                        v-on:mousedown="initiateShowBookDetail"
-                        v-on:mousemove="invalidateShowBookDetail"
-                        v-on:mouseup="showBookDetail">
+                        height : '${bookcellHeight}px'}">
                         <img    v-if="!imgAvailable"
                                 v-bind:style="bookCoverStyleObject"
-                                v-bind:src="generatedCoverSrc">
+                                v-bind:src="generatedCoverSrc"
+                                v-on:mousedown="initiateShowBookDetail"
+                                v-on:mousemove="invalidateShowBookDetail"
+                                v-on:mouseup="showBookDetail">
                                 <p  v-if="!imgAvailable"
-                                    v-bind:style="generatedBookCoverTitleStyleObject">
+                                    v-bind:style="generatedBookCoverTitleStyleObject"
+                                    v-on:mousedown="initiateShowBookDetail"
+                                    v-on:mousemove="invalidateShowBookDetail"
+                                    v-on:mouseup="showBookDetail">
                                     {{book.title}}
                                 </p>
                         </img>
@@ -73,11 +78,17 @@ var BookElement = {
                             <transition name="fade">
                                 <img    v-if="imgAvailable"
                                         v-bind:style="bookCoverStyleObject"
-                                        v-bind:src="imgSrc">
+                                        v-bind:src="imgSrc"
+                                        v-on:mousedown="initiateShowBookDetail"
+                                        v-on:mousemove="invalidateShowBookDetail"
+                                        v-on:mouseup="showBookDetail">
                                 </img>
                             </transition>
                         </lazy-component>
-                        <div    class="cartouche-box">
+                        <div    class="cartouche-box"
+                                v-on:mousedown="initiateShowBookDetail"
+                                v-on:mousemove="invalidateShowBookDetail"
+                                v-on:mouseup="showBookDetail">
                             <p  class="cartouche-title"
                                 v-bind:id="titleId">
                                 {{book.title}}
