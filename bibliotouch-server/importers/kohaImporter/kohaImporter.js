@@ -266,29 +266,30 @@ KohaImporter.prototype.parseRecordObject = function(record){
             let id = null;
             let isbn = null;        //010a
             let issn = null;        //011a
-            let ismn = null;        //013a N
-            let ean = null;         //073a N
+            let ismn = null;        //013a
+            let ean = null;         //073a
             let title = null;       //200a
             let editor = null;      //210c
             let datePub = null;     //210d                  -- rarely clean
             let nbPages = null;     //215a                  -- rarely clean
-            let note = null;        //300a N
-            let noteBioIndex = null;//320a N
-            let thesisInfo = null;  //328abcde N
-            let thesisUrl = null;   //328u N
+            let note = null;        //300a
+            let noteBioIndex = null;//320a
+            let thesisInfo = null;  //328abcde
+            let thesisUrl = null;   //328u
             let description = null; //330a
-            let table = [];         //359b N
-            let collection = null;  //410t N
-            let uniformTitle = null;//500a N
-            let formTitle = null;   //503a N
+            let table = [];         //359b
+            let collection = null;  //410t
+            let uniformTitle = null;//500a
+            let formTitle = null;   //503a
             let authorities = [];   //600-607,616ajxy   -- several
             let mainAuthorities = [];
-            let freeIndex = [];     //610[a] N          -- several
-            let cdu = [];           //675[a] N          -- several
+            let freeIndex = [];     //610[a]          -- several
+            let cdu = [];           //675[a]          -- several
             let dewey = null;       //676a N
-            let lcc = null;         //680a+b N
-            let otherClass = null;  //686a+2 N
+            let lcc = null;         //680a+b
+            let otherClass = null;  //686a+2
             let authors = [];       //700a+b,701a+b,702a+b,710a+b,711a+b,712a+b  -- can be of multiple occurence
+            let readingUrl = null;  //856u
 
 
             record.datafield.forEach(function(datafield){
@@ -386,6 +387,9 @@ KohaImporter.prototype.parseRecordObject = function(record){
                 let tmp_author = getTextFromSubfields(datafield, kohaTags.authors);
                 tmp_author ? authors.push(tmp_author) : null;
 
+                let tmp_readingUrl = getTextFromSubfields(datafield, kohaTags.readingUrl);
+                readingUrl = tmp_readingUrl ? tmp_readingUrl : readingUrl;
+
                 //If authorityObject has main, we add it to authorities
                 if(authorityObject.main){
                     authorities.push(authorityObject);
@@ -442,7 +446,8 @@ KohaImporter.prototype.parseRecordObject = function(record){
                 dewey : dewey,
                 lcc : lcc,
                 otherClass : otherClass,
-                authors : authors
+                authors : authors,
+                readingUrl : readingUrl
             }
 
             //Do not download covers yet - Do downlaod

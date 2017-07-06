@@ -83852,6 +83852,7 @@ var Vue = require('vue');
 var requestp = require('request-promise-native');
 var queryBuilder = require('../helpers/queryBuilder');
 var stopword = require('stopword');
+var favStore = require('../helpers/favStore');
 
 var Availability = Object.freeze({
     UNAVAILABLE : 'indisponible',
@@ -83863,7 +83864,8 @@ var BookDetail = Vue.component('book-detail', {
     template : `<div    id="blurrer"
                         class="modal"
                         v-on:click.self="$emit('close-book-modal')">
-                    <div id="scroll-hide-wrapper">
+                    <div id="scroll-hide-wrapper"
+                            v-on:scroll.once>
                         <div id="book-modal-wrapper">
                             <div id="scroll-hide">
                                 <div id="cover-title-wrapper">
@@ -83881,19 +83883,29 @@ var BookDetail = Vue.component('book-detail', {
                                     </p>
                                     <p id="disponibility-cote">côte <span>{{callNumber}}</span></p>
                                 </div>
-                                <div id="authors-wrapper">
-                                    <span v-for="author in book.authors" v-on:click="searchField(author, 'authors')">{{author}}</span>
+                                <div id="fav-wrapper">
+                                    <div id="fav-element"
+                                            v-on:click="toogleFav">
+                                        <img src="./res/unfavorites.png" v-if="isFav">
+                                        <img src="./res/favorites.png" v-if="!isFav">
+                                    </div>
+                                    <p>Je le garde !</p>
                                 </div>
-                                <div id="publication-wrapper">
-                                    <p id="editor-name" v-on:click="searchField(book.editor, 'editor')">{{book.editor}}</p>
-                                    <p id="collection-name" v-on:click="searchField(book.collection, 'collection')">{{book.collection}}</p>
-                                    <p id="publication-date" v-on:click="searchField(parseDate(book.datePub), 'datePub')">{{book.datePub}}</p>
-                                </div>
-                                <div id="vedettes-wrapper">
-                                    <div v-for="authority in book.mainAuthorities" v-on:click="searchField(authority, 'mainAuthorities')">{{authority}}</div>
-                                </div>
-                                <div id="book-description">
-                                    {{book.description}}
+                                <div id="info-wrapper">
+                                    <div id="authors-wrapper">
+                                        <span v-for="author in book.authors" v-on:click="searchField(author, 'authors')">{{author}}</span>
+                                    </div>
+                                    <div id="publication-wrapper">
+                                        <p id="editor-name" v-on:click="searchField(book.editor, 'editor')">{{book.editor}}</p>
+                                        <p id="collection-name" v-on:click="searchField(book.collection, 'collection')">{{book.collection}}</p>
+                                        <p id="publication-date" v-on:click="searchField(parseDate(book.datePub), 'datePub')">{{book.datePub}}</p>
+                                    </div>
+                                    <div id="vedettes-wrapper">
+                                        <div v-for="authority in book.mainAuthorities" v-on:click="searchField(authority, 'mainAuthorities')">{{authority}}</div>
+                                    </div>
+                                    <div id="book-description">
+                                        {{book.description}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -83909,7 +83921,8 @@ var BookDetail = Vue.component('book-detail', {
         return {
             imgSrc: '',
             available: Availability.UNKNOWN,
-            callNumber: 'inconnue'
+            callNumber: 'inconnue',
+            isFav: false
         }
     },
     created : function(){
@@ -83917,8 +83930,18 @@ var BookDetail = Vue.component('book-detail', {
             this.imgSrc =  `/res/covers/cover_${rnd}.png`;
             this.getTrueCover();
             this.getAvailability();
+            this.isFav = favStore.contains(this.book.id);
     },
     methods : {
+        toogleFav : function () {
+            if(this.isFav){
+                favStore.removeBook(this.book.id);
+                this.isFav = false;
+            } else {
+                favStore.addBook(this.book.id);
+                this.isFav = true;
+            }
+        },
         getTrueCover : function () {
             let self = this;
             let isbn = this.book.isbn;
@@ -83986,7 +84009,7 @@ var BookDetail = Vue.component('book-detail', {
         }
     }
 })
-},{"../helpers/queryBuilder":397,"request-promise-native":285,"stopword":333,"vue":384}],388:[function(require,module,exports){
+},{"../helpers/favStore":392,"../helpers/queryBuilder":398,"request-promise-native":285,"stopword":333,"vue":384}],388:[function(require,module,exports){
 var Vue = require('vue');
 
 Vue.component('border-indicators', {
@@ -84477,7 +84500,7 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
         }
     }
 })
-},{"../helpers/queryBuilder":397,"request-promise-native":285,"stopword":333,"vue":384}],391:[function(require,module,exports){
+},{"../helpers/queryBuilder":398,"request-promise-native":285,"stopword":333,"vue":384}],391:[function(require,module,exports){
 var Vue = require('vue');
 
 Vue.component('zoom-nav-box', {
@@ -84534,6 +84557,33 @@ Vue.component('zoom-nav-box', {
     }
 });
 },{"vue":384}],392:[function(require,module,exports){
+var FavStore = function(){
+    this.books = [];    
+}
+
+FavStore.prototype.addBook = function (book) {
+    if(this.books.indexOf(book) == -1){
+        this.books.push(book);
+    }
+}
+
+FavStore.prototype.removeBook = function (book){
+    let index = this.books.indexOf(book);
+    if(index != -1){
+        this.books.splice(index,1);
+    }
+}
+
+FavStore.prototype.contains = function (book) {
+    if(this.books.indexOf(book) != -1){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+module.exports = new FavStore();
+},{}],393:[function(require,module,exports){
 //require('dragscroll');
 
 var FixedGridDispatcher = function () {
@@ -84553,7 +84603,7 @@ FixedGridDispatcher.prototype.dispatch = function(elements, columns, cellWidth, 
 
 
 module.exports = new FixedGridDispatcher();
-},{}],393:[function(require,module,exports){
+},{}],394:[function(require,module,exports){
 var curYPos, curXPos, curDown;
 
 var mousemove = function(e){ 
@@ -84588,7 +84638,7 @@ MouseDragScroll.prototype.disableDragScroll = function(){
 }
 
 module.exports = new MouseDragScroll();
-},{}],394:[function(require,module,exports){
+},{}],395:[function(require,module,exports){
 /******************************************************************************
 
 Copyright (c) 2011 Jake Gordon and contributors
@@ -84756,7 +84806,7 @@ GrowingPacker.prototype = {
 }
 
 module.exports = GrowingPacker;
-},{}],395:[function(require,module,exports){
+},{}],396:[function(require,module,exports){
 
 var ZoomHandler = function (el) {
     this.el = el;
@@ -84813,7 +84863,7 @@ ZoomHandler.prototype.removeZoomHandlers = function(){
 }
 
 module.exports = ZoomHandler;
-},{}],396:[function(require,module,exports){
+},{}],397:[function(require,module,exports){
 var PackerGrowing = require('./packerGrowing');
 
 var QuadBinPacker = function (bookcellHeight, bookcellWidth, ratio) {
@@ -84932,7 +84982,7 @@ QuadBinPacker.prototype.pack = function(sortedThemes){
 }
 
 module.exports = QuadBinPacker;
-},{"./packerGrowing":394}],397:[function(require,module,exports){
+},{"./packerGrowing":395}],398:[function(require,module,exports){
 /**
  * Tiny module to build queryArrays to be used by search-index module
  * @constructor
@@ -84991,7 +85041,7 @@ QueryBuilder.prototype.buildQuery = function(terms){
 }
 
 module.exports = new QueryBuilder();
-},{}],398:[function(require,module,exports){
+},{}],399:[function(require,module,exports){
 var Vue = require('vue');
 var VueRouter = require('vue-router');
 
@@ -85085,7 +85135,7 @@ window.addEventListener("touchmove", function (event){
         event.preventDefault();
     }
 });
-},{"./components/activeThemeBox":386,"./components/bookDetail":387,"./components/searchBox":389,"./components/searchQueryBuilder":390,"./components/zoomNavBox":391,"./innerThemeMap":399,"./outerThemeMap":401,"./themeMap":402,"vue":384,"vue-router":383}],399:[function(require,module,exports){
+},{"./components/activeThemeBox":386,"./components/bookDetail":387,"./components/searchBox":389,"./components/searchQueryBuilder":390,"./components/zoomNavBox":391,"./innerThemeMap":400,"./outerThemeMap":402,"./themeMap":403,"vue":384,"vue-router":383}],400:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var gridDispatcher = require('./helpers/fixedGridDispatcher');
@@ -85366,7 +85416,7 @@ var InnerThemeMap = Vue.extend({
 });
 
 module.exports = InnerThemeMap;
-},{"./components/searchBox":389,"./helpers/fixedGridDispatcher":392,"./helpers/mouseDragScroll":393,"./helpers/pinchToZoomHandler":395,"request-promise-native":285,"vue":384,"vue-lazyload":382}],400:[function(require,module,exports){
+},{"./components/searchBox":389,"./helpers/fixedGridDispatcher":393,"./helpers/mouseDragScroll":394,"./helpers/pinchToZoomHandler":396,"request-promise-native":285,"vue":384,"vue-lazyload":382}],401:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -85513,7 +85563,7 @@ var packedThemeMapMixin = {
 }
 
 module.exports = packedThemeMapMixin;
-},{"../helpers/mouseDragScroll":393,"../helpers/quadBinPacker":396,"request-promise-native":285,"vue":384,"vue-lazyload":382}],401:[function(require,module,exports){
+},{"../helpers/mouseDragScroll":394,"../helpers/quadBinPacker":397,"request-promise-native":285,"vue":384,"vue-lazyload":382}],402:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -85701,7 +85751,7 @@ var ThemeMap = Vue.extend({
 });
 
 module.exports = ThemeMap;
-},{"./components/borderIndicators":388,"./components/searchBox":389,"./helpers/pinchToZoomHandler":395,"./mixins/packedThemeMap":400,"request-promise-native":285,"vue":384,"vue-lazyload":382}],402:[function(require,module,exports){
+},{"./components/borderIndicators":388,"./components/searchBox":389,"./helpers/pinchToZoomHandler":396,"./mixins/packedThemeMap":401,"request-promise-native":285,"vue":384,"vue-lazyload":382}],403:[function(require,module,exports){
 var Vue = require('vue');
 var VueLazyLoad = require('vue-lazyload');
 var requestp = require('request-promise-native');
@@ -85989,4 +86039,4 @@ var ThemeMap = Vue.extend({
 });
 
 module.exports = ThemeMap;
-},{"./components/borderIndicators":388,"./components/searchBox":389,"./helpers/fixedGridDispatcher":392,"./helpers/pinchToZoomHandler":395,"./mixins/packedThemeMap":400,"request-promise-native":285,"vue":384,"vue-lazyload":382}]},{},[398]);
+},{"./components/borderIndicators":388,"./components/searchBox":389,"./helpers/fixedGridDispatcher":393,"./helpers/pinchToZoomHandler":396,"./mixins/packedThemeMap":401,"request-promise-native":285,"vue":384,"vue-lazyload":382}]},{},[399]);

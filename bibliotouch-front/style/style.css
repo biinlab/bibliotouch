@@ -370,8 +370,43 @@ p {
   margin: 5px 48px 0px 48px;
 }
 
+
+#fav-wrapper{
+  display: inline-block;
+  width: 285px;
+  height: 20px;
+  vertical-align: top;
+}
+
+#fav-element{
+  margin-top: 128px;
+  margin-left: 50%;
+  transform: translate(-50%,0);
+  background-color: black;
+  width:64px;
+  height: 64px;
+  border-radius: 32px;
+  cursor: pointer;
+}
+
+#fav-wrapper p{
+  text-align:center;
+}
+
+#fav-element img{
+  width: 27px;
+  margin-top:50%;
+  margin-left:50%;
+  transform: translate(-50%,-50%);
+}
+
+#info-wrapper{
+  display: inline-block;
+  width:437px;
+}
+
 #authors-wrapper {
-  margin: 7px 48px 0px 285px;
+  margin: 7px 48px 0px 0px;
   font-family: Montserrat;
   font-weight: 600;
   font-size: 18px;
@@ -398,7 +433,7 @@ p {
   font-weight: 300;
   font-size: 14px;
   color: #000000;
-  margin: 44px 48px 0px 285px;
+  margin: 44px 48px 0px 0px;
   text-decoration: underline;
 }
 
@@ -407,7 +442,7 @@ p {
 }
 
 #vedettes-wrapper {
-  margin: 44px 48px 0px 285px;
+  margin: 44px 48px 0px 0px;
 }
 
 #vedettes-wrapper div {
@@ -426,7 +461,7 @@ p {
 }
 
 #book-description {
-  margin: 44px 48px 32px 285px;
+  margin: 44px 48px 32px 0px;
   font-family: Montserrat;
   font-weight: 300;
   font-size: 12px;
@@ -646,6 +681,7 @@ p {
   font-weight: 600;
   font-size: 30px;
   border: none;
+  outline: none;
 }
 
 #suggestion-wrapper{

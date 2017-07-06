@@ -2,6 +2,7 @@ var Vue = require('vue');
 var requestp = require('request-promise-native');
 var queryBuilder = require('../helpers/queryBuilder');
 var stopword = require('stopword');
+var favStore = require('../helpers/favStore');
 
 var Availability = Object.freeze({
     UNAVAILABLE : 'indisponible',
@@ -13,7 +14,8 @@ var BookDetail = Vue.component('book-detail', {
     template : `<div    id="blurrer"
                         class="modal"
                         v-on:click.self="$emit('close-book-modal')">
-                    <div id="scroll-hide-wrapper">
+                    <div id="scroll-hide-wrapper"
+                            v-on:scroll.once>
                         <div id="book-modal-wrapper">
                             <div id="scroll-hide">
                                 <div id="cover-title-wrapper">
@@ -31,19 +33,29 @@ var BookDetail = Vue.component('book-detail', {
                                     </p>
                                     <p id="disponibility-cote">côte <span>{{callNumber}}</span></p>
                                 </div>
-                                <div id="authors-wrapper">
-                                    <span v-for="author in book.authors" v-on:click="searchField(author, 'authors')">{{author}}</span>
+                                <div id="fav-wrapper">
+                                    <div id="fav-element"
+                                            v-on:click="toogleFav">
+                                        <img src="./res/unfavorites.png" v-if="isFav">
+                                        <img src="./res/favorites.png" v-if="!isFav">
+                                    </div>
+                                    <p>Je le garde !</p>
                                 </div>
-                                <div id="publication-wrapper">
-                                    <p id="editor-name" v-on:click="searchField(book.editor, 'editor')">{{book.editor}}</p>
-                                    <p id="collection-name" v-on:click="searchField(book.collection, 'collection')">{{book.collection}}</p>
-                                    <p id="publication-date" v-on:click="searchField(parseDate(book.datePub), 'datePub')">{{book.datePub}}</p>
-                                </div>
-                                <div id="vedettes-wrapper">
-                                    <div v-for="authority in book.mainAuthorities" v-on:click="searchField(authority, 'mainAuthorities')">{{authority}}</div>
-                                </div>
-                                <div id="book-description">
-                                    {{book.description}}
+                                <div id="info-wrapper">
+                                    <div id="authors-wrapper">
+                                        <span v-for="author in book.authors" v-on:click="searchField(author, 'authors')">{{author}}</span>
+                                    </div>
+                                    <div id="publication-wrapper">
+                                        <p id="editor-name" v-on:click="searchField(book.editor, 'editor')">{{book.editor}}</p>
+                                        <p id="collection-name" v-on:click="searchField(book.collection, 'collection')">{{book.collection}}</p>
+                                        <p id="publication-date" v-on:click="searchField(parseDate(book.datePub), 'datePub')">{{book.datePub}}</p>
+                                    </div>
+                                    <div id="vedettes-wrapper">
+                                        <div v-for="authority in book.mainAuthorities" v-on:click="searchField(authority, 'mainAuthorities')">{{authority}}</div>
+                                    </div>
+                                    <div id="book-description">
+                                        {{book.description}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -59,7 +71,8 @@ var BookDetail = Vue.component('book-detail', {
         return {
             imgSrc: '',
             available: Availability.UNKNOWN,
-            callNumber: 'inconnue'
+            callNumber: 'inconnue',
+            isFav: false
         }
     },
     created : function(){
@@ -67,8 +80,18 @@ var BookDetail = Vue.component('book-detail', {
             this.imgSrc =  `/res/covers/cover_${rnd}.png`;
             this.getTrueCover();
             this.getAvailability();
+            this.isFav = favStore.contains(this.book.id);
     },
     methods : {
+        toogleFav : function () {
+            if(this.isFav){
+                favStore.removeBook(this.book.id);
+                this.isFav = false;
+            } else {
+                favStore.addBook(this.book.id);
+                this.isFav = true;
+            }
+        },
         getTrueCover : function () {
             let self = this;
             let isbn = this.book.isbn;
