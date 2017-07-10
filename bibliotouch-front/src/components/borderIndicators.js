@@ -1,5 +1,7 @@
 var Vue = require('vue');
-
+/**
+ * Floating boxes at the edges of the screen, appearing only when scrolling
+ */
 Vue.component('border-indicators', {
     template : `<!--LEFT INDICATOR-->
                 <div>
@@ -160,7 +162,7 @@ Vue.component('border-indicators', {
             if(self.scrollTimer != -1){
                 clearTimeout(self.scrollTimer);
             }
-            self.scrollTimer = window.setTimeout(hideNeighbour, 500);
+            self.scrollTimer = window.setTimeout(hideNeighbour, 1000);
         };
     }
 })

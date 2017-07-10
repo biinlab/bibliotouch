@@ -1,5 +1,8 @@
 var Vue = require('vue');
 
+/**
+ * Floating button indicating the theme the user is currently consulting, only appear when using the inner-themem-map view
+ */ 
 Vue.component('active-theme-box', {
     template: `<div id="active-theme-box"
                     v-if="showActiveTheme">

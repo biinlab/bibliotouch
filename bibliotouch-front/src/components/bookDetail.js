@@ -4,12 +4,20 @@ var queryBuilder = require('../helpers/queryBuilder');
 var stopword = require('stopword');
 var favStore = require('../helpers/favStore');
 
+/**
+ * Enum for book availability status, values correspond to displayed text
+ * @readonly
+ * @enum {string}
+ */
 var Availability = Object.freeze({
     UNAVAILABLE : 'indisponible',
     UNKNOWN : 'disponibilité inconnue',
     AVAILABLE : 'disponible'
 });
 
+/**
+ *  Book Detail modal displaying information about the book the user selected
+ */
 var BookDetail = Vue.component('book-detail', {
     template : `<div    id="blurrer"
                         class="modal"
@@ -83,6 +91,9 @@ var BookDetail = Vue.component('book-detail', {
             this.isFav = favStore.contains(this.book.id);
     },
     methods : {
+        /*
+        * Toggle the fav status of the book, adding or removing it from the FavStore
+         */
         toogleFav : function () {
             if(this.isFav){
                 favStore.removeBook(this.book.id);
@@ -92,6 +103,9 @@ var BookDetail = Vue.component('book-detail', {
                 this.isFav = true;
             }
         },
+        /** 
+         * Tries to get the book cover, if available the component is updated accordingly
+        */
         getTrueCover : function () {
             let self = this;
             let isbn = this.book.isbn;
@@ -103,6 +117,9 @@ var BookDetail = Vue.component('book-detail', {
                     .catch(function(err){});
             }
         },
+        /**
+         * Tries to get the book availability, updates the component accordingly
+         */
         getAvailability : function(){
             let self = this;
             let reqOptions = {
@@ -126,6 +143,10 @@ var BookDetail = Vue.component('book-detail', {
                 })
                 .catch(function(err){console.error(err)});
         },
+        /**
+         * Returns a color code depending in the book availability status
+         * @returns {string} a color code
+         */
         availabilityColor : function(){
             if(this.available === Availability.AVAILABLE){
                 return '#009A1A';
@@ -137,8 +158,13 @@ var BookDetail = Vue.component('book-detail', {
                 return 'grey';
             }
         },
+        /**
+         * Starts a search operation on a given field
+         * @param {string} authority - The string from which we want to build the query
+         * @param {string} field - The field on which we want to apply the query, must correspond to the name of one of the fields of the book object
+         */
         searchField : function(authority, field) {
-            let splitAuthority = authority.split(/[ -']/);
+            let splitAuthority = authority.split(/[ \-']/g);
             splitAuthority = stopword.removeStopwords(splitAuthority, stopword.fr);
             let termsArray = [];
             for(let auth of splitAuthority){
@@ -152,6 +178,11 @@ var BookDetail = Vue.component('book-detail', {
             this.$router.push(`/search-map/${encodeURIComponent(JSON.stringify(queryArray))}`);
             this.$emit('close-book-modal');
         },
+        /**
+         * Returns the first four digit string that looks like a year
+         * @param {string} stinkyDate - The string in which we are looking for a date
+         * @returns {string} - The first four digit string looking like a year, or a default date if nothing found 
+         */
         parseDate : function(stinkyDate) {
             let defaultDate = '1993';//The world was sad, empty and meaningless before that year
             let matches =  stinkyDate.match(/\d{4}/);

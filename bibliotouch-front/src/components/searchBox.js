@@ -1,5 +1,8 @@
 var Vue = require('vue');
 
+/**
+* Floating central bar showing the SearchQueryBuilder when clicked
+*/
 Vue.component('search-box', {
     template : `<div id="search-box"
                         v-on:click="showSearchQueryBuilder()">

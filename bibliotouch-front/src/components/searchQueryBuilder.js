@@ -6,14 +6,31 @@ var queryBuilder = require('../helpers/queryBuilder');
 
 var defaultBooleanOperator = queryBuilder.BooleanOperator.AND;
 
+/**
+ * Suggestion line component, displaying one of the autosuggestion result from search-index in a HTML table row
+ * Adds a search-term when clicked
+ * @property {Array} suggestion - The suggestion array with [0] : the suggestion text and [1] : the number of docs for this suggestion
+ * @property {string} field - The applicable field for the suggestion
+ * @fires add-search-term
+ */
 var SuggestionLine = {
+    /**
+     * @event add-search-term
+     * @type {object}
+     * @property {string} field - The field we want to use for the search-term
+     * @property {string} text - The text of the new search term
+     */
     template: ` <tr v-on:click="$emit('add-search-term', {field:field,text:suggestion[0]})">
                     <td class="suggestion-name">{{suggestion[0]}}</td>
                     <td class="suggestion-count">{{suggestion[1]}}</td>
                 </tr>`,
     props:['suggestion', 'field']
 }
-
+/**
+ * Component displaying a boolean operator (AND, OR, NOT) and allowing to switch between them
+ * @property {BooleanOperator} booleanOperator - The boolean operator value of the component
+ * @property {integer} index - The index of the component (if 0 we do not want to display the Boolean operator)
+ */
 var BooleanOperator = {
     template : `<span class="search-term-boolean-operator" v-if="index!=0">
                     <div class="up-down-arrow up-arrow" v-on:click="nextBooleanOp()"><img src="./res/arrow.png"></div>
@@ -22,6 +39,10 @@ var BooleanOperator = {
                 </span>`,
     props: ['booleanOperator', 'index'],
     computed : {
+        /**
+         * Return a string to display the value of the component's boolean operator
+         * @return {string} - Display value of the component's boolean operator
+         */
         treatedBooleanOperator : function(){
             switch(this.booleanOperator){
                 case queryBuilder.BooleanOperator.AND:
@@ -34,17 +55,40 @@ var BooleanOperator = {
         }
     },
     methods: {
+        /**
+         * Switches the boolean operator to the next value
+         * @fires operator-changed
+         * @type {BooleanOperator}
+         */
         nextBooleanOp : function(){
             let operator = (this.booleanOperator+1)%3;
+            /**
+             * @event operator-changed
+             * @type {BooleanOperator}
+             */
             this.$emit('operator-changed', operator);
         },
+        /**
+         * Switches the boolean operator to the precedent value
+         * @fires operator-changed
+         * @type {BooleanOperator}
+         */
         precBooleanOp : function(){
             let operator = this.booleanOperator == 0 ? 2 : this.booleanOperator-1;
+            /**
+             * @event operator-changed
+             * @type {BooleanOperator}
+             */
             this.$emit('operator-changed', operator);
         }
     }
 }
 
+/**
+ * Search term component containing a boolean operator, a field and some text
+ * @property {object} term - The object containing all the fuss (operator,field,text)
+ * @property {integer} index - The index of the component
+ */
 var SearchTermItem = {
     template: `<div class="search-term-wrapper">
                     <boolean-operator v-bind:booleanOperator="term.operator"
@@ -66,6 +110,10 @@ var SearchTermItem = {
         'boolean-operator' : BooleanOperator
     },
     computed : {
+        /**
+         * Returns a string describing the field of the search term
+         * @return {string} - The string describing the field of the search term
+         */
         fieldDesc : function(){
             if(this.term.field == 'mainAuthorities') {
                 return 'sur le sujet';
@@ -79,6 +127,10 @@ var SearchTermItem = {
 
             return 'à propos de';
         },
+        /**
+         * Returns a random color from an inner palette
+         * @return {string} - Color code
+         */
         randomColor : function(){
             //Returns a random integer between min (inclusive) and max (inclusive)
             function getRandomInt(min, max) {
@@ -90,6 +142,9 @@ var SearchTermItem = {
     }
 }
 
+/**
+ * Component allowing to build and display a complex search query
+ */
 var SearchQueryBuilder = Vue.component('search-query-builder', {
     template: ` <div id="blurred-background">
                     <div id="search-elements-wrapper">
@@ -191,6 +246,9 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
         }
     },
     directives : {
+        /**
+         * Custom directive to set au default focus on an element
+         */
         focus : {
             inserted: function (el) {
                 el.focus();
@@ -198,7 +256,13 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
         }
     },
     watch:{
+        /**
+         * Watches the value of the currentlyWritingTerm to get autosuggestions while the the user is typing his query
+         * if suggestions are found, it updates the suggestion lists
+         * @param {string} - The state of the reactive property currentlyWritingTerm
+         */
         currentlyWritingTerm : function(newTerm){
+            newTerm = newTerm.toLowerCase();
             let self = this;
             let subjectOptions = {
                 method: 'POST',
@@ -256,10 +320,17 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
         'boolean-operator' : BooleanOperator
     },
     methods : {
+        /**
+         * Removes a search term item from the query
+         * @param {integer} index - The index of the search term to remove
+         */
         deleteSearchItem : function(index){
             this.terms.splice(index,1);
             this.getQueryHits();
         },
+        /**
+         * Get the number of docs found for the current query, if succesful updates the corresponding reactive property
+         */
         getQueryHits : function(){
             let self = this;
             let queryOptions = {
@@ -275,10 +346,24 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                     self.totalHits = totalHits.totalHits;
                 });
         },
+        /**
+         * Display the search results for the current query and hide the search query builder
+         * @fires hide-search-query-builder
+         */
         launchSearch:function(){
+            /**
+             * @event hide-search-query-builder
+             */
             this.$emit('hide-search-query-builder');
             this.$router.push(`/search-map/${encodeURIComponent(JSON.stringify(this.getQuery()))}`);
         },
+        /**
+         * Adds a search term item to the current query and resets the currentlyWritingTerm
+         * @param {object} term - The term object to add to the query with properties (operator,field,text)
+         * @param {BooleanOperator} term.operator - The boolean operator value of the search term item
+         * @param {string} term.field - The field of the search term item
+         * @param {string} term.text - The text of the search term item
+         */
         addSearchTerm : function(term){
             if(term.field && term.text){
                 term.operator = this.defaultBooleanOperator
@@ -292,6 +377,10 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
             this.getQueryHits();
             this.currentlyWritingTerm = '';
         },
+        /**
+         * Return a query array
+         * @returns {Array} - A query Array from the module QueryBuilder
+         */
         getQuery : function(){
             return queryBuilder.buildQuery(this.terms);
         }

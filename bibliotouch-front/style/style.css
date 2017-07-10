@@ -818,3 +818,93 @@ p {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+/* Outer Map book cover style */
+.outer-map-book-cell {
+    display: inline-block;
+    width: 35px;
+    height: 65px;
+}
+
+.outer-map-book-cover {
+    width : 5px;
+    height : 35px;
+    margin-left : 15px;
+    margin-top : 15px;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.12);
+    -webkit-user-drag: none;
+    user-select: none;
+    background-color: lightgrey;
+    object-fit: cover;
+}
+
+/* Theme Map book cover style */
+.theme-map-book-cell {
+    position : absolute;
+    width : 116px;
+    height : 140px;
+}
+
+.theme-map-book-cover{
+    position : absolute;
+    width : 56px;
+    height : 80px;
+    left : 30px;
+    top : 30px;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.12);
+    -webkit-user-drag: none;
+    user-select : none;
+    background-color : lightgrey;
+    object-fit : cover;
+    cursor : pointer;
+}
+
+.theme-map-generated-book-cover-title {
+    position : absolute;
+    width : 46px;
+    height : 70px;
+    left : 30px;
+    top : 30px;
+    font-size : 8px;
+    user-select : none;
+    margin : 5px;
+    overflow : hidden;
+    cursor : pointer;
+}
+
+/* Inner Map book cover style */
+.inner-map-book-cell {
+    position: absolute;
+    width: 244px;
+    height: 228px;
+}
+
+.inner-map-book-cover {
+    position : absolute;
+    width : 100px;
+    height : 168px;
+    left : 60px;
+    top : 60px;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.12);
+    -webkit-user-drag: none;
+    user-select : none;
+    overflow : hidden;
+    object-fit : cover;
+    background-color : lightgrey;
+    cursor : pointer;
+}
+
+.inner-map-generated-book-cover-title {
+    position : absolute;
+    width : 86px;
+    height : 154px;
+    left : 60px;
+    top : 60px;
+    font-size : 8px;
+    user-select : none;
+    margin : 7px;
+    overflow : hidden;
+    cursor : pointer;
+    font-family: Montserrat, sans-serif;
+    font-size: 10px;
+}

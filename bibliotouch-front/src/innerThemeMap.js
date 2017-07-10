@@ -8,64 +8,33 @@ require('./components/searchBox');
 
 var eventBus = new Vue();
 
+//These values are used by the bin-packing algorithm (packedThemeMap.js)
+//Apply changes to the CSS classes inner-map-*
+//Sorry
 var bookcellHeight = 168+60,
     bookcellWidth = 184+60,
     bookcoverHeight = 168,
     bookcoverWidth = 100;
-
-var imgTopMargin = 60;
-var imgLeftMargin = 60;
 
 Vue.use(VueLazyLoad, {
     preLoad : 3,
     lazyComponent : true
 });
 
-var bookCoverStyleObject = {
-    position : 'absolute',
-    width : `${bookcoverWidth}px`,
-    height : `${bookcoverHeight}px`,
-    left : `${imgTopMargin}px`,
-    top : `${imgLeftMargin}px`,
-    boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
-    userDrag : 'none',
-    userSelect : 'none',
-    overflow : 'hidden',
-    objectFit : 'cover',
-    backgroundColor : 'lightgrey',
-    cursor : 'pointer'
-}
-
-var generatedBookCoverTitleStyleObject = {
-    position : 'absolute',
-    left : `${imgLeftMargin}px`,
-    top : `${imgTopMargin}px`,
-    margin : '7px',
-    width : `${bookcoverWidth-14}px`,
-    height : `${bookcoverHeight-14}px`,
-    overflow : 'hidden',
-    fontFamily: 'Montserrat, sans-serif',
-    fontSize: '10px',
-    color: '#000000',
-    cursor : 'pointer'
-}
-
 var BookElement = {
     template : `<!--<lazy-component @show="setOnScreen">-->
                     <div v-bind:style="{
-                        position : 'absolute',
                         left : book.dispatch.x + 'px',
-                        top : book.dispatch.y + 'px',
-                        width : '${bookcellWidth}px',
-                        height : '${bookcellHeight}px'}">
+                        top : book.dispatch.y + 'px'}"
+                        class="inner-map-book-cell">
                         <img    v-if="!imgAvailable"
-                                v-bind:style="bookCoverStyleObject"
+                                class="inner-map-book-cover"
                                 v-bind:src="generatedCoverSrc"
                                 v-on:mousedown="initiateShowBookDetail"
                                 v-on:mousemove="invalidateShowBookDetail"
                                 v-on:mouseup="showBookDetail">
                                 <p  v-if="!imgAvailable"
-                                    v-bind:style="generatedBookCoverTitleStyleObject"
+                                    class="inner-map-generated-book-cover-title"
                                     v-on:mousedown="initiateShowBookDetail"
                                     v-on:mousemove="invalidateShowBookDetail"
                                     v-on:mouseup="showBookDetail">
@@ -77,7 +46,7 @@ var BookElement = {
                                         
                             <transition name="fade">
                                 <img    v-if="imgAvailable"
-                                        v-bind:style="bookCoverStyleObject"
+                                        class="inner-map-book-cover"
                                         v-bind:src="imgSrc"
                                         v-on:mousedown="initiateShowBookDetail"
                                         v-on:mousemove="invalidateShowBookDetail"
@@ -114,8 +83,6 @@ var BookElement = {
             imgAvailable : false,
             imgSrc : '',
             isOverflown : false,
-            bookCoverStyleObject : bookCoverStyleObject,
-            generatedBookCoverTitleStyleObject : generatedBookCoverTitleStyleObject,
             zoomHandler: null
         }
     },

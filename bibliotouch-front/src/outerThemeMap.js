@@ -7,47 +7,26 @@ require('./components/borderIndicators');
 require('./components/searchBox');
 
 
+//These values are used by the bin-packing algorithm (packedThemeMap.js)
+//Apply changes to the CSS classes outer-map-*
+//Sorry
 var bookcellHeight = 65,
     bookcellWidth = 35,
     bookcoverHeight = 35,
     bookcoverWidth = 5;
     
-var imgTopMargin = (bookcellHeight-bookcoverHeight)/2;
-var imgLeftMargin = (bookcellWidth-bookcoverWidth)/2;
-
-
 Vue.use(VueLazyLoad, {
     preLoad : 3,
     lazyComponent : true
 });
 
-var bookCoverStyleObject = {
-    width : `${bookcoverWidth}px`,
-    height : `${bookcoverHeight}px`,
-    marginLeft : `${imgTopMargin}px`,
-    marginTop : `${imgLeftMargin}px`,
-    boxShadow: '0 0 10px 0 rgba(0,0,0,0.12)',
-    userDrag : 'none',
-    userSelect : 'none',
-    backgroundColor : 'lightgrey',
-    objectFit : 'cover'
-}
-
 var BookElement = {
-    template : `<div v-bind:style="{
-                        display : 'inline-block',
-                        width : '${bookcellWidth}px',
-                        height : '${bookcellHeight}px',}">
-                    <img    v-bind:style="bookCoverStyleObject"
+    template : `<div class="outer-map-book-cell">
+                    <img    class="outer-map-book-cover"
                             v-bind:src="generatedCoverSrc">
                     </img>
                 </div>`,
     props : ['book'],
-    data : function(){
-        return {
-            bookCoverStyleObject : bookCoverStyleObject,
-        }
-    },
     computed: {
         generatedCoverSrc : function(){
             let rnd = Math.trunc((Math.random()*7)+1);
