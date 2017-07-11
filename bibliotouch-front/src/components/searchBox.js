@@ -16,7 +16,13 @@ Vue.component('search-box', {
                     </div>
                 </div>`,
     methods: {
+        /**
+         * @fires show-search-query-builder
+         */
         showSearchQueryBuilder : function(){
+            /**
+             * @event show-search-query-builder - Show search query builder screen event
+             */
             this.$emit('show-search-query-builder');
         },
         showGiveMeAnIdea: function(){

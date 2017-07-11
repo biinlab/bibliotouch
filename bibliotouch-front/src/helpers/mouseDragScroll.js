@@ -17,14 +17,26 @@ var mouseup =  function(e){
 };
 
 
+/**
+ * Enable window scrolling using mouse click and drag interaction
+ * @constructor
+ */
 var MouseDragScroll = function(){}
 
+/**
+ * Enables scrolling
+ * 
+ */
 MouseDragScroll.prototype.enableDragScroll = function(){
     window.addEventListener('mousemove', mousemove);
     window.addEventListener('mousedown', mousedown);
     window.addEventListener('mouseup', mouseup);
 };
 
+/**
+ * Disables scrolling
+ * 
+ */
 MouseDragScroll.prototype.disableDragScroll = function(){
     window.removeEventListener('mousemove', mousemove);
     window.removeEventListener('mousedown', mousedown);

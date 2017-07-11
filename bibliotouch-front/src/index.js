@@ -13,11 +13,7 @@ var ThemeMap = require('./themeMap');
 var InnerThemeMap = require('./innerThemeMap');
 var OuterThemeMap = require('./outerThemeMap');
 
-// 2. Define some routes
-// Each route should map to a component. The "component" can
-// either be an actual component constructor created via
-// Vue.extend(), or just a component options object.
-// We'll talk about nested routes later.
+//Routes
 const routes = [
   { path: '/', component: OuterThemeMap},
   { path: '/outer-theme-map', component: OuterThemeMap},
@@ -28,16 +24,13 @@ const routes = [
   { path: '/search-map/:query', component: InnerThemeMap}
 ];
 
-// 3. Create the router instance and pass the `routes` option
-// You can pass in additional options here, but let's
-// keep it simple for now.
 const router = new VueRouter({
   routes
 })
 
-// 4. Create and mount the root instance.
-// Make sure to inject the router with the router option to make the
-// whole app router-aware.
+/**
+ * Main Vue of the app
+ */
 const app = new Vue({
   router,
   data : {
@@ -77,7 +70,7 @@ const app = new Vue({
 }).$mount('#app')
 
 
-
+//If we detect multitouch we don't want to trigger simple touch everywhere
 window.addEventListener("touchstart", function (event){
     if(event.touches.length > 1){
         //the event is multi-touch

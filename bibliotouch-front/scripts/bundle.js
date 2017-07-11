@@ -83814,6 +83814,9 @@ function extend() {
 },{}],386:[function(require,module,exports){
 var Vue = require('vue');
 
+/**
+ * Floating button indicating the theme the user is currently consulting, only appear when using the inner-themem-map view
+ */ 
 Vue.component('active-theme-box', {
     template: `<div id="active-theme-box"
                     v-if="showActiveTheme">
@@ -83854,12 +83857,20 @@ var queryBuilder = require('../helpers/queryBuilder');
 var stopword = require('stopword');
 var favStore = require('../helpers/favStore');
 
+/**
+ * Enum for book availability status, values correspond to displayed text
+ * @readonly
+ * @enum {string}
+ */
 var Availability = Object.freeze({
     UNAVAILABLE : 'indisponible',
     UNKNOWN : 'disponibilité inconnue',
     AVAILABLE : 'disponible'
 });
 
+/**
+ *  Book Detail modal displaying information about the book the user selected
+ */
 var BookDetail = Vue.component('book-detail', {
     template : `<div    id="blurrer"
                         class="modal"
@@ -83933,6 +83944,9 @@ var BookDetail = Vue.component('book-detail', {
             this.isFav = favStore.contains(this.book.id);
     },
     methods : {
+        /*
+        * Toggle the fav status of the book, adding or removing it from the FavStore
+         */
         toogleFav : function () {
             if(this.isFav){
                 favStore.removeBook(this.book.id);
@@ -83942,6 +83956,9 @@ var BookDetail = Vue.component('book-detail', {
                 this.isFav = true;
             }
         },
+        /** 
+         * Tries to get the book cover, if available the component is updated accordingly
+        */
         getTrueCover : function () {
             let self = this;
             let isbn = this.book.isbn;
@@ -83953,6 +83970,9 @@ var BookDetail = Vue.component('book-detail', {
                     .catch(function(err){});
             }
         },
+        /**
+         * Tries to get the book availability, updates the component accordingly
+         */
         getAvailability : function(){
             let self = this;
             let reqOptions = {
@@ -83976,6 +83996,10 @@ var BookDetail = Vue.component('book-detail', {
                 })
                 .catch(function(err){console.error(err)});
         },
+        /**
+         * Returns a color code depending in the book availability status
+         * @returns {string} a color code
+         */
         availabilityColor : function(){
             if(this.available === Availability.AVAILABLE){
                 return '#009A1A';
@@ -83987,6 +84011,12 @@ var BookDetail = Vue.component('book-detail', {
                 return 'grey';
             }
         },
+        /**
+         * Starts a search operation on a given field
+         * @param {string} authority - The string from which we want to build the query
+         * @param {string} field - The field on which we want to apply the query, must correspond to the name of one of the fields of the book object
+         * @fires close-book-modal
+         */
         searchField : function(authority, field) {
             let splitAuthority = authority.split(/[ \-']/g);
             splitAuthority = stopword.removeStopwords(splitAuthority, stopword.fr);
@@ -84000,8 +84030,16 @@ var BookDetail = Vue.component('book-detail', {
             }
             let queryArray = queryBuilder.buildQuery(termsArray);
             this.$router.push(`/search-map/${encodeURIComponent(JSON.stringify(queryArray))}`);
+            /**
+             * @event close-book-modal - Close signal to hide the book modal
+             */
             this.$emit('close-book-modal');
         },
+        /**
+         * Returns the first four digit string that looks like a year
+         * @param {string} stinkyDate - The string in which we are looking for a date
+         * @returns {string} - The first four digit string looking like a year, or a default date if nothing found 
+         */
         parseDate : function(stinkyDate) {
             let defaultDate = '1993';//The world was sad, empty and meaningless before that year
             let matches =  stinkyDate.match(/\d{4}/);
@@ -84011,7 +84049,9 @@ var BookDetail = Vue.component('book-detail', {
 })
 },{"../helpers/favStore":392,"../helpers/queryBuilder":398,"request-promise-native":285,"stopword":333,"vue":384}],388:[function(require,module,exports){
 var Vue = require('vue');
-
+/**
+ * Floating boxes at the edges of the screen, appearing only when scrolling
+ */
 Vue.component('border-indicators', {
     template : `<!--LEFT INDICATOR-->
                 <div>
@@ -84172,13 +84212,16 @@ Vue.component('border-indicators', {
             if(self.scrollTimer != -1){
                 clearTimeout(self.scrollTimer);
             }
-            self.scrollTimer = window.setTimeout(hideNeighbour, 500);
+            self.scrollTimer = window.setTimeout(hideNeighbour, 1000);
         };
     }
 })
 },{"vue":384}],389:[function(require,module,exports){
 var Vue = require('vue');
 
+/**
+* Floating central bar showing the SearchQueryBuilder when clicked
+*/
 Vue.component('search-box', {
     template : `<div id="search-box"
                         v-on:click="showSearchQueryBuilder()">
@@ -84192,7 +84235,13 @@ Vue.component('search-box', {
                     </div>
                 </div>`,
     methods: {
+        /**
+         * @fires show-search-query-builder
+         */
         showSearchQueryBuilder : function(){
+            /**
+             * @event show-search-query-builder - Show search query builder screen event
+             */
             this.$emit('show-search-query-builder');
         },
         showGiveMeAnIdea: function(){
@@ -84209,14 +84258,31 @@ var queryBuilder = require('../helpers/queryBuilder');
 
 var defaultBooleanOperator = queryBuilder.BooleanOperator.AND;
 
+/**
+ * Suggestion line component, displaying one of the autosuggestion result from search-index in a HTML table row
+ * Adds a search-term when clicked
+ * @property {Array} suggestion - The suggestion array with [0] : the suggestion text and [1] : the number of docs for this suggestion
+ * @property {string} field - The applicable field for the suggestion
+ * @fires add-search-term
+ */
 var SuggestionLine = {
+    /**
+     * @event add-search-term
+     * @type {object}
+     * @property {string} field - The field we want to use for the search-term
+     * @property {string} text - The text of the new search term
+     */
     template: ` <tr v-on:click="$emit('add-search-term', {field:field,text:suggestion[0]})">
                     <td class="suggestion-name">{{suggestion[0]}}</td>
                     <td class="suggestion-count">{{suggestion[1]}}</td>
                 </tr>`,
     props:['suggestion', 'field']
 }
-
+/**
+ * Component displaying a boolean operator (AND, OR, NOT) and allowing to switch between them
+ * @property {BooleanOperator} booleanOperator - The boolean operator value of the component
+ * @property {integer} index - The index of the component (if 0 we do not want to display the Boolean operator)
+ */
 var BooleanOperator = {
     template : `<span class="search-term-boolean-operator" v-if="index!=0">
                     <div class="up-down-arrow up-arrow" v-on:click="nextBooleanOp()"><img src="./res/arrow.png"></div>
@@ -84225,6 +84291,10 @@ var BooleanOperator = {
                 </span>`,
     props: ['booleanOperator', 'index'],
     computed : {
+        /**
+         * Return a string to display the value of the component's boolean operator
+         * @return {string} - Display value of the component's boolean operator
+         */
         treatedBooleanOperator : function(){
             switch(this.booleanOperator){
                 case queryBuilder.BooleanOperator.AND:
@@ -84237,17 +84307,40 @@ var BooleanOperator = {
         }
     },
     methods: {
+        /**
+         * Switches the boolean operator to the next value
+         * @fires operator-changed
+         * @type {BooleanOperator}
+         */
         nextBooleanOp : function(){
             let operator = (this.booleanOperator+1)%3;
+            /**
+             * @event operator-changed
+             * @type {BooleanOperator}
+             */
             this.$emit('operator-changed', operator);
         },
+        /**
+         * Switches the boolean operator to the precedent value
+         * @fires operator-changed
+         * @type {BooleanOperator}
+         */
         precBooleanOp : function(){
             let operator = this.booleanOperator == 0 ? 2 : this.booleanOperator-1;
+            /**
+             * @event operator-changed
+             * @type {BooleanOperator}
+             */
             this.$emit('operator-changed', operator);
         }
     }
 }
 
+/**
+ * Search term component containing a boolean operator, a field and some text
+ * @property {object} term - The object containing all the fuss (operator,field,text)
+ * @property {integer} index - The index of the component
+ */
 var SearchTermItem = {
     template: `<div class="search-term-wrapper">
                     <boolean-operator v-bind:booleanOperator="term.operator"
@@ -84269,6 +84362,10 @@ var SearchTermItem = {
         'boolean-operator' : BooleanOperator
     },
     computed : {
+        /**
+         * Returns a string describing the field of the search term
+         * @return {string} - The string describing the field of the search term
+         */
         fieldDesc : function(){
             if(this.term.field == 'mainAuthorities') {
                 return 'sur le sujet';
@@ -84282,6 +84379,10 @@ var SearchTermItem = {
 
             return 'à propos de';
         },
+        /**
+         * Returns a random color from an inner palette
+         * @return {string} - Color code
+         */
         randomColor : function(){
             //Returns a random integer between min (inclusive) and max (inclusive)
             function getRandomInt(min, max) {
@@ -84293,6 +84394,9 @@ var SearchTermItem = {
     }
 }
 
+/**
+ * Component allowing to build and display a complex search query
+ */
 var SearchQueryBuilder = Vue.component('search-query-builder', {
     template: ` <div id="blurred-background">
                     <div id="search-elements-wrapper">
@@ -84394,6 +84498,9 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
         }
     },
     directives : {
+        /**
+         * Custom directive to set au default focus on an element
+         */
         focus : {
             inserted: function (el) {
                 el.focus();
@@ -84401,6 +84508,11 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
         }
     },
     watch:{
+        /**
+         * Watches the value of the currentlyWritingTerm to get autosuggestions while the the user is typing his query
+         * if suggestions are found, it updates the suggestion lists
+         * @param {string} - The state of the reactive property currentlyWritingTerm
+         */
         currentlyWritingTerm : function(newTerm){
             newTerm = newTerm.toLowerCase();
             let self = this;
@@ -84460,10 +84572,17 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
         'boolean-operator' : BooleanOperator
     },
     methods : {
+        /**
+         * Removes a search term item from the query
+         * @param {integer} index - The index of the search term to remove
+         */
         deleteSearchItem : function(index){
             this.terms.splice(index,1);
             this.getQueryHits();
         },
+        /**
+         * Get the number of docs found for the current query, if succesful updates the corresponding reactive property
+         */
         getQueryHits : function(){
             let self = this;
             let queryOptions = {
@@ -84479,10 +84598,24 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
                     self.totalHits = totalHits.totalHits;
                 });
         },
+        /**
+         * Display the search results for the current query and hide the search query builder
+         * @fires hide-search-query-builder
+         */
         launchSearch:function(){
+            /**
+             * @event hide-search-query-builder
+             */
             this.$emit('hide-search-query-builder');
             this.$router.push(`/search-map/${encodeURIComponent(JSON.stringify(this.getQuery()))}`);
         },
+        /**
+         * Adds a search term item to the current query and resets the currentlyWritingTerm
+         * @param {object} term - The term object to add to the query with properties (operator,field,text)
+         * @param {BooleanOperator} term.operator - The boolean operator value of the search term item
+         * @param {string} term.field - The field of the search term item
+         * @param {string} term.text - The text of the search term item
+         */
         addSearchTerm : function(term){
             if(term.field && term.text){
                 term.operator = this.defaultBooleanOperator
@@ -84496,6 +84629,10 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
             this.getQueryHits();
             this.currentlyWritingTerm = '';
         },
+        /**
+         * Return a query array
+         * @returns {Array} - A query Array from the module QueryBuilder
+         */
         getQuery : function(){
             return queryBuilder.buildQuery(this.terms);
         }
@@ -84504,6 +84641,10 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
 },{"../helpers/queryBuilder":398,"request-promise-native":285,"stopword":333,"vue":384}],391:[function(require,module,exports){
 var Vue = require('vue');
 
+/**
+ * Floating box displaying the current zoom and allow the user to change zoom
+ * @property {string} currentTheme - The current theme the user is in
+ */
 Vue.component('zoom-nav-box', {
     template : `<div id="zoom-nav-box">
                     <p id="zoom-nav-label">Vues</p>
@@ -84540,6 +84681,12 @@ Vue.component('zoom-nav-box', {
         }
     },
     methods : {
+        /**
+         * 
+         * Parse the current path and detects the current zoom
+         * 
+         * @param {object} route - A VueJS $route object
+         */
         setCurrentZoom(route){
             if(route.fullPath.match(/^\/outer-theme-map/) || route.fullPath.match(/^\/$/)){
                 this.isMiddleZoom = false;
@@ -84558,16 +84705,32 @@ Vue.component('zoom-nav-box', {
     }
 });
 },{"vue":384}],392:[function(require,module,exports){
+
+
+/**
+ * Helper module for storing, retrieving and deleting favorites
+ * @constructor
+ */
 var FavStore = function(){
     this.books = [];    
 }
 
+/**
+ * Adds a book to the FavStore
+ * 
+ * @param {any} book - The book to add
+ */
 FavStore.prototype.addBook = function (book) {
     if(this.books.indexOf(book) == -1){
         this.books.push(book);
     }
 }
 
+/**
+ * Removes a book from the FavStore
+ * 
+ * @param {any} book - The book to remove
+ */
 FavStore.prototype.removeBook = function (book){
     let index = this.books.indexOf(book);
     if(index != -1){
@@ -84575,6 +84738,13 @@ FavStore.prototype.removeBook = function (book){
     }
 }
 
+
+/**
+ * Check if the FavStore contains a given book
+ * 
+ * @param {any} book - The book we want to check
+ * @returns {boolean} - if the FavStore contains the given book
+ */
 FavStore.prototype.contains = function (book) {
     if(this.books.indexOf(book) != -1){
         return true;
@@ -84585,11 +84755,24 @@ FavStore.prototype.contains = function (book) {
 
 module.exports = new FavStore();
 },{}],393:[function(require,module,exports){
-//require('dragscroll');
 
+/**
+ * A module giving xy coordinates to elements for a given number of columns
+ * I doubt of its usefulness now
+ * @constructor
+ * 
+ */
 var FixedGridDispatcher = function () {
 }
 
+/**
+ * Give to each element of elements a dispatch property with a x and a y value.
+ * 
+ * @param {Arry} elements - The array of elements to dispatch
+ * @param {integer} columns - The number of columns on which we wish to dispatch
+ * @param {integer} cellWidth - The width of and element
+ * @param {integer} cellHeight - The height of an element
+ */
 FixedGridDispatcher.prototype.dispatch = function(elements, columns, cellWidth, cellHeight) {
     let i = 0;
 
@@ -84624,14 +84807,26 @@ var mouseup =  function(e){
 };
 
 
+/**
+ * Enable window scrolling using mouse click and drag interaction
+ * @constructor
+ */
 var MouseDragScroll = function(){}
 
+/**
+ * Enables scrolling
+ * 
+ */
 MouseDragScroll.prototype.enableDragScroll = function(){
     window.addEventListener('mousemove', mousemove);
     window.addEventListener('mousedown', mousedown);
     window.addEventListener('mouseup', mouseup);
 };
 
+/**
+ * Disables scrolling
+ * 
+ */
 MouseDragScroll.prototype.disableDragScroll = function(){
     window.removeEventListener('mousemove', mousemove);
     window.removeEventListener('mousedown', mousedown);
@@ -84809,10 +85004,22 @@ GrowingPacker.prototype = {
 module.exports = GrowingPacker;
 },{}],396:[function(require,module,exports){
 
+/**
+ * Detects pinch-in an pinch-out gestures on a HTMLElement
+ * 
+ * @param {HTMLElement} el - The element watching the pinch gesture
+ * @constructor
+ */
 var ZoomHandler = function (el) {
     this.el = el;
 }
 
+/**
+ * Sets callbacks for pinch-in and pinch-out
+ * 
+ * @param {any} zoomInCallback - The pinch-out callback
+ * @param {any} zoomOutCallback - The pinch-in callback
+ */
 ZoomHandler.prototype.setZoomHandlers = function(zoomInCallback, zoomOutCallback) {
 
     var startDistance = 0;
@@ -84856,6 +85063,10 @@ ZoomHandler.prototype.setZoomHandlers = function(zoomInCallback, zoomOutCallback
     this.el.ontouchend= end_handler;
 }
 
+/**
+ * Removes the callbacks
+ * 
+ */
 ZoomHandler.prototype.removeZoomHandlers = function(){
     this.el.ontouchstart = null;
     this.el.ontouchmove = null;
@@ -84867,6 +85078,14 @@ module.exports = ZoomHandler;
 },{}],397:[function(require,module,exports){
 var PackerGrowing = require('./packerGrowing');
 
+/**
+ * Module creating a bin-packin map of elements regouped in themes with bigger elements in the center
+ * 
+ * @param {Number} bookcellHeight - Height of an element
+ * @param {Number} bookcellWidth - Width of an element
+ * @param {Number} ratio - Ratio determining if we reduce or augment the size of elements
+ * @constructor
+ */
 var QuadBinPacker = function (bookcellHeight, bookcellWidth, ratio) {
     this.bookcellHeight = bookcellHeight;
     this.bookcellWidth = bookcellWidth;
@@ -84877,6 +85096,12 @@ var QuadBinPacker = function (bookcellHeight, bookcellWidth, ratio) {
     this.ratio = ratio;
 }
 
+/**
+ * Returns an Array of themes, sorted by the size of the theme
+ * 
+ * @param {Array} themes - Themes to sort
+ * @returns {Array} - The sorted themes
+ */
 QuadBinPacker.prototype.sortThemes = function(themes){
     if(!themes){
         return;
@@ -84905,6 +85130,12 @@ QuadBinPacker.prototype.sortThemes = function(themes){
     return sortedThemes;
 }
 
+/**
+ * Returns an Array of themes, each element of the array is dispatched and possess x and y coordinates
+ * 
+ * @param {Array} sortedThemes - A sorted Array of themes
+ * @returns {Array} - An array of dispatched themes
+ */
 QuadBinPacker.prototype.pack = function(sortedThemes){
     let getBiggestSizePack = function(roots){
         let biggestW = -1;
@@ -85058,11 +85289,7 @@ var ThemeMap = require('./themeMap');
 var InnerThemeMap = require('./innerThemeMap');
 var OuterThemeMap = require('./outerThemeMap');
 
-// 2. Define some routes
-// Each route should map to a component. The "component" can
-// either be an actual component constructor created via
-// Vue.extend(), or just a component options object.
-// We'll talk about nested routes later.
+//Routes
 const routes = [
   { path: '/', component: OuterThemeMap},
   { path: '/outer-theme-map', component: OuterThemeMap},
@@ -85073,16 +85300,13 @@ const routes = [
   { path: '/search-map/:query', component: InnerThemeMap}
 ];
 
-// 3. Create the router instance and pass the `routes` option
-// You can pass in additional options here, but let's
-// keep it simple for now.
 const router = new VueRouter({
   routes
 })
 
-// 4. Create and mount the root instance.
-// Make sure to inject the router with the router option to make the
-// whole app router-aware.
+/**
+ * Main Vue of the app
+ */
 const app = new Vue({
   router,
   data : {
@@ -85122,7 +85346,7 @@ const app = new Vue({
 }).$mount('#app')
 
 
-
+//If we detect multitouch we don't want to trigger simple touch everywhere
 window.addEventListener("touchstart", function (event){
     if(event.touches.length > 1){
         //the event is multi-touch
@@ -85160,6 +85384,10 @@ Vue.use(VueLazyLoad, {
     lazyComponent : true
 });
 
+/**
+ * Component displaying a single book cover and a cartouche with its title, author, etc...
+ * @property {Object} book - The book displayed by the component
+ */
 var BookElement = {
     template : `<!--<lazy-component @show="setOnScreen">-->
                     <div v-bind:style="{
@@ -85230,6 +85458,11 @@ var BookElement = {
         this.isOverflown = element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
     },
     computed: {
+        /**
+         * Returns an URL to a random generated book cover
+         * 
+         * @returns {string} - the URL of a random book cover
+         */
         generatedCoverSrc : function(){
             let rnd = Math.trunc((Math.random()*7)+1);
             return `/res/covers/cover_${rnd}.png`;
@@ -85244,6 +85477,11 @@ var BookElement = {
             if(!this.book.authors) return '';
             return this.book.authors.length >= 1 ? this.book.authors[0] : '';
         },
+        /**
+         * Returns the first four digit year found in the datePub field of the book
+         * 
+         * @returns {string} - (Hopefully) the publication date of the book
+         */
         parsedDatePub: function(){
             if(!this.book.datePub) return '';
             let matches = this.book.datePub.match(/\d{4}/);
@@ -85251,6 +85489,11 @@ var BookElement = {
         }
     },
     methods:{
+        /**
+         * Loads the book cover from the ISBN number of the book and applies it to the component
+         * 
+         * @param {HTMLElement} component - The element that triggered the call to this function (unsued, why do I keep this ?)
+         */
         loadCover: function(component){
             let self = this;
             let isbn = this.book.isbn;
@@ -85266,14 +85509,6 @@ var BookElement = {
         setOnScreen : function(component){
             this.onScreen = true;
         },
-        getRndColor : function(){
-            var letters = '0123456789ABCDEF';
-            var color = '#';
-            for (var i = 0; i < 6; i++ ) {
-                color += letters[Math.floor(Math.random() * 10)+6];
-            }
-            return color;
-        },
         initiateShowBookDetail : function () {
             this.moved = false;
         },
@@ -85282,14 +85517,25 @@ var BookElement = {
                 this.moved = true;
             }
         },
+        /**
+         * Fires the event to show the detail modal for the book
+         * @fires show-book-detail
+         */
         showBookDetail : function(){
             if(!this.moved){
+                /**
+                 * @event show-book-detail
+                 * @type {Object}
+                 */
                 eventBus.$emit('show-book-detail', this.book);
             }
         }
     }
 }
 
+/**
+ * Component displaying all the books for a theme or a search in a 2D square grid
+ */
 var InnerThemeMap = Vue.extend({
     template : `<div id="inner-theme-map">
                     <book-element
@@ -85334,6 +85580,12 @@ var InnerThemeMap = Vue.extend({
         'book-element' : BookElement
     },
     methods : {
+        /**
+         * For a given theme, this function will get the according list of books and display them
+         * 
+         * @param {string} theme - The theme whose books we are loading
+         * @fires current-theme-changed
+         */
         populateMapFromTheme : function(theme){
             let self = this;
             //Remove currently charged books
@@ -85351,6 +85603,12 @@ var InnerThemeMap = Vue.extend({
                     });
                 });
         },
+        /**
+         * For a given query, this function will get the according list of books and display them
+         * 
+         * @param {Array} query - The query used to load books
+         * @fires current-theme-changed
+         */
         populateMapFromQuery : function(query){
             let self = this;
             //Remove currently charged books
@@ -85392,10 +85650,23 @@ var mouseDragScroll = require('../helpers/mouseDragScroll');
 var QuadBinPacker = require('../helpers/quadBinPacker');
 
 
+/**
+ * Utilitary function for the distance between 2 points
+ * 
+ * @param {Number} x1 - x1
+ * @param {Number} y1 - y1
+ * @param {Number} x2 - x2
+ * @param {Number} y2 - y2
+ * @returns {Number} - The distance between the 2 points
+ */
 var getDistance = function(x1, y1, x2, y2){
     return Math.hypot(x2-x1, y2-y1)
 }
 
+/**
+ * Mixin for a Map of themes using the QuadBinPacker module for its constitution and is dragscrollable using the mouse
+ * @mixin
+ */
 var packedThemeMapMixin = {
     data : function(){
         return {
@@ -85455,6 +85726,13 @@ var packedThemeMapMixin = {
         mouseDragScroll.disableDragScroll();
     },
     methods: {
+        /**
+         * Returns the theme corresponding to some xy coordinates
+         * 
+         * @param {any} x - x
+         * @param {any} y - y
+         * @returns {Object} - The theme
+         */
         getThemeElementFromPos : function (x,y) {
             for(let element of this.cthemes){
                     if(x >= element.fit.x && x < (element.fit.x + element.w) && y >= element.fit.y && y < (element.fit.y + element.h)){
@@ -85462,6 +85740,11 @@ var packedThemeMapMixin = {
                     }
                 }
         },
+        /**
+         * Sets an Interval that regularly checks for the current hovered theme
+         * @fires current-theme-changed
+         * 
+         */
         setCurrentThemeFinderInterval : function() {
             let self = this;
             window.setInterval(function(){
@@ -85471,15 +85754,30 @@ var packedThemeMapMixin = {
                     self.currentTheme = element.name;
                     self.nbBooks = element.nbBooks;
                     self.findNeighbours(element);
+                    /**
+                     * Hovered theme changed
+                     * @event current-theme-changed
+                     * @type {Object}
+                     */
                     self.$emit('current-theme-changed', self.currentTheme);
                     return;
                 }
             }, 300);
         },
+        /**
+         * Start the loading of the list of the themes
+         * 
+         * @returns {Promise} 
+         */
         retrieveThemeMapJson : function(){
             this.loading = true;
             return requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/themes`);
         },
+        /**
+         * Finds the nearest neighbours of a given theme
+         * 
+         * @param {Object} currentElement - The theme whose neighbours we are looking for
+         */
         findNeighbours : function(currentElement){
             this.topNeighbour = this.botNeighbour = this.leftNeighbour = this.rightNeighbour = null;
             let topDist = Infinity,
@@ -85554,13 +85852,15 @@ Vue.use(VueLazyLoad, {
     lazyComponent : true
 });
 
+/**
+ * Component displaying a single book spine
+ */
 var BookElement = {
     template : `<div class="outer-map-book-cell">
                     <img    class="outer-map-book-cover"
                             v-bind:src="generatedCoverSrc">
                     </img>
                 </div>`,
-    props : ['book'],
     computed: {
         generatedCoverSrc : function(){
             let rnd = Math.trunc((Math.random()*7)+1);
@@ -85582,8 +85882,7 @@ var ThemeWrapper = {
                                     userSelect: 'none'}">
                         <book-element
                                     v-for="book in books"
-                                    v-bind:key="book"
-                                    v-bind:book="book">
+                                    v-bind:key="book">
                         </book-element>
                         <div v-bind:style="{
                             position : 'absolute',

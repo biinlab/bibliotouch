@@ -1,5 +1,13 @@
 var PackerGrowing = require('./packerGrowing');
 
+/**
+ * Module creating a bin-packin map of elements regouped in themes with bigger elements in the center
+ * 
+ * @param {Number} bookcellHeight - Height of an element
+ * @param {Number} bookcellWidth - Width of an element
+ * @param {Number} ratio - Ratio determining if we reduce or augment the size of elements
+ * @constructor
+ */
 var QuadBinPacker = function (bookcellHeight, bookcellWidth, ratio) {
     this.bookcellHeight = bookcellHeight;
     this.bookcellWidth = bookcellWidth;
@@ -10,6 +18,12 @@ var QuadBinPacker = function (bookcellHeight, bookcellWidth, ratio) {
     this.ratio = ratio;
 }
 
+/**
+ * Returns an Array of themes, sorted by the size of the theme
+ * 
+ * @param {Array} themes - Themes to sort
+ * @returns {Array} - The sorted themes
+ */
 QuadBinPacker.prototype.sortThemes = function(themes){
     if(!themes){
         return;
@@ -38,6 +52,12 @@ QuadBinPacker.prototype.sortThemes = function(themes){
     return sortedThemes;
 }
 
+/**
+ * Returns an Array of themes, each element of the array is dispatched and possess x and y coordinates
+ * 
+ * @param {Array} sortedThemes - A sorted Array of themes
+ * @returns {Array} - An array of dispatched themes
+ */
 QuadBinPacker.prototype.pack = function(sortedThemes){
     let getBiggestSizePack = function(roots){
         let biggestW = -1;

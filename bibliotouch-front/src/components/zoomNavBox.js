@@ -1,5 +1,9 @@
 var Vue = require('vue');
 
+/**
+ * Floating box displaying the current zoom and allow the user to change zoom
+ * @property {string} currentTheme - The current theme the user is in
+ */
 Vue.component('zoom-nav-box', {
     template : `<div id="zoom-nav-box">
                     <p id="zoom-nav-label">Vues</p>
@@ -36,6 +40,12 @@ Vue.component('zoom-nav-box', {
         }
     },
     methods : {
+        /**
+         * 
+         * Parse the current path and detects the current zoom
+         * 
+         * @param {object} route - A VueJS $route object
+         */
         setCurrentZoom(route){
             if(route.fullPath.match(/^\/outer-theme-map/) || route.fullPath.match(/^\/$/)){
                 this.isMiddleZoom = false;

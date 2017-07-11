@@ -21,6 +21,10 @@ Vue.use(VueLazyLoad, {
     lazyComponent : true
 });
 
+/**
+ * Component displaying a single book cover and a cartouche with its title, author, etc...
+ * @property {Object} book - The book displayed by the component
+ */
 var BookElement = {
     template : `<!--<lazy-component @show="setOnScreen">-->
                     <div v-bind:style="{
@@ -91,6 +95,11 @@ var BookElement = {
         this.isOverflown = element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
     },
     computed: {
+        /**
+         * Returns an URL to a random generated book cover
+         * 
+         * @returns {string} - the URL of a random book cover
+         */
         generatedCoverSrc : function(){
             let rnd = Math.trunc((Math.random()*7)+1);
             return `/res/covers/cover_${rnd}.png`;
@@ -105,6 +114,11 @@ var BookElement = {
             if(!this.book.authors) return '';
             return this.book.authors.length >= 1 ? this.book.authors[0] : '';
         },
+        /**
+         * Returns the first four digit year found in the datePub field of the book
+         * 
+         * @returns {string} - (Hopefully) the publication date of the book
+         */
         parsedDatePub: function(){
             if(!this.book.datePub) return '';
             let matches = this.book.datePub.match(/\d{4}/);
@@ -112,6 +126,11 @@ var BookElement = {
         }
     },
     methods:{
+        /**
+         * Loads the book cover from the ISBN number of the book and applies it to the component
+         * 
+         * @param {HTMLElement} component - The element that triggered the call to this function (unsued, why do I keep this ?)
+         */
         loadCover: function(component){
             let self = this;
             let isbn = this.book.isbn;
@@ -127,14 +146,6 @@ var BookElement = {
         setOnScreen : function(component){
             this.onScreen = true;
         },
-        getRndColor : function(){
-            var letters = '0123456789ABCDEF';
-            var color = '#';
-            for (var i = 0; i < 6; i++ ) {
-                color += letters[Math.floor(Math.random() * 10)+6];
-            }
-            return color;
-        },
         initiateShowBookDetail : function () {
             this.moved = false;
         },
@@ -143,14 +154,25 @@ var BookElement = {
                 this.moved = true;
             }
         },
+        /**
+         * Fires the event to show the detail modal for the book
+         * @fires show-book-detail
+         */
         showBookDetail : function(){
             if(!this.moved){
+                /**
+                 * @event show-book-detail
+                 * @type {Object}
+                 */
                 eventBus.$emit('show-book-detail', this.book);
             }
         }
     }
 }
 
+/**
+ * Component displaying all the books for a theme or a search in a 2D square grid
+ */
 var InnerThemeMap = Vue.extend({
     template : `<div id="inner-theme-map">
                     <book-element
@@ -195,6 +217,12 @@ var InnerThemeMap = Vue.extend({
         'book-element' : BookElement
     },
     methods : {
+        /**
+         * For a given theme, this function will get the according list of books and display them
+         * 
+         * @param {string} theme - The theme whose books we are loading
+         * @fires current-theme-changed
+         */
         populateMapFromTheme : function(theme){
             let self = this;
             //Remove currently charged books
@@ -212,6 +240,12 @@ var InnerThemeMap = Vue.extend({
                     });
                 });
         },
+        /**
+         * For a given query, this function will get the according list of books and display them
+         * 
+         * @param {Array} query - The query used to load books
+         * @fires current-theme-changed
+         */
         populateMapFromQuery : function(query){
             let self = this;
             //Remove currently charged books

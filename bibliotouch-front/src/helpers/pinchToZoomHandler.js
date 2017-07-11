@@ -1,8 +1,20 @@
 
+/**
+ * Detects pinch-in an pinch-out gestures on a HTMLElement
+ * 
+ * @param {HTMLElement} el - The element watching the pinch gesture
+ * @constructor
+ */
 var ZoomHandler = function (el) {
     this.el = el;
 }
 
+/**
+ * Sets callbacks for pinch-in and pinch-out
+ * 
+ * @param {any} zoomInCallback - The pinch-out callback
+ * @param {any} zoomOutCallback - The pinch-in callback
+ */
 ZoomHandler.prototype.setZoomHandlers = function(zoomInCallback, zoomOutCallback) {
 
     var startDistance = 0;
@@ -46,6 +58,10 @@ ZoomHandler.prototype.setZoomHandlers = function(zoomInCallback, zoomOutCallback
     this.el.ontouchend= end_handler;
 }
 
+/**
+ * Removes the callbacks
+ * 
+ */
 ZoomHandler.prototype.removeZoomHandlers = function(){
     this.el.ontouchstart = null;
     this.el.ontouchmove = null;

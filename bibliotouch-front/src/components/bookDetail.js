@@ -162,6 +162,7 @@ var BookDetail = Vue.component('book-detail', {
          * Starts a search operation on a given field
          * @param {string} authority - The string from which we want to build the query
          * @param {string} field - The field on which we want to apply the query, must correspond to the name of one of the fields of the book object
+         * @fires close-book-modal
          */
         searchField : function(authority, field) {
             let splitAuthority = authority.split(/[ \-']/g);
@@ -176,6 +177,9 @@ var BookDetail = Vue.component('book-detail', {
             }
             let queryArray = queryBuilder.buildQuery(termsArray);
             this.$router.push(`/search-map/${encodeURIComponent(JSON.stringify(queryArray))}`);
+            /**
+             * @event close-book-modal - Close signal to hide the book modal
+             */
             this.$emit('close-book-modal');
         },
         /**

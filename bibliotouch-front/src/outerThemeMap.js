@@ -20,13 +20,15 @@ Vue.use(VueLazyLoad, {
     lazyComponent : true
 });
 
+/**
+ * Component displaying a single book spine
+ */
 var BookElement = {
     template : `<div class="outer-map-book-cell">
                     <img    class="outer-map-book-cover"
                             v-bind:src="generatedCoverSrc">
                     </img>
                 </div>`,
-    props : ['book'],
     computed: {
         generatedCoverSrc : function(){
             let rnd = Math.trunc((Math.random()*7)+1);
@@ -35,6 +37,13 @@ var BookElement = {
     }
 }
 
+/**
+ * Component displaying books for a given theme
+ * 
+ * @property {string} theme - The theme of the component
+ * @property {Number} biggestNbDocs - The biggest number of documents across the themes
+ * @property {Number} ratio - Scale factor of the component 
+ */
 var ThemeWrapper = {
     template : `
                     <lazy-component 
@@ -48,8 +57,7 @@ var ThemeWrapper = {
                                     userSelect: 'none'}">
                         <book-element
                                     v-for="book in books"
-                                    v-bind:key="book"
-                                    v-bind:book="book">
+                                    v-bind:key="book">
                         </book-element>
                         <div v-bind:style="{
                             position : 'absolute',
@@ -106,6 +114,11 @@ var ThemeWrapper = {
         }
     },
     methods : {
+        /**
+         * Sets to itself an empty Array according to ratio
+         * 
+         * @param {any} component 
+         */
         loadBooks : function(component){
             this.books = new Array(this.ratio > 0 ? Math.trunc(this.theme.nbBooks/this.ratio) : this.theme.nbBooks);
         }
@@ -115,6 +128,9 @@ var ThemeWrapper = {
     }
 };
 
+/**
+ * Component display a map of themes, based on the PackedThemeMapMixin mixin
+ */
 var ThemeMap = Vue.extend({
     template : `<div id="outer-theme-map">
                     <theme-wrapper  v-for="theme in cthemes" 

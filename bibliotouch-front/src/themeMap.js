@@ -22,6 +22,10 @@ Vue.use(VueLazyLoad, {
     lazyComponent : true
 });
 
+/**
+ * Component displaying a single book cover
+ * @property {Object} book - The book the component displays
+ */
 var BookElement = {
     template : `<div v-bind:style="{
                         left : book.dispatch.x + 'px',
@@ -72,6 +76,11 @@ var BookElement = {
         }
     },
     methods:{
+        /**
+         * Loads the cover of the book if available and sets it to the component
+         * 
+         * @param {any} component 
+         */
         loadCover: function(component){
             let self = this;
             let isbn = this.book.isbn;
@@ -86,14 +95,6 @@ var BookElement = {
         },
         setOnScreen : function(component){
             this.onScreen = true;
-        },
-        getRndColor : function(){
-            var letters = '0123456789ABCDEF';
-            var color = '#';
-            for (var i = 0; i < 6; i++ ) {
-                color += letters[Math.floor(Math.random() * 10)+6];
-            }
-            return color;
         },
         initiateShowBookDetail : function(){
             this.moved = false;
