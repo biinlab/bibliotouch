@@ -112,6 +112,10 @@ var BookElement = {
     }
 }
 
+/**
+ * Component displaying a grid of book covers
+ * @property {string} theme - The theme of the component
+ */
 var ThemeWrapper = {
     template : `
                     <lazy-component 
@@ -138,6 +142,11 @@ var ThemeWrapper = {
         }
     },
     methods : {
+        /**
+         * Retrieves books for the theme of the component and displays them once loaded
+         * 
+         * @param {any} component 
+         */
         loadBooks : function(component){
             let self = this;
             requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/themes/${component.$parent.theme.name}/books`)
@@ -158,6 +167,9 @@ var ThemeWrapper = {
     }
 };
 
+/**
+ * Vue displaying a bin-packed map of themes, using the PackedThemeMapMxin
+ */
 var ThemeMap = Vue.extend({
     template : `<div id="theme-map">
                     <theme-wrapper  v-for="theme in cthemes" 
