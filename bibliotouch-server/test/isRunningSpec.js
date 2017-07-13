@@ -16,16 +16,6 @@ describe('Basic server running', function(){
                 done(err);
             });
         });
-        
-        it('returns "Hello"', function(done){
-            chai.request(app).get('/').then(function(res){
-                expect(res.text).to.contain('Je cherche');
-                done();
-            }).catch(function(err){
-                done(err);
-            });
-        });
-        
     });
 });
 
@@ -38,6 +28,40 @@ describe('Simple query doc 33392', function(){
             }).catch(function(err){
                 done(err);
             });
+        });
+        it('is a JSON document', function(done){
+            chai.request(app).get('/search/33392').then(function(res){
+                expect(res).to.be.json;
+                done();
+            }).catch(function(err){
+                done(err);
+            })
+        })
+    })
+})
+
+describe('Query themes', function(){
+    describe('GET /themes', function(){
+        it('return a JSON document', function(done){
+            chai.request(app).get('/themes').then(function(res){
+                expect(res).to.be.json;
+                done();
+            }).catch(function(err){
+                done(err);
+            })
+        })
+    })
+});
+
+describe('Total Hits fucntionnality', function(){
+    describe('GET /total-hits/33392', function(){
+        it('returns a Number', function(done){
+            chai.request(app).get('/total-hits/33392').then(function(res){
+                expect(res.body.totalHits).to.be.a('number');
+                done();
+            }).catch(function(err){
+                done(err);
+            })
         })
     })
 })
