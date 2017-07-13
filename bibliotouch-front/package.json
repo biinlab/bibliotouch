@@ -8,7 +8,7 @@
     "request-promise-native": "^1.0.4",
     "stopword": "^0.1.6",
     "vue": "^2.3.3",
-    "vue-lazyload": "git+ssh://git@gitlab.com:biin-projects/vue-lazyload.git",
+    "vue-lazyload": "git+ssh://git@gitlab.com:biin_open/vue-lazyload.git",
     "vue-router": "^2.5.3",
     "vue-touch": "^2.0.0-beta.4"
   },

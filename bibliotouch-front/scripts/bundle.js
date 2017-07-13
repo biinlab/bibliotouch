@@ -83815,6 +83815,11 @@ function extend() {
 var Vue = require('vue');
 
 /**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
+/**
  * Floating button indicating the theme the user is currently consulting, only appear when using the inner-themem-map view
  */ 
 Vue.component('active-theme-box', {
@@ -83856,6 +83861,11 @@ var requestp = require('request-promise-native');
 var queryBuilder = require('../helpers/queryBuilder');
 var stopword = require('stopword');
 var favStore = require('../helpers/favStore');
+
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 /**
  * Enum for book availability status, values correspond to displayed text
@@ -84049,6 +84059,12 @@ var BookDetail = Vue.component('book-detail', {
 })
 },{"../helpers/favStore":392,"../helpers/queryBuilder":398,"request-promise-native":285,"stopword":333,"vue":384}],388:[function(require,module,exports){
 var Vue = require('vue');
+
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
 /**
  * Floating boxes at the edges of the screen, appearing only when scrolling
  */
@@ -84220,6 +84236,11 @@ Vue.component('border-indicators', {
 var Vue = require('vue');
 
 /**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
+/**
 * Floating central bar showing the SearchQueryBuilder when clicked
 */
 Vue.component('search-box', {
@@ -84255,6 +84276,10 @@ var requestp = require('request-promise-native');
 var stopword = require('stopword');
 var queryBuilder = require('../helpers/queryBuilder');
 
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 var defaultBooleanOperator = queryBuilder.BooleanOperator.AND;
 
@@ -84642,6 +84667,11 @@ var SearchQueryBuilder = Vue.component('search-query-builder', {
 var Vue = require('vue');
 
 /**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
+/**
  * Floating box displaying the current zoom and allow the user to change zoom
  * @property {string} currentTheme - The current theme the user is in
  */
@@ -84705,7 +84735,10 @@ Vue.component('zoom-nav-box', {
     }
 });
 },{"vue":384}],392:[function(require,module,exports){
-
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 /**
  * Helper module for storing, retrieving and deleting favorites
@@ -84755,6 +84788,10 @@ FavStore.prototype.contains = function (book) {
 
 module.exports = new FavStore();
 },{}],393:[function(require,module,exports){
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 /**
  * A module giving xy coordinates to elements for a given number of columns
@@ -84789,6 +84826,11 @@ FixedGridDispatcher.prototype.dispatch = function(elements, columns, cellWidth, 
 module.exports = new FixedGridDispatcher();
 },{}],394:[function(require,module,exports){
 var curYPos, curXPos, curDown;
+
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 var mousemove = function(e){ 
     if(curDown){
@@ -85003,6 +85045,10 @@ GrowingPacker.prototype = {
 
 module.exports = GrowingPacker;
 },{}],396:[function(require,module,exports){
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 /**
  * Detects pinch-in an pinch-out gestures on a HTMLElement
@@ -85077,6 +85123,11 @@ ZoomHandler.prototype.removeZoomHandlers = function(){
 module.exports = ZoomHandler;
 },{}],397:[function(require,module,exports){
 var PackerGrowing = require('./packerGrowing');
+
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 /**
  * Module creating a bin-packin map of elements regouped in themes with bigger elements in the center
@@ -85216,6 +85267,11 @@ QuadBinPacker.prototype.pack = function(sortedThemes){
 module.exports = QuadBinPacker;
 },{"./packerGrowing":395}],398:[function(require,module,exports){
 /**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
+/**
  * Tiny module to build queryArrays to be used by search-index module
  * @constructor
  */
@@ -85276,6 +85332,11 @@ module.exports = new QueryBuilder();
 },{}],399:[function(require,module,exports){
 var Vue = require('vue');
 var VueRouter = require('vue-router');
+
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 Vue.use(VueRouter);
 
@@ -85368,6 +85429,11 @@ var requestp = require('request-promise-native');
 var mouseDragScroll = require('./helpers/mouseDragScroll');
 var ZoomHandler = require('./helpers/pinchToZoomHandler');
 require('./components/searchBox');
+
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 var eventBus = new Vue();
 
@@ -85649,6 +85715,10 @@ var requestp = require('request-promise-native');
 var mouseDragScroll = require('../helpers/mouseDragScroll');
 var QuadBinPacker = require('../helpers/quadBinPacker');
 
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 /**
  * Utilitary function for the distance between 2 points
@@ -85838,6 +85908,10 @@ var ZoomHandler = require('./helpers/pinchToZoomHandler');
 require('./components/borderIndicators');
 require('./components/searchBox');
 
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 //These values are used by the bin-packing algorithm (packedThemeMap.js)
 //Apply changes to the CSS classes outer-map-*
@@ -85869,6 +85943,13 @@ var BookElement = {
     }
 }
 
+/**
+ * Component displaying books for a given theme
+ * 
+ * @property {string} theme - The theme of the component
+ * @property {Number} biggestNbDocs - The biggest number of documents across the themes
+ * @property {Number} ratio - Scale factor of the component 
+ */
 var ThemeWrapper = {
     template : `
                     <lazy-component 
@@ -85939,6 +86020,11 @@ var ThemeWrapper = {
         }
     },
     methods : {
+        /**
+         * Sets to itself an empty Array according to ratio
+         * 
+         * @param {any} component 
+         */
         loadBooks : function(component){
             this.books = new Array(this.ratio > 0 ? Math.trunc(this.theme.nbBooks/this.ratio) : this.theme.nbBooks);
         }
@@ -85948,6 +86034,9 @@ var ThemeWrapper = {
     }
 };
 
+/**
+ * Component display a map of themes, based on the PackedThemeMapMixin mixin
+ */
 var ThemeMap = Vue.extend({
     template : `<div id="outer-theme-map">
                     <theme-wrapper  v-for="theme in cthemes" 
@@ -86007,6 +86096,11 @@ var packedThemeMapMixin = require('./mixins/packedThemeMap');
 require('./components/borderIndicators');
 require('./components/searchBox');
 
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
 var eventBus = new Vue();
 
 //These values are used by the bin-packing algorithm (packedThemeMap.js)
@@ -86022,6 +86116,10 @@ Vue.use(VueLazyLoad, {
     lazyComponent : true
 });
 
+/**
+ * Component displaying a single book cover
+ * @property {Object} book - The book the component displays
+ */
 var BookElement = {
     template : `<div v-bind:style="{
                         left : book.dispatch.x + 'px',
@@ -86072,6 +86170,11 @@ var BookElement = {
         }
     },
     methods:{
+        /**
+         * Loads the cover of the book if available and sets it to the component
+         * 
+         * @param {any} component 
+         */
         loadCover: function(component){
             let self = this;
             let isbn = this.book.isbn;
@@ -86086,14 +86189,6 @@ var BookElement = {
         },
         setOnScreen : function(component){
             this.onScreen = true;
-        },
-        getRndColor : function(){
-            var letters = '0123456789ABCDEF';
-            var color = '#';
-            for (var i = 0; i < 6; i++ ) {
-                color += letters[Math.floor(Math.random() * 10)+6];
-            }
-            return color;
         },
         initiateShowBookDetail : function(){
             this.moved = false;
@@ -86111,6 +86206,10 @@ var BookElement = {
     }
 }
 
+/**
+ * Component displaying a grid of book covers
+ * @property {string} theme - The theme of the component
+ */
 var ThemeWrapper = {
     template : `
                     <lazy-component 
@@ -86137,6 +86236,11 @@ var ThemeWrapper = {
         }
     },
     methods : {
+        /**
+         * Retrieves books for the theme of the component and displays them once loaded
+         * 
+         * @param {any} component 
+         */
         loadBooks : function(component){
             let self = this;
             requestp(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/themes/${component.$parent.theme.name}/books`)
@@ -86157,6 +86261,9 @@ var ThemeWrapper = {
     }
 };
 
+/**
+ * Vue displaying a bin-packed map of themes, using the PackedThemeMapMxin
+ */
 var ThemeMap = Vue.extend({
     template : `<div id="theme-map">
                     <theme-wrapper  v-for="theme in cthemes" 
