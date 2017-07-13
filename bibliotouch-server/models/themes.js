@@ -9,12 +9,24 @@ var themes;
 var sortable;
 var lastThemeDefinition;
 
+
+/**
+ * Module identifying and saving Themes from a set of Authorities
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module themes
+ * @constructor
+ */
 var Themes = function(){
     this.defineThemes();
     lastThemeDefinition = new Date();
 }
 
 
+/**
+ * Get Authorities from Authorities module and generates a list of themes.
+ * Only keep the themes whose title appear at least 10 times.
+ * 
+ */
 Themes.prototype.defineThemes = function(){
     
     themes = {};
@@ -101,6 +113,12 @@ Themes.prototype.defineThemes = function(){
     */
 }
 
+/**
+ * Returns the number of books for a given theme
+ * 
+ * @param {String} theme - The theme we are investigating
+ * @returns {Number} - The number of books of the given theme
+ */
 Themes.prototype.getNbBooksInTheme = function(theme){
     let idsToRetrieve = [];
 
@@ -115,6 +133,12 @@ Themes.prototype.getNbBooksInTheme = function(theme){
     return uniqueIds.length;
 }
 
+/**
+ * Returns the list of themes.
+ * If there is more than 24 hours since last time the theme list was updated, we trigger an update.
+ * 
+ * @returns {Object} - The list of themes
+ */
 Themes.prototype.getThemes = function(){
     var hours = Math.abs(new Date() - lastThemeDefinition) / 36e5;
     if(hours >= 24){
@@ -123,6 +147,11 @@ Themes.prototype.getThemes = function(){
     return themes;
 }
 
+/**
+ * Returns an empty theme object, may be useful in some cases
+ * 
+ * @returns {Object} - Empty theme object
+ */
 Themes.prototype.getEmptyTheme = function(){
     return {
         occ : 0,

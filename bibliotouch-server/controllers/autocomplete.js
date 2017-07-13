@@ -1,3 +1,9 @@
+/**
+ * Express controller returning autosuggestions
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module autocomplete
+ */
+
 var express = require('express');
 var Logger = require('../helpers/logger');
 var index = require('../helpers/searchIndex');

@@ -6,6 +6,10 @@ var ZoomHandler = require('./helpers/pinchToZoomHandler');
 require('./components/borderIndicators');
 require('./components/searchBox');
 
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 //These values are used by the bin-packing algorithm (packedThemeMap.js)
 //Apply changes to the CSS classes outer-map-*

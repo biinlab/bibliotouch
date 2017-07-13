@@ -1,3 +1,8 @@
+/**
+ * Main Express controller
+ * 
+ */
+
 var express = require('express');
 var Logger = require('../helpers/logger');
 

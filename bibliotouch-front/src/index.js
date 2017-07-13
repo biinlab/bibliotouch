@@ -1,6 +1,11 @@
 var Vue = require('vue');
 var VueRouter = require('vue-router');
 
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
 Vue.use(VueRouter);
 
 require('./components/searchBox');

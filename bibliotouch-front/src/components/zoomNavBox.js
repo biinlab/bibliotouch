@@ -1,6 +1,11 @@
 var Vue = require('vue');
 
 /**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
+/**
  * Floating box displaying the current zoom and allow the user to change zoom
  * @property {string} currentTheme - The current theme the user is in
  */

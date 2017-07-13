@@ -15,7 +15,7 @@ var argv = parseArgs(process.argv.slice(2));
 
 
 var app = express();
-var serverPort = argv.port ? argv.port : 8080;
+var serverPort = argv.port ? argv.port : config.get('Bibliotouch.serverPort');
 
 app.use(compression());
 app.use(cors())

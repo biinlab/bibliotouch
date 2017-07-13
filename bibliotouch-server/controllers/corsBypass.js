@@ -1,3 +1,9 @@
+/**
+ * Express controller requesting Koha REST API endpoint without CORS complication
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module corsBypass
+ */
+
 var express = require('express');
 var Logger = require('../helpers/logger');
 var bodyParser = require('body-parser');

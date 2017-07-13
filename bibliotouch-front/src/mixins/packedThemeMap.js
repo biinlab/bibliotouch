@@ -4,6 +4,10 @@ var requestp = require('request-promise-native');
 var mouseDragScroll = require('../helpers/mouseDragScroll');
 var QuadBinPacker = require('../helpers/quadBinPacker');
 
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 /**
  * Utilitary function for the distance between 2 points

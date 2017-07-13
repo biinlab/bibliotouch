@@ -16,10 +16,21 @@ var searchIndexOption = {
 };
 
 
+/**
+ * Module wrapping search-index APIs with Promises
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module searchIndex
+ */
+/** @constructor */
 var Search = function(){
     this.index = null;
 };
 
+/**
+ * Init the search-index
+ * 
+ * @returns {Promise}
+ */
 Search.prototype.initIndex = function(){
     let self = this;
     return new Promise(function(resolve, reject){
@@ -41,6 +52,11 @@ Search.prototype.initIndex = function(){
     });
 }
 
+/**
+ * Flush the index
+ * 
+ * @returns {Promise}
+ */
 Search.prototype.flushIndex = function(){
     let self = this;
     return new Promise(async function(resolve, reject){
@@ -60,6 +76,12 @@ Search.prototype.flushIndex = function(){
     });
 }
 
+/**
+ * Reads a JSON file and fill the index using it
+ * (unused)
+ * 
+ * @returns {Promise}
+ */
 Search.prototype.fillIndexFromFile = function(){
     let self = this;
     return new Promise(async function(resolve, reject){
@@ -84,6 +106,12 @@ Search.prototype.fillIndexFromFile = function(){
     });
 }
 
+/**
+ * Fills the index from a stream of documents
+ * 
+ * @param {Stream} stream 
+ * @returns {Promise}
+ */
 Search.prototype.fillIndexFromStream = function(stream){
     let self = this;
     return new Promise(async function(resolve, reject){
@@ -111,6 +139,12 @@ Search.prototype.fillIndexFromStream = function(stream){
     });
 }
 
+/**
+ * Search Documents using a query object or Array
+ * 
+ * @param {Object} query 
+ * @returns {Promise}
+ */
 Search.prototype.search = function(query){
     let self = this;
     let results = [];
@@ -134,6 +168,12 @@ Search.prototype.search = function(query){
     
 }
 
+/**
+ * Returns the number of documents correspondinf to the given query
+ * 
+ * @param {Object} query 
+ * @returns {Promise}
+ */
 Search.prototype.totalHits = function(query){
     let self = this;
     return new Promise(async function(resolve, reject){
@@ -151,6 +191,12 @@ Search.prototype.totalHits = function(query){
     });
 }
 
+/**
+ * Retrieve documents for the given ids Array
+ * 
+ * @param {Array} ids 
+ * @returns {Promise}
+ */
 Search.prototype.get = function(ids){
     let self = this;
     let docs = [];
@@ -170,6 +216,12 @@ Search.prototype.get = function(ids){
     })
 }
 
+/**
+ * Returns autosuggestion results for a given word
+ * 
+ * @param {String} query 
+ * @returns {Promise} 
+ */
 Search.prototype.match = function(query){
     let self = this;
     let results = [];

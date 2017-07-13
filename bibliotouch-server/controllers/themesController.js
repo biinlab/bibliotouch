@@ -1,3 +1,9 @@
+/**
+ * Express controller returning the theme list and the books for a given theme
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module themesController
+ */
+
 var express = require('express');
 var sw = require('stopword');
 var Logger = require('../helpers/logger');

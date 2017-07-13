@@ -1,6 +1,11 @@
 var Vue = require('vue');
 
 /**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
+/**
 * Floating central bar showing the SearchQueryBuilder when clicked
 */
 Vue.component('search-box', {

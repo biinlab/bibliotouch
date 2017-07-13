@@ -8,6 +8,13 @@ authorities.nbMain = 0;
 authorities.nbBooks = 0;
 authorities.books = [];
 
+
+/**
+ * Module managing and saving main authorities found in the documents
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ * @constructor
+ */
 var Authorities = function(){
     this.loadAuthorities();
 }

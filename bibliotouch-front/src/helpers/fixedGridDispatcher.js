@@ -1,3 +1,7 @@
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 /**
  * A module giving xy coordinates to elements for a given number of columns

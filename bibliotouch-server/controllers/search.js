@@ -1,3 +1,10 @@
+/**
+ * Express controller returning search results
+ * We have to provide GET and POST because some libraries don't allow a body in a GET request
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module search
+ */
+
 var express = require('express');
 var Logger = require('../helpers/logger');
 var index = require('../helpers/searchIndex');

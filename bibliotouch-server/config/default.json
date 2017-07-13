@@ -17,7 +17,8 @@
             },
             "oaipmhEndpoint" : {
                 "url" : "http://cataloguebib.enssib.fr/cgi-bin/koha/oai.pl",
-                "update":false
+                "update":false,
+                "maxOAIPMHExports":3000
             },
             "restApiEndpoint" : "http://cataloguebib.enssib.fr/cgi-bin/koha/webservice/rest.pl/",
             "kohaTags" :{
@@ -142,6 +143,7 @@
         ,
         "updateTime":{
             "cron" : "0 4 * * *"
-        }
+        },
+        "serverPort" : 8080
     }
 }

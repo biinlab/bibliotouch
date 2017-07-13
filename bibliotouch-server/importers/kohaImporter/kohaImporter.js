@@ -1,3 +1,10 @@
+/**
+ * There be dragons
+ * Module enbling the import and update of the search-index from a Koha database and OAIPMH endpoint
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
 var XmlStream = require('xml-stream');
 var parseXmlString = require('xml2js').parseString;
 var request = require('request-promise-native');
@@ -12,7 +19,7 @@ var authorityManager = require('../../models/authorities');
 var Readable = require('stream').Readable;
 
 var batchSize = 3000;
-var maxOAIPMHExports = 3000;
+var maxOAIPMHExports = config.get('Bibliotouch.koha.oaipmhEndpoint').maxOAIPMHExports;
 var kohaTags = config.get('Bibliotouch.koha.kohaTags');
 var lastUpdateFilename = 'data/lastUpdate.json';
 var oaipmhEndpoint = config.get('Bibliotouch.koha.oaipmhEndpoint').url;
@@ -36,6 +43,16 @@ var KohaImporter = function() {
 }
 
 
+/**
+ * Returns an array of words where weird letters of the values of an object have been replaced with their more simple equivalent
+ * 
+ * @example
+ * //returns ['poete','mais']
+ * getNormalizedWords({a:'poète',b:'maïs'})
+ * 
+ * @param {Object} biblioObject - The object where we track weird letters
+ * @returns {Array} - Normalized words
+ */
 var getNormalizedWords = function(biblioObject){
     let normalizedWords = [];
     JSON.stringify(biblioObject).replace(weirdWordRegex,function(match){
@@ -57,6 +74,11 @@ var getNormalizedWords = function(biblioObject){
     return normalizedWords;
 }
 
+/**
+ * Updates or create the file storing the last update date using the given date object or current time
+ * 
+ * @param {Date} [date] 
+ */
 var updateLastUpdateFile = function(date){
     let updateDate = date ||new Date();
     let importDate = {
@@ -70,13 +92,26 @@ var updateLastUpdateFile = function(date){
     });
 }
 
+/**
+ * Return the most recent timestamp from 2
+ * 
+ * @param {Date} oldTimeStamp 
+ * @param {Date} newTimeStamp 
+ * @returns 
+ */
 var getMostRecentTimestamp = function(oldTimeStamp, newTimeStamp){
-    if(oldTimeStamp < newTimeStamp){
-        oldTimeStamp = newTimeStamp
+    if(oldTimeStamp.getTime() < newTimeStamp.getTime()){
+        return newTimeStamp;
+    } else {
+        return oldTimeStamp;
     }
-    return oldTimeStamp;
 }
 
+/**
+ * Import into the search index all the documents found in the configured database
+ * 
+ * @returns {Promise}
+ */
 KohaImporter.prototype.import = function(){
     let self = this;
     var mostRecentTimeStamp = new Date(1970,00,01);
@@ -139,6 +174,11 @@ KohaImporter.prototype.import = function(){
     return new Promise(importPromise);
 }
 
+/**
+ * Updates the search index documents and add those that are new using the OAIPMH endpoint of Koha
+ * 
+ * @returns {Promise}
+ */
 KohaImporter.prototype.update = function(){
     var self = this;
     if(!config.get('Bibliotouch.koha.oaipmhEndpoint').update){
@@ -160,6 +200,7 @@ KohaImporter.prototype.update = function(){
         Logger.log('info', info);
         console.log(info);
 
+        //Most of the time we cannot request all the documents in one batch, please fine tune the config regarding this value (maxOIAPMHExports)
         while (nbProcessed == maxOAIPMHExports) {
             let updateUrl = oaipmhEndpoint+`/request?verb=ListRecords&resumptionToken=marcxml/${index}/${lastUpdateString}/${todayString}/`;
             console.log(`Requesting ${updateUrl}`);
@@ -210,6 +251,12 @@ KohaImporter.prototype.update = function(){
     return new Promise(updatePromise);
 }
 
+/**
+ * Extract and organize information from a record object previously parsed from MARCXML
+ * 
+ * @param {Object} record - The record object (parsed from MARCXML)
+ * @returns {Promise}
+ */
 KohaImporter.prototype.parseRecordObject = function(record){
 
     //Helper functions

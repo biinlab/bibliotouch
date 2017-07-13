@@ -19,7 +19,7 @@ describe('Basic server running', function(){
         
         it('returns "Hello"', function(done){
             chai.request(app).get('/').then(function(res){
-                expect(res.text).to.contain('Hello');
+                expect(res.text).to.contain('Je cherche');
                 done();
             }).catch(function(err){
                 done(err);

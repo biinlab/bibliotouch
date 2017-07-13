@@ -1,4 +1,10 @@
 var Vue = require('vue');
+
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
 /**
  * Floating boxes at the edges of the screen, appearing only when scrolling
  */

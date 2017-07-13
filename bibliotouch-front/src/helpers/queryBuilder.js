@@ -1,4 +1,9 @@
 /**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
+/**
  * Tiny module to build queryArrays to be used by search-index module
  * @constructor
  */

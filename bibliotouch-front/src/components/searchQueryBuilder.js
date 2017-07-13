@@ -3,6 +3,10 @@ var requestp = require('request-promise-native');
 var stopword = require('stopword');
 var queryBuilder = require('../helpers/queryBuilder');
 
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 var defaultBooleanOperator = queryBuilder.BooleanOperator.AND;
 

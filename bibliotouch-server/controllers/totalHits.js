@@ -1,3 +1,9 @@
+/**
+ * Express controller returning the number of results for a search query
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module totalHits
+ */
+
 var express = require('express');
 var Logger = require('../helpers/logger');
 var index = require('../helpers/searchIndex');

@@ -1,5 +1,10 @@
 var curYPos, curXPos, curDown;
 
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
 var mousemove = function(e){ 
     if(curDown){
         window.scrollTo(scrollX - e.movementX, scrollY - e.movementY);

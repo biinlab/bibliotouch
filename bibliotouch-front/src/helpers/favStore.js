@@ -1,4 +1,7 @@
-
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 /**
  * Helper module for storing, retrieving and deleting favorites

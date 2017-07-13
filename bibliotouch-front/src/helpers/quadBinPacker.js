@@ -1,6 +1,11 @@
 var PackerGrowing = require('./packerGrowing');
 
 /**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
+/**
  * Module creating a bin-packin map of elements regouped in themes with bigger elements in the center
  * 
  * @param {Number} bookcellHeight - Height of an element

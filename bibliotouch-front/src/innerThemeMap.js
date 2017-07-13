@@ -6,6 +6,11 @@ var mouseDragScroll = require('./helpers/mouseDragScroll');
 var ZoomHandler = require('./helpers/pinchToZoomHandler');
 require('./components/searchBox');
 
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
 var eventBus = new Vue();
 
 //These values are used by the bin-packing algorithm (packedThemeMap.js)

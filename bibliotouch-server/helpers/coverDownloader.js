@@ -117,6 +117,10 @@ var CoverDownloader = function () {
     })
 }
 
+/**
+ * Save the covers dictionnary to the disk
+ * 
+ */
 CoverDownloader.prototype.saveCoversFile = function(){
     fs.writeFile(coversFile, JSON.stringify(covers), function(err){
         if (err) {
@@ -125,6 +129,10 @@ CoverDownloader.prototype.saveCoversFile = function(){
     });
 }
 
+/**
+ * Tries to load the covers dictionnary if it exists
+ * 
+ */
 CoverDownloader.prototype.loadCoversFile = function(){
     try{
         covers = require('../'+coversFile);
@@ -136,6 +144,10 @@ CoverDownloader.prototype.loadCoversFile = function(){
     }
 }
 
+/**
+ * Create download directories if nonexistant
+ * 
+ */
 var createDownloadDir = function () {
     let covers = './covers';
     if (!fs.existsSync(covers)){
@@ -152,6 +164,12 @@ var createDownloadDir = function () {
 
 }
 
+/**
+ * Tries to download a book cover
+ * 
+ * @param {any} code 
+ * @param {any} type 
+ */
 var downloadFromCode = function (code, type) {
     let cleanedCode = code.replace(/[^0-9]/g,'');
     let url = `https://www.googleapis.com/books/v1/volumes?q=${type}:${cleanedCode}`;
@@ -186,6 +204,11 @@ var downloadFromCode = function (code, type) {
     })
 };
 
+/**
+ * Tries to request a book cover image from Amazon, if available resizes it and save it on the disk.
+ * 
+ * @param {Object} book - The book we want to get the cover
+ */
 var getFromIsbnOnAmazonSecretApi = function(book){
     let type = 'isbn';
     let cleanedCode = book.isbn.replace(/[^0-9]/g,'');
@@ -215,6 +238,11 @@ var getFromIsbnOnAmazonSecretApi = function(book){
                 
 }
 
+/**
+ * Downloads a cover
+ * 
+ * @param {Object} book - The book whose cover we want to download
+ */
 CoverDownloader.prototype.dlCover = function(book){
     if(book.isbn) {
         this.q.push(function () {
@@ -229,6 +257,12 @@ CoverDownloader.prototype.dlCover = function(book){
     }
 }
 
+/**
+ * Returns if the book with the given id has a correponding cover
+ * 
+ * @param {string} id - The book id
+ * @returns {Boolean} - If the cover is available
+ */
 CoverDownloader.prototype.hasCover = function(id) {
     return covers[id] ? true : false;
 }

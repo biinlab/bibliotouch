@@ -1,3 +1,7 @@
+/**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
 
 /**
  * Detects pinch-in an pinch-out gestures on a HTMLElement

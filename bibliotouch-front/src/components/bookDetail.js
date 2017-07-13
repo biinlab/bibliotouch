@@ -5,6 +5,11 @@ var stopword = require('stopword');
 var favStore = require('../helpers/favStore');
 
 /**
+ * @author Alix Ducros <ducrosalix@hotmail.fr>
+ * @module
+ */
+
+/**
  * Enum for book availability status, values correspond to displayed text
  * @readonly
  * @enum {string}
