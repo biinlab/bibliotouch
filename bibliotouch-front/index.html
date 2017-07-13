@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+		<meta charset=utf-8>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+		<title>Bibliotouch</title>
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600" rel="stylesheet"> 
+		<link rel="stylesheet" type="text/css" href="style/style.css">
+	</head>
+	<body>
+
+        <div id="app">
+            <book-detail    v-if="showBookModal"
+                            v-bind:book="currentBook"
+                            v-on:close-book-modal="closeBookModal">
+            </book-detail>
+            <div id="app-content">
+                <router-view    v-on:current-theme-changed="updateCurrentTheme"
+                                v-on:show-book-detail="showBookDetail">
+                </router-view>
+                <div id="footer-wrapper">
+                    <active-theme-box></active-theme-box>
+                    <div id="constant-footer-wrapper">
+                        <search-box v-on:show-search-query-builder="showSearchQueryBuilder()"></search-box>
+                        <zoom-nav-box v-bind:current-theme="currentTheme"></zoom-nav-box>
+                    </div>
+                </div>
+            </div>
+            <search-query-builder   v-if="showSearchQueryBuilderModal"
+                                    v-on:hide-search-query-builder="hideSearchQueryBuilder()"></search-query-builder>
+        </div>
+        <script src="scripts/bundle.js"></script>
+	</body>
+</html>

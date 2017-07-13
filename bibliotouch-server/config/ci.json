@@ -1,0 +1,14 @@
+{
+    "Bibliotouch" : {
+        "dbconfig" : {
+            "host" : "mysql"
+        },
+        "koha":{
+            "kohadbconfig" : {
+                "host" : "mysql",
+                "dbname" : "test"
+            }
+        },
+        "downloadCovers" : false
+    }
+}

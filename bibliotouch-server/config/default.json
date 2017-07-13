@@ -1,0 +1,150 @@
+{
+    "Bibliotouch" : {
+        "dbconfig" : {
+            "host" : "localhost",
+            "port" : "3306",
+            "dbname" : "bibliotouch",
+            "user" : "bibliotouch",
+            "pwd" : "bibliotouch"
+        },
+        "koha":{
+            "kohadbconfig" : {
+                "host" : "localhost",
+                "port" : "3306",
+                "dbname" : "bibserver",
+                "user" : "bibliotouch",
+                "pwd" : "bibliotouch"
+            },
+            "oaipmhEndpoint" : {
+                "url" : "http://cataloguebib.enssib.fr/cgi-bin/koha/oai.pl",
+                "update":false,
+                "maxOAIPMHExports":3000
+            },
+            "restApiEndpoint" : "http://cataloguebib.enssib.fr/cgi-bin/koha/webservice/rest.pl/",
+            "kohaTags" :{
+                "isbn" : {
+                    "tag" : ["010"],
+                    "code": ["a"]
+                },
+                "issn" : {
+                    "tag" : ["011"],
+                    "code": ["a"]
+                },
+                "ismn" : {
+                    "tag" : ["013"],
+                    "code": ["a"]
+                },
+                "ean" : {
+                    "tag" : ["073"],
+                    "code": ["a"]
+                },
+                "title" : {
+                    "tag" : ["200"],
+                    "code": ["a"]
+                },
+                "editor" : {
+                    "tag" : ["210"],
+                    "code": ["c"]
+                },
+                "datePub" : {
+                    "tag" : ["210"],
+                    "code": ["d"]
+                },
+                "nbPages" : {
+                    "tag" : ["215"],
+                    "code": ["a"]
+                },
+                "note" : {
+                    "tag" : ["300"],
+                    "code": ["a"]
+                },
+                "noteBioIndex" : {
+                    "tag" : ["320"],
+                    "code": ["a"]
+                },
+                "thesisInfo" : {
+                    "tag" : ["328"],
+                    "code": ["a","b","c","d","e"]
+                },
+                "thesisUrl" : {
+                    "tag" : ["328"],
+                    "code": ["u"]
+                },
+                "description" : {
+                    "tag" : ["330"],
+                    "code": ["a"]
+                },
+                "table" : {
+                    "tag" : ["359"],
+                    "code": ["b"]
+                },
+                "collection" : {
+                    "tag" : ["410"],
+                    "code": ["t"]
+                },
+                "uniformTitle" : {
+                    "tag" : ["500"],
+                    "code": ["a"]
+                },
+                "formTitle" : {
+                    "tag" : ["503"],
+                    "code": ["a"]
+                },
+                "mainAuthority" : {
+                    "tag" : ["600","601","602","603","604","605","606","607","616"],
+                    "code": ["a"]
+                },
+                "subAuthority" : {
+                    "tag" : ["600","601","602","603","604","605","606","607","616"],
+                    "code": ["x"]
+                },
+                "geoAuthority" : {
+                    "tag" : ["600","601","602","603","604","605","606","607","616"],
+                    "code": ["y"]
+                },
+                "dateAuthority" : {
+                    "tag" : ["600","601","602","603","604","605","606","607","616"],
+                    "code": ["z"]
+                },
+                "formAuthority" : {
+                    "tag" : ["600","601","602","603","604","605","606","607","616"],
+                    "code": ["j"]
+                },
+                "freeIndex" : {
+                    "tag" : ["610"],
+                    "code": ["a"]
+                },
+                "cdu" : {
+                    "tag" : ["675"],
+                    "code": ["a"]
+                },
+                "dewey" : {
+                    "tag" : ["676"],
+                    "code": ["a"]
+                },
+                "lcc" : {
+                    "tag" : ["680"],
+                    "code": ["a","b"]
+                },
+                "otherClass" : {
+                    "tag" : ["686"],
+                    "code": ["a","2"]
+                },
+                "authors" : {
+                    "tag" : ["700","701","702","710","711","712"],
+                    "code": ["a","b"]
+                },
+                "readingUrl":{
+                    "tag" : ["856"],
+                    "code" : ["u"]
+                }
+            }
+        }
+        ,
+        "updateTime":{
+            "cron" : "0 4 * * *"
+        },
+        "serverPort" : 8080,
+        "downloadCovers" : true
+    }
+}

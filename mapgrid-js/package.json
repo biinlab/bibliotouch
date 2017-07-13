@@ -1,17 +1,18 @@
 {
-  "name": "bibliotouch-custom",
+  "name": "bibliotouch-public",
   "version": "1.0.0",
   "description": "",
-  "main": "./server/index.js",
+  "main": "",
   "scripts": {
-    "install": "npm --prefix ./public install",
-    "build": "npm --prefix ./public run build",
-    "start": "node ./server/index.js",
+    "build": "browserify src/script.js -o static/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.15.2"
+    "blazy": "^1.8.2",
+    "browserify": "^14.1.0",
+    "dragscroll": "0.0.8",
+    "jquery": "^3.2.0"
   }
 }
