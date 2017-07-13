@@ -498,7 +498,9 @@ KohaImporter.prototype.parseRecordObject = function(record){
             }
 
             //Do not download covers yet - Do downlaod
-            coverDownloader.dlCover(bibliodocument);
+            if(config.get('Bibliotouch.downloadCovers')){
+                coverDownloader.dlCover(bibliodocument);
+            }
 
             bibliodocument.normalizedWords = getNormalizedWords(bibliodocument);
 
